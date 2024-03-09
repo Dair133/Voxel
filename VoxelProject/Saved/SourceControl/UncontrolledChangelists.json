@@ -8,9 +8,6 @@
 				"C:/Users/alasd/OneDrive/Documents/Unreal Projects/VoxelProject/Content/StarterContent/Architecture/Floor_400x400.uasset",
 				"C:/Users/alasd/OneDrive/Documents/Unreal Projects/VoxelProject/Content/ThirdPerson/Maps/ThirdPersonMap.umap",
 				"C:/Users/alasd/OneDrive/Documents/Unreal Projects/VoxelProject/Content/ThirdPerson/Maps/ThirdPersonMap_BuiltData.uasset",
-				"C:/Users/alasd/OneDrive/Documents/Unreal Projects/VoxelProject/Content/ThirdPerson/Blueprints/PlayerTest/Material_001.uasset",
-				"C:/Users/alasd/OneDrive/Documents/Unreal Projects/VoxelProject/Content/ThirdPerson/Blueprints/PlayerTest/UnrealRig.uasset",
-				"C:/Users/alasd/OneDrive/Documents/Unreal Projects/VoxelProject/Content/ThirdPerson/Blueprints/PlayerTest/UnrealRig_PhysicsAsset.uasset",
 				"C:/Users/alasd/OneDrive/Documents/Unreal Projects/VoxelProject/Content/ThirdPerson/Blueprints/BP_ThirdPersonGameMode.uasset",
 				"C:/Users/alasd/OneDrive/Documents/Unreal Projects/VoxelProject/Content/ThirdPerson/Input/Actions/IA_Jump.uasset",
 				"C:/Users/alasd/OneDrive/Documents/Unreal Projects/VoxelProject/Content/ThirdPerson/Input/Actions/IA_Look.uasset",
@@ -82,7 +79,11 @@
 				"C:/Users/alasd/OneDrive/Documents/Unreal Projects/VoxelProject/Content/__ExternalActors__/VoxelMap/B/YZ/8KPB0UZ6O7BYRLIN5BOL1R.uasset",
 				"C:/Users/alasd/OneDrive/Documents/Unreal Projects/VoxelProject/Content/__ExternalActors__/VoxelMap/7/R4/G0UWIMLS60T12L2QHENLHS.uasset",
 				"C:/Users/alasd/OneDrive/Documents/Unreal Projects/VoxelProject/Content/__ExternalActors__/VoxelMap/E/3S/F27Y1HKMK5YRJ5D9GJK5BS.uasset",
-				"C:/Users/alasd/OneDrive/Documents/Unreal Projects/VoxelProject/Content/VoxelMap.umap"
+				"C:/Users/alasd/OneDrive/Documents/Unreal Projects/VoxelProject/Content/VoxelMap.umap",
+				"E:/UE5Projects/Voxel/VoxelProject/Content/__ExternalActors__/VoxelMap/A/DP/13V00N6P8FRJF2C9WDPRHM.uasset",
+				"C:/Users/alasd/OneDrive/Documents/Unreal Projects/VoxelProject/Content/ThirdPerson/Blueprints/PlayerTest/Material_001.uasset",
+				"C:/Users/alasd/OneDrive/Documents/Unreal Projects/VoxelProject/Content/ThirdPerson/Blueprints/PlayerTest/UnrealRig.uasset",
+				"C:/Users/alasd/OneDrive/Documents/Unreal Projects/VoxelProject/Content/ThirdPerson/Blueprints/PlayerTest/UnrealRig_PhysicsAsset.uasset"
 			]
 		}
 	]
