@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="17.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <None Include="..\..\VoxelProject.uproject" />
+    <Filter Include="Source">
+      <UniqueIdentifier>{F31BBDD1-B3E8-3BCC-9652-680E16935819}</UniqueIdentifier>
+    </Filter>
+    <None Include="..\..\Source\VoxelProject.Target.cs">
+      <Filter>Source</Filter>
+    </None>
+    <None Include="..\..\Source\VoxelProjectEditor.Target.cs">
+      <Filter>Source</Filter>
+    </None>
+    <None Include="..\..\.editorconfig" />
+    <None Include="..\..\.vsconfig" />
+    <None Include="..\..\shadertoolsconfig.json" />
+    <Filter Include="Config">
+      <UniqueIdentifier>{FA535FFB-25E1-3D20-B416-52F9BE21E06E}</UniqueIdentifier>
+    </Filter>
+    <None Include="..\..\Config\DefaultEditor.ini">
+      <Filter>Config</Filter>
+    </None>
+    <None Include="..\..\Config\DefaultEngine.ini">
+      <Filter>Config</Filter>
+    </None>
+    <None Include="..\..\Config\DefaultGame.ini">
+      <Filter>Config</Filter>
+    </None>
+    <None Include="..\..\Config\DefaultInput.ini">
+      <Filter>Config</Filter>
+    </None>
+    <Filter Include="Source\VoxelProject">
+      <UniqueIdentifier>{675FB4DC-71E7-3EDE-A3EA-438EBC52DA40}</UniqueIdentifier>
+    </Filter>
+    <ClCompile Include="..\..\Source\VoxelProject\BoxTwo.cpp">
+      <Filter>Source\VoxelProject</Filter>
+    </ClCompile>
+    <ClInclude Include="..\..\Source\VoxelProject\BoxTwo.h">
+      <Filter>Source\VoxelProject</Filter>
+    </ClInclude>
+    <ClCompile Include="..\..\Source\VoxelProject\Chunk.cpp">
+      <Filter>Source\VoxelProject</Filter>
+    </ClCompile>
+    <ClInclude Include="..\..\Source\VoxelProject\Chunk.h">
+      <Filter>Source\VoxelProject</Filter>
+    </ClInclude>
+    <ClCompile Include="..\..\Source\VoxelProject\Enums.cpp">
+      <Filter>Source\VoxelProject</Filter>
+    </ClCompile>
+    <ClInclude Include="..\..\Source\VoxelProject\Enums.h">
+      <Filter>Source\VoxelProject</Filter>
+    </ClInclude>
+    <ClCompile Include="..\..\Source\VoxelProject\FastNoiseLite.cpp">
+      <Filter>Source\VoxelProject</Filter>
+    </ClCompile>
+    <ClInclude Include="..\..\Source\VoxelProject\FastNoiseLite.h">
+      <Filter>Source\VoxelProject</Filter>
+    </ClInclude>
+    <ClCompile Include="..\..\Source\VoxelProject\MyPawn.cpp">
+      <Filter>Source\VoxelProject</Filter>
+    </ClCompile>
+    <ClInclude Include="..\..\Source\VoxelProject\MyPawn.h">
+      <Filter>Source\VoxelProject</Filter>
+    </ClInclude>
+    <ClCompile Include="..\..\Source\VoxelProject\Vector2.cpp">
+      <Filter>Source\VoxelProject</Filter>
+    </ClCompile>
+    <ClInclude Include="..\..\Source\VoxelProject\Vector2.h">
+      <Filter>Source\VoxelProject</Filter>
+    </ClInclude>
+    <ClCompile Include="..\..\Source\VoxelProject\VoxelGameModeBase.cpp">
+      <Filter>Source\VoxelProject</Filter>
+    </ClCompile>
+    <ClInclude Include="..\..\Source\VoxelProject\VoxelGameModeBase.h">
+      <Filter>Source\VoxelProject</Filter>
+    </ClInclude>
+    <None Include="..\..\Source\VoxelProject\VoxelProject.Build.cs">
+      <Filter>Source\VoxelProject</Filter>
+    </None>
+    <ClCompile Include="..\..\Source\VoxelProject\VoxelProject.cpp">
+      <Filter>Source\VoxelProject</Filter>
+    </ClCompile>
+    <ClInclude Include="..\..\Source\VoxelProject\VoxelProject.h">
+      <Filter>Source\VoxelProject</Filter>
+    </ClInclude>
+    <ClCompile Include="..\..\Source\VoxelProject\VoxelTestOne.cpp">
+      <Filter>Source\VoxelProject</Filter>
+    </ClCompile>
+    <ClInclude Include="..\..\Source\VoxelProject\VoxelTestOne.h">
+      <Filter>Source\VoxelProject</Filter>
+    </ClInclude>
+  </ItemGroup>
+</Project>

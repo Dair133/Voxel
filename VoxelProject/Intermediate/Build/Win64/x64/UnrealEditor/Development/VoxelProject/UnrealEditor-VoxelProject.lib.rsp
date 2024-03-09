@@ -1,0 +1,25 @@
+/NOLOGO
+/errorReport:prompt
+/MACHINE:x64
+/SUBSYSTEM:WINDOWS
+/DEF
+/NAME:"UnrealEditor-VoxelProject.dll"
+/IGNORE:4221
+/NODEFAULTLIB
+"C:\Users\alasd\OneDrive\Documents\Unreal Projects\VoxelProject\Intermediate\Build\Win64\x64\VoxelProjectEditor\Development\Engine\SharedPCH.Engine.Cpp20.InclOrderUnreal5_0.h.obj"
+"C:\Users\alasd\OneDrive\Documents\Unreal Projects\VoxelProject\Intermediate\Build\Win64\x64\UnrealEditor\Development\VoxelProject\Chunk.gen.cpp.obj"
+"C:\Users\alasd\OneDrive\Documents\Unreal Projects\VoxelProject\Intermediate\Build\Win64\x64\UnrealEditor\Development\VoxelProject\Enums.gen.cpp.obj"
+"C:\Users\alasd\OneDrive\Documents\Unreal Projects\VoxelProject\Intermediate\Build\Win64\x64\UnrealEditor\Development\VoxelProject\MyPawn.gen.cpp.obj"
+"C:\Users\alasd\OneDrive\Documents\Unreal Projects\VoxelProject\Intermediate\Build\Win64\x64\UnrealEditor\Development\VoxelProject\VoxelGameModeBase.gen.cpp.obj"
+"C:\Users\alasd\OneDrive\Documents\Unreal Projects\VoxelProject\Intermediate\Build\Win64\x64\UnrealEditor\Development\VoxelProject\VoxelProject.init.gen.cpp.obj"
+"C:\Users\alasd\OneDrive\Documents\Unreal Projects\VoxelProject\Intermediate\Build\Win64\x64\UnrealEditor\Development\VoxelProject\BoxTwo.cpp.obj"
+"C:\Users\alasd\OneDrive\Documents\Unreal Projects\VoxelProject\Intermediate\Build\Win64\x64\UnrealEditor\Development\VoxelProject\Chunk.cpp.obj"
+"C:\Users\alasd\OneDrive\Documents\Unreal Projects\VoxelProject\Intermediate\Build\Win64\x64\UnrealEditor\Development\VoxelProject\Enums.cpp.obj"
+"C:\Users\alasd\OneDrive\Documents\Unreal Projects\VoxelProject\Intermediate\Build\Win64\x64\UnrealEditor\Development\VoxelProject\FastNoiseLite.cpp.obj"
+"C:\Users\alasd\OneDrive\Documents\Unreal Projects\VoxelProject\Intermediate\Build\Win64\x64\UnrealEditor\Development\VoxelProject\MyPawn.cpp.obj"
+"C:\Users\alasd\OneDrive\Documents\Unreal Projects\VoxelProject\Intermediate\Build\Win64\x64\UnrealEditor\Development\VoxelProject\Vector2.cpp.obj"
+"C:\Users\alasd\OneDrive\Documents\Unreal Projects\VoxelProject\Intermediate\Build\Win64\x64\UnrealEditor\Development\VoxelProject\VoxelGameModeBase.cpp.obj"
+"C:\Users\alasd\OneDrive\Documents\Unreal Projects\VoxelProject\Intermediate\Build\Win64\x64\UnrealEditor\Development\VoxelProject\VoxelProject.cpp.obj"
+"C:\Users\alasd\OneDrive\Documents\Unreal Projects\VoxelProject\Intermediate\Build\Win64\x64\UnrealEditor\Development\VoxelProject\VoxelTestOne.cpp.obj"
+"C:\Users\alasd\OneDrive\Documents\Unreal Projects\VoxelProject\Intermediate\Build\Win64\x64\UnrealEditor\Development\VoxelProject\Default.rc2.res"
+/OUT:"C:\Users\alasd\OneDrive\Documents\Unreal Projects\VoxelProject\Intermediate\Build\Win64\x64\UnrealEditor\Development\VoxelProject\UnrealEditor-VoxelProject.lib"
