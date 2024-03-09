@@ -5,7 +5,7 @@
 ===========================================================================*/
 
 #include "UObject/GeneratedCppIncludes.h"
-#include "VoxelProject/Enums.h"
+#include "../../../UE5Projects/Voxel/VoxelProject/Source/VoxelProject/Enums.h"
 PRAGMA_DISABLE_DEPRECATION_WARNINGS
 void EmptyLinkFunctionForGeneratedCodeEnums() {}
 // Cross Module References

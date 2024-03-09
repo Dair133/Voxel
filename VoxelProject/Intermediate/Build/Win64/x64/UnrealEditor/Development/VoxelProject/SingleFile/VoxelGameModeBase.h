@@ -1,1 +1,1 @@
-#include "C:/Users/alasd/OneDrive/Documents/Unreal Projects/VoxelProject/Source/VoxelProject/VoxelGameModeBase.h"
+#include "E:/UE5Projects/Voxel/VoxelProject/Source/VoxelProject/VoxelGameModeBase.h"

@@ -5,7 +5,7 @@
 ===========================================================================*/
 
 #include "UObject/GeneratedCppIncludes.h"
-#include "VoxelProject/MyPawn.h"
+#include "../../../UE5Projects/Voxel/VoxelProject/Source/VoxelProject/MyPawn.h"
 PRAGMA_DISABLE_DEPRECATION_WARNINGS
 void EmptyLinkFunctionForGeneratedCodeMyPawn() {}
 // Cross Module References

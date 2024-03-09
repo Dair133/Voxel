@@ -1,12 +1,12 @@
 {
     "Version": "1.2",
     "Data": {
-        "Source": "c:\\users\\alasd\\onedrive\\documents\\unreal projects\\voxelproject\\intermediate\\build\\win64\\x64\\unrealeditor\\development\\voxelproject\\singlefile\\voxelgamemodebase.h",
+        "Source": "e:\\ue5projects\\voxel\\voxelproject\\intermediate\\build\\win64\\x64\\unrealeditor\\development\\voxelproject\\singlefile\\voxelgamemodebase.h",
         "ProvidedModule": "",
         "Includes": [
-            "c:\\users\\alasd\\onedrive\\documents\\unreal projects\\voxelproject\\intermediate\\build\\win64\\x64\\unrealeditor\\development\\voxelproject\\definitions.voxelproject.h",
-            "c:\\users\\alasd\\onedrive\\documents\\unreal projects\\voxelproject\\intermediate\\build\\win64\\x64\\voxelprojecteditor\\development\\engine\\shareddefinitions.engine.cpp20.inclorderunreal5_0.h",
-            "c:\\users\\alasd\\onedrive\\documents\\unreal projects\\voxelproject\\source\\voxelproject\\voxelgamemodebase.h",
+            "e:\\ue5projects\\voxel\\voxelproject\\intermediate\\build\\win64\\x64\\unrealeditor\\development\\voxelproject\\definitions.voxelproject.h",
+            "e:\\ue5projects\\voxel\\voxelproject\\intermediate\\build\\win64\\x64\\voxelprojecteditor\\development\\engine\\shareddefinitions.engine.cpp20.inclorderunreal5_0.h",
+            "e:\\ue5projects\\voxel\\voxelproject\\source\\voxelproject\\voxelgamemodebase.h",
             "e:\\ue5\\ue_5.3\\engine\\source\\runtime\\core\\public\\coreminimal.h",
             "e:\\ue5\\ue_5.3\\engine\\source\\runtime\\core\\public\\coretypes.h",
             "e:\\ue5\\ue_5.3\\engine\\source\\runtime\\core\\public\\hal\\platform.h",
@@ -435,9 +435,9 @@
             "e:\\ue5\\ue_5.3\\engine\\source\\runtime\\core\\public\\math\\convexhull2d.h",
             "e:\\ue5\\ue_5.3\\engine\\source\\runtime\\core\\public\\math\\unrealmath.h",
             "e:\\ue5\\ue_5.3\\engine\\source\\runtime\\core\\public\\math\\ray.h",
-            "c:\\users\\alasd\\onedrive\\documents\\unreal projects\\voxelproject\\source\\voxelproject\\boxtwo.h",
-            "c:\\users\\alasd\\onedrive\\documents\\unreal projects\\voxelproject\\source\\voxelproject\\vector2.h",
-            "c:\\users\\alasd\\onedrive\\documents\\unreal projects\\voxelproject\\source\\voxelproject\\enums.h",
+            "e:\\ue5projects\\voxel\\voxelproject\\source\\voxelproject\\boxtwo.h",
+            "e:\\ue5projects\\voxel\\voxelproject\\source\\voxelproject\\vector2.h",
+            "e:\\ue5projects\\voxel\\voxelproject\\source\\voxelproject\\enums.h",
             "c:\\program files\\microsoft visual studio\\2022\\community\\vc\\tools\\msvc\\14.36.32532\\include\\string",
             "c:\\program files\\microsoft visual studio\\2022\\community\\vc\\tools\\msvc\\14.36.32532\\include\\xstring",
             "c:\\program files\\microsoft visual studio\\2022\\community\\vc\\tools\\msvc\\14.36.32532\\include\\xmemory",
@@ -945,7 +945,7 @@
             "e:\\ue5\\ue_5.3\\engine\\source\\runtime\\engine\\classes\\engine\\serverstatreplicator.h",
             "e:\\ue5\\ue_5.3\\engine\\intermediate\\build\\win64\\unrealeditor\\inc\\engine\\uht\\serverstatreplicator.generated.h",
             "e:\\ue5\\ue_5.3\\engine\\intermediate\\build\\win64\\unrealeditor\\inc\\engine\\uht\\gamemodebase.generated.h",
-            "c:\\users\\alasd\\onedrive\\documents\\unreal projects\\voxelproject\\intermediate\\build\\win64\\unrealeditor\\inc\\voxelproject\\uht\\voxelgamemodebase.generated.h"
+            "e:\\ue5projects\\voxel\\voxelproject\\intermediate\\build\\win64\\unrealeditor\\inc\\voxelproject\\uht\\voxelgamemodebase.generated.h"
         ],
         "ImportedModules": [],
         "ImportedHeaderUnits": []

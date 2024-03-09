@@ -5,7 +5,7 @@
 ===========================================================================*/
 
 #include "UObject/GeneratedCppIncludes.h"
-#include "VoxelProject/VoxelGameModeBase.h"
+#include "../../../UE5Projects/Voxel/VoxelProject/Source/VoxelProject/VoxelGameModeBase.h"
 PRAGMA_DISABLE_DEPRECATION_WARNINGS
 void EmptyLinkFunctionForGeneratedCodeVoxelGameModeBase() {}
 // Cross Module References

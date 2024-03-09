@@ -5,7 +5,7 @@
 ===========================================================================*/
 
 #include "UObject/GeneratedCppIncludes.h"
-#include "VoxelProject/Chunk.h"
+#include "../../../UE5Projects/Voxel/VoxelProject/Source/VoxelProject/Chunk.h"
 PRAGMA_DISABLE_DEPRECATION_WARNINGS
 void EmptyLinkFunctionForGeneratedCodeChunk() {}
 // Cross Module References

@@ -1,6 +1,12 @@
 // // Fill out your copyright notice in the Description page of Project Settings.
+   //FGraphEventRef Taskx = FFunctionGraphTask::CreateAndDispatchWhenReady([&]()
+          //   {
+          //        Code to be executed in the worker thread
 
+          //        ...
 
+          //        Code executed in the worker thread is complete
+          //   }, TStatId(), nullptr, ENamedThreads::GameThread);
 #include "Chunk.h"
 
 #include <system_error>
@@ -39,34 +45,9 @@ std::string ToStringEnum(EBlock blockType) {
 
 AChunk::AChunk()
 {
-    /*
-     *Below arguments to octree object are important
-     *we STARt at 0,0,0 and the 30 indicates how far we go
-     *so  chunkRange(0,0,0,30) means from (0,0,0) to (30,30,30)
-     *if we doe (30,30,30,30) its WRONG because that means from (30,30,30) to (60,60,60)
-     */
-
-     //representing from 0,0,0 to 64,64,64
-    // const CubeRange* ChunkRange = new CubeRange(0,0,0,32,32,32);
-     //Octree *newOctree =  new Octree(*ChunkRange);
-     //newOctree->AssignBlock(8,0,8,EBlock::Dirt);
-
-     //newOctree->BulkAssignment(0,0,0,16,1,16,EBlock::Sand);//sets all x,z values to zero for y of zero, WE DO NOT INPUT
-
-     //EBlock returnedBlock = newOctree->GetBlock(4,0,4);
-
-     //std::string blockName = ToStringEnum(returnedBlock);
-
-     //for loop which goes through every x and z 
-
-
-
-
-
-
-     //now log returned name
-
-
+   
+    
+    
 
      // Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
     PrimaryActorTick.bCanEverTick = false;
@@ -115,19 +96,6 @@ AChunk::AChunk()
     //MyGrassBPClass = (UClass*)MyGrassBlueprintFinder.Object->GeneratedClass;
 
 
-    // for (int x = 0; x < 16; x++)
-    // {
-    //     for (int z = 0; z < 16; z++)
-    //     {
-    //        
-    //         
-    //         EBlock returnedBlock = newOctree->GetBlock(x,0,z);
-    //
-    //         std::string blockName = ToStringEnum(returnedBlock);
-    //         
-    //         UE_LOG(LogTemp, Warning, TEXT("Returned block name is %s"), *FString(blockName.c_str()));
-    //     }
-    // }
 }
 
 void AChunk::ModifyVoxel(const FIntVector Position, const EBlock Block)
@@ -150,14 +118,7 @@ void AChunk::ModifyVoxel(const FIntVector Position, const EBlock Block)
 // Called when the game starts or when spawned
 void AChunk::BeginPlay()
 {
-    //FGraphEventRef Taskx = FFunctionGraphTask::CreateAndDispatchWhenReady([&]()
-          //   {
-          //        Code to be executed in the worker thread
-
-          //        ...
-
-          //        Code executed in the worker thread is complete
-          //   }, TStatId(), nullptr, ENamedThreads::GameThread);
+ 
 
 // int32 Key1 = -1;
 //  float TimeToDisplay1 = 10.0f; // Display the message for 5 seconds.
@@ -331,10 +292,7 @@ void AChunk::GenerateBlocks()
     for (float x = 0; x < Size; ++x) {
         for (float y = 0; y < Size; ++y)
         {
-            /*   FGraphEventRef Taskz = FFunctionGraphTask::CreateAndDispatchWhenReady([this, x, y, BiomeNoise]()
-                   {
 
-                   }, TStatId(), nullptr, ENamedThreads::AnyBackgroundThreadNormalTask);*/
 
                    /*
                    To increase the amount of mountains in the biome, we can increase the frequency of the noise but this removes the nice ingrooves and roughness of the mountains
@@ -502,33 +460,28 @@ void AChunk::GenerateBlocks()
             Blocks[GetBlockIndex(x, y, Height - 1)] = EBlock::Grass;
 
 
-            // const int Height = CombinedNoise;
-
-                   //FGraphEventRef Taskx = FFunctionGraphTask::CreateAndDispatchWhenReady([&]()
-                   //   {
-
-                   //   }, TStatId(), nullptr, ENamedThreads::GameThread);
-
-
-              //Height += 100;
-
+           
             for (int z = 0; z < Height; z++)
             {
 
                 if (z == Height - 1) {
+
                     if (BiomeValue < -0.2) {
                         Blocks[GetBlockIndex(x, y, z)] = EBlock::Grass;
                     }
+
                     else if (BiomeValue > 0.2f) {
                         Blocks[GetBlockIndex(x, y, z)] = EBlock::SnowGrass;
                     }
+
                     else if (!(BiomeValue < -0.2 && BiomeValue > 0.2f)) {
                         //srand(unsigned int(time(NULL) + rand()));
-                      //  int random = rand() + rand() * rand();
+                        //  int random = rand() + rand() * rand();
                         int random = 3;
                         if (random % 2 == 0) {
                             Blocks[GetBlockIndex(x, y, z)] = EBlock::Grass;
                         }
+
                         else {
                             Blocks[GetBlockIndex(x, y, z)] = EBlock::SnowGrass;
                         }
@@ -537,50 +490,8 @@ void AChunk::GenerateBlocks()
                 else {
                     Blocks[GetBlockIndex(x, y, z)] = EBlock::Stone;
                 }
-
-
-                //std::random_device rd;
-
-                //// Initialize a Mersenne Twister pseudo-random generator of 32-bit numbers with a state size of 19937 bits.
-                //std::mt19937 gen(rd());
-
-                //// Uniform distribution between 1 and 100
-                //std::uniform_int_distribution<> distrib(1, 26250);
-
-                //// Generate random number
-                //int randNum = distrib(gen);
-
-                //UE_LOG(LogTemp, Warning, TEXT("Random NUm: %d"), randNum);
-
-                //if (randNum == 1)
-                //{
-                // 
-                //    // 3% chance of this block being true
-                //    // Spawn a tree
-
-                //}
-
-
-
-
-
             }
-            //if (Height > 6) {
-
-            //
-            //        for (int z = 0; z < VerticalHeight - 1; z++)
-            //    {
-            //            if(z < Height){
-            //                Blocks[GetBlockIndex(x, y, z)] = EBlock::Stone;
-            //            }
-            //     
-
-            //            else{
-            //                //Blocks[GetBlockIndex(x, y, z)] = EBlock::Air;
-            //            }
-            //      
-            //    }
-            //}
+     
             for (int z = Height; z < VerticalHeight; z++)
             {
 
@@ -589,108 +500,6 @@ void AChunk::GenerateBlocks()
                 //if(z % 25 == 0)
                // GetWorld()->GetTimerManager().SetTimer(MyTimerHandle, this, &AChunk::GenerateBlocks, 0.15f, false);
             }
-
-
-            //             // Generate random number
-            //             int randNum = distrib(gen);
-            //             int randNum2 = distrib2(gen2);
-            //             //UE_LOG(LogTemp, Warning, TEXT("Random NUm: %d"), randNum);
-            //             // Create a random device
-            //             if (numTrees ==0 && randNum % 5 ==0) {
-            //                 numTrees++;
-            //                 FVector Loc = GetActorLocation();
-            //               //  FGraphEventRef Task = FFunctionGraphTask::CreateAndDispatchWhenReady([&]() {
-            //                     actorData myActorData;
-            //                     actorData myActorData2;
-            //                     // Offset by actor location if your chunk isn't at world origin
-            //                     FScopeLock Lock(&CriticalSection);
-            //                     if (Height != 0) {
-            //                         
-            //                     if (Height == 6) {
-            //                       //  float offsetX = FMath::RandRange(-1250, 2500);
-            //                       //  float offsetY = FMath::RandRange(-2300, 2500);
-            //
-            //                        // FVector SpawnLocation = FVector((x + offsetX) * randNum2, (y + offsetY) * randNum2, Height);
-            //                         FVector SpawnLocation = FVector(x, y, Height);
-            //                         
-            //                         SpawnLocation += GetActorLocation();
-            //                         SpawnLocation.Z *= 100;
-            //                         SpawnLocation.X += randNum*80;
-            //                         SpawnLocation.Y += randNum2*80;
-            //                         //UE_LOG(LogTemp, Warning, TEXT("Random NUm: %d  2:%d"), randNum);
-            //                         myActorData.Location = SpawnLocation;
-            //                         myActorData.Rotation = FRotator(0, (randNum + 35) % 360,0);
-            //                         Trees.Add(myActorData);
-            //                         numTrees++;
-            //
-            //                         FVector SpawnLocation2 = FVector(x*randNum, y*randNum, Height);
-            //                         SpawnLocation2 += GetActorLocation();
-            //                         SpawnLocation2.Z *= 100;
-            //                         SpawnLocation2.X += randNum *120;
-            //                         SpawnLocation2.Y += randNum2*120;
-            //                         myActorData2.Location = SpawnLocation2;
-            //                         myActorData2.Rotation = FRotator(0, (randNum2 + 30) % 360,0);
-            //                         Trees.Add(myActorData2);
-            //                         numTrees++;
-            //                         //TreeLocations.Add(SpawnLocation);
-            //                         //SpawnActorAtLocation(SpawnLocation.X, SpawnLocation.Y, SpawnLocation.Z,MyTreeBPClass, myActorData.Rotation);
-            //                         //SpawnActorAtLocation(SpawnLocation.X+2000, SpawnLocation.Y+3500, SpawnLocation.Z, MyTreeBPClass, myActorData.Rotation);
-            //                         //SpawnActorAtLocation(SpawnLocation.X - 4500, SpawnLocation.Y -2000, SpawnLocation.Z, MyTreeBPClass, myActorData.Rotation);
-            //                  
-            //                        /* SpawnActorAtLocation(SpawnLocation.X+500, SpawnLocation.Y-500, SpawnLocation.Z, MyGrassBPClass, myActorData.Rotation);
-            //                         SpawnActorAtLocation(SpawnLocation.X + 400, SpawnLocation.Y - 400, SpawnLocation.Z, MyGrassBPClass, myActorData.Rotation);
-            //                         SpawnActorAtLocation(SpawnLocation.X + 350, SpawnLocation.Y - 350, SpawnLocation.Z, MyGrassBPClass, myActorData.Rotation);
-            //                         SpawnActorAtLocation(SpawnLocation.X + 250, SpawnLocation.Y - 250, SpawnLocation.Z, MyGrassBPClass, myActorData.Rotation);
-            //
-            //                         SpawnActorAtLocation(SpawnLocation.X - 500, SpawnLocation.Y + 500, SpawnLocation.Z, MyGrassBPClass, myActorData.Rotation);
-            //                         SpawnActorAtLocation(SpawnLocation.X - 400, SpawnLocation.Y + 470, SpawnLocation.Z, MyGrassBPClass, myActorData.Rotation);
-            //                         SpawnActorAtLocation(SpawnLocation.X - 350, SpawnLocation.Y + 420, SpawnLocation.Z, MyGrassBPClass, myActorData.Rotation);
-            //                         SpawnActorAtLocation(SpawnLocation.X - 250, SpawnLocation.Y + 250, SpawnLocation.Z, MyGrassBPClass, myActorData.Rotation);
-            //
-            //                         SpawnActorAtLocation(SpawnLocation.X - 1700, SpawnLocation.Y + 1300, SpawnLocation.Z, MyGrassBPClass, myActorData.Rotation);
-            //                         SpawnActorAtLocation(SpawnLocation.X - 1400, SpawnLocation.Y + 1700, SpawnLocation.Z, MyGrassBPClass, myActorData.Rotation);
-            //                         SpawnActorAtLocation(SpawnLocation.X - 1850, SpawnLocation.Y + 1350, SpawnLocation.Z, MyGrassBPClass, myActorData.Rotation);
-            //                         SpawnActorAtLocation(SpawnLocation.X - 1250, SpawnLocation.Y + 1250, SpawnLocation.Z, MyGrassBPClass, myActorData.Rotation);
-            //
-            //
-            //                         SpawnActorAtLocation(SpawnLocation.X - 3200, SpawnLocation.Y + 3200, SpawnLocation.Z, MyGrassBPClass, myActorData.Rotation);
-            //                         SpawnActorAtLocation(SpawnLocation.X - 3700, SpawnLocation.Y + 3800, SpawnLocation.Z, MyGrassBPClass, myActorData.Rotation);
-            //                         SpawnActorAtLocation(SpawnLocation.X - 3150, SpawnLocation.Y + 3750, SpawnLocation.Z, MyGrassBPClass, myActorData.Rotation);
-            //                         SpawnActorAtLocation(SpawnLocation.X - 3950, SpawnLocation.Y + 2950, SpawnLocation.Z, MyGrassBPClass, myActorData.Rotation);*/
-            //
-            //                     }
-            //                     else if(Height == 160) {
-            //                         FVector SpawnLocation = FVector(x, y , Height);
-            //                        
-            //                         SpawnLocation += GetActorLocation();
-            //                         SpawnLocation.Z *= 100;
-            //                         SpawnLocation.Z = FMath::Clamp(SpawnLocation.Z, 0, 16000);
-            //                         myActorData.Location = SpawnLocation;
-            //                         Trees.Add(myActorData);
-            //                  //     SpawnActorAtLocation(SpawnLocation.X, SpawnLocation.Y, SpawnLocation.Z,MyTreeBPClass, myActorData.Rotation);
-            //                     }
-            //                     else {
-            //                         FVector SpawnLocation = FVector(x , y , Height);
-            //                        
-            //                         SpawnLocation += GetActorLocation();
-            //                         TreeLocations.Add(SpawnLocation);
-            //                  //       SpawnActorAtLocation(SpawnLocation.X, SpawnLocation.Y, SpawnLocation.Z,MyTreeBPClass, myActorData.Rotation);
-            //                     }
-            //
-            //
-            //                                      //SpawnTreeAtLocation(SpawnLocation.X, SpawnLocation.Y, SpawnLocation.Z);
-            //                                      numTrees++;
-            //                                      Lock.Unlock();
-            //                     }
-            //                   //  }, TStatId(), nullptr, ENamedThreads::GameThread);
-            //                 numTrees++;
-            //             }
-
-
-
-
-
-
         }
 
     }//, EParallelForFlags::PumpRenderingThread);
@@ -1035,3 +844,5 @@ void AChunk::GenerateMesh()
             }
         }, EParallelForFlags::PumpRenderingThread);
 }
+
+

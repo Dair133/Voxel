@@ -1,8 +1,8 @@
-"C:\Users\alasd\OneDrive\Documents\Unreal Projects\VoxelProject\Source\VoxelProject\VoxelGameModeBase.cpp"
-/FI"C:\Users\alasd\OneDrive\Documents\Unreal Projects\VoxelProject\Intermediate\Build\Win64\x64\UnrealEditor\Development\VoxelProject\Definitions.VoxelProject.h"
-/Fo"C:\Users\alasd\OneDrive\Documents\Unreal Projects\VoxelProject\Intermediate\Build\Win64\x64\UnrealEditor\Development\VoxelProject\SingleFile\VoxelGameModeBase.cpp.obj"
-/sourceDependencies "C:\Users\alasd\OneDrive\Documents\Unreal Projects\VoxelProject\Intermediate\Build\Win64\x64\UnrealEditor\Development\VoxelProject\SingleFile\VoxelGameModeBase.cpp.dep.json"
-@"C:\Users\alasd\OneDrive\Documents\Unreal Projects\VoxelProject\Intermediate\Build\Win64\x64\UnrealEditor\Development\VoxelProject\VoxelProject.Shared.rsp"
+"E:\UE5Projects\Voxel\VoxelProject\Source\VoxelProject\VoxelGameModeBase.cpp"
+/FI"E:\UE5Projects\Voxel\VoxelProject\Intermediate\Build\Win64\x64\UnrealEditor\Development\VoxelProject\Definitions.VoxelProject.h"
+/Fo"E:\UE5Projects\Voxel\VoxelProject\Intermediate\Build\Win64\x64\UnrealEditor\Development\VoxelProject\SingleFile\VoxelGameModeBase.cpp.obj"
+/sourceDependencies "E:\UE5Projects\Voxel\VoxelProject\Intermediate\Build\Win64\x64\UnrealEditor\Development\VoxelProject\SingleFile\VoxelGameModeBase.cpp.dep.json"
+@"E:\UE5Projects\Voxel\VoxelProject\Intermediate\Build\Win64\x64\UnrealEditor\Development\VoxelProject\VoxelProject.Shared.rsp"
 /Zc:inline
 /nologo
 /Oi
@@ -42,6 +42,4 @@
 /TP
 /GR-
 /W4
-/std:c++20
-/Zc:preprocessor
-/wd5054
+/std:c++17

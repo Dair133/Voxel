@@ -1,5 +1,6 @@
 /I "."
 /I "E:\UE5Projects\Voxel\VoxelProject\Intermediate\Build\Win64\UnrealEditor\Inc\VoxelProject\UHT"
+/I "E:\GithubRepoes\FastNoise2\include"
 /I "E:\UE5Projects\Voxel\VoxelProject\Source"
 /I "Runtime\Core\Public"
 /I "Runtime\Core\Internal"

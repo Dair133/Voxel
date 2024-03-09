@@ -1,6 +1,7 @@
 // Copyright Epic Games, Inc. All Rights Reserved.
 
 #include <VoxelProject/VoxelGameModeBase.h>
+#include <FastNoise/FastNoise.h>
 #include <VoxelProject/Chunk.h>
 #include <VoxelProject/Enums.h>
 #include <VoxelProject/BoxTwo.h>
@@ -37,7 +38,7 @@ void AVoxelGameModeBase::OnCheckUpdateChunks()
 
 void AVoxelGameModeBase::BeginPlay()
 {
-
+  
 
     //200 height was the multiple 12.5
     ChunkSizeInMeters = ChunkSize * BlockSize * 4;
@@ -52,7 +53,7 @@ void AVoxelGameModeBase::BeginPlay()
     //UpdateVisibleChunksAroundPlayers();
 
 
-
+    
 
     Super::BeginPlay();
 }
@@ -170,25 +171,7 @@ void AVoxelGameModeBase::UpdateVisibleChunks(FVector2D viewerPosition)
                     terrainChunkMap2.Add(position);
                     ChunkQueue.Enqueue(position);
                 }
-                //terrainChunkMap.Add(viewedChunkCoord);
-
-
-               // AActor* newChunk = spawnChunk(position);
-               // //add delay
-               //// std::this_thread::sleep_for(std::chrono::seconds(3));
-               // //if (GetWorld()->GetTimeSeconds() > 2) {
-
-               //  //   std::this_thread::sleep_for(std::chrono::seconds(2));
-
-               //// }
-               // if (newChunk == nullptr)
-               // {
-               //     UE_LOG(LogTemp, Warning, TEXT("Newchunk is  is null!"));
-               //     return;
-               // }
-               // newChunk->SetActorHiddenInGame(true);
-               // terrainChunkMap.Add(viewedChunkCoord, newChunk);
-               // UpdateChunk(newChunk);
+              
 
 
 
@@ -197,29 +180,7 @@ void AVoxelGameModeBase::UpdateVisibleChunks(FVector2D viewerPosition)
         }
     }
 
-    ProcessChunkQueue();
-    //if (!ChunkQueue.IsEmpty()) {
-    //    FVector nextChunkPosition;
-    //    ChunkQueue.Dequeue(nextChunkPosition);
-    //    AActor* newChunk = spawnChunk(nextChunkPosition);
-
-    //    if (newChunk == nullptr)
-    //    {
-    //        UE_LOG(LogTemp, Warning, TEXT("Newchunk is null!"));
-    //        return;
-    //    }
-
-    //    newChunk->SetActorHiddenInGame(true);
-    //    FVector2D viewedChunkCoord = FVector2D(nextChunkPosition.X / ChunkSizeInMeters, nextChunkPosition.Y / ChunkSizeInMeters);
-    //    terrainChunkMap.Add(viewedChunkCoord, newChunk);
-    //    UpdateChunk(newChunk);
-    //    if (ChunkQueue.IsEmpty()) {
-    //      //  GetWorld()->GetTimerManager().SetTimer(SpawnTimerHandle, this, &AVoxelGameGameModeBase::UpdateVisibleChunks, 1.0f, false);
-    //    }
-    //}
-    //else {
-    //    return;
-    //}
+   
 }
 void AVoxelGameModeBase::ProcessChunkQueue()
 {
@@ -279,20 +240,7 @@ void AVoxelGameModeBase::UpdateVisibleChunksAroundPlayers()
 {
 
     TArray<AActor*> updatedVisibleTerrainChunks;
-    //GEngine->AddOnScreenDebugMessage(-1, 1.f, FColor::Orange, FString::Printf(TEXT("%f"), visibleTerrainChunks.Num()));
-
-    //ParallelFor(visibleTerrainChunks.Num(), [&](int32 index) {
-    //    AActor* currentChunk = visibleTerrainChunks[index];
-    //    if (UpdateChunk(currentChunk)) {
-    //        // Ensure thread-safety when accessing shared resource
-    //        FScopeLock Lock(&CriticalSection);
-    //        updatedVisibleTerrainChunks.Add(currentChunk);
-    //        Lock.Unlock();
-
-    //    }
-    //    });
-    // 
-    //FScopeLock Lock(&CriticalSection);
+    
     for (AActor* currentChunk : visibleTerrainChunks) {
         UpdateChunk(currentChunk);
     }
@@ -368,16 +316,6 @@ void AVoxelGameModeBase::UpdateVisibleChunksAroundPlayers()
 
 
 
-        // SpawnParams.Owner = current_pc;
-
-         /*
-         // Spawn pawn code
-APlayerController* playerController = GetWorld()->GetFirstPlayerController();
-playerController->SetViewTargetWithBlend(newPawn, 0.5f, EViewTargetBlendFunction::VTBlend_Cubic);
-Second line is interesting way to get player controller may work as an alternative
-
-
-            */
 
     }
     TreeMap.Empty();

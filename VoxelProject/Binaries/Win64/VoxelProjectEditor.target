@@ -34,6 +34,18 @@
 			"Type": "RequiredResource"
 		},
 		{
+			"Path": "$(ProjectDir)/Plugins/UE4CMake/Binaries/Win64/UnrealEditor-CMakeTarget.dll",
+			"Type": "DynamicLibrary"
+		},
+		{
+			"Path": "$(ProjectDir)/Plugins/UE4CMake/Binaries/Win64/UnrealEditor-CMakeTarget.pdb",
+			"Type": "SymbolFile"
+		},
+		{
+			"Path": "$(ProjectDir)/Plugins/UE4CMake/Binaries/Win64/UnrealEditor.modules",
+			"Type": "RequiredResource"
+		},
+		{
 			"Path": "$(EngineDir)/Binaries/Win64/AgentInterface.dll",
 			"Type": "DynamicLibrary"
 		},
@@ -3527,6 +3539,10 @@
 		}
 	],
 	"RuntimeDependencies": [
+		{
+			"Path": "$(ProjectDir)/Plugins/UE4CMake/CMakeTarget.uplugin",
+			"Type": "UFS"
+		},
 		{
 			"Path": "$(ProjectDir)/VoxelProject.uproject",
 			"Type": "UFS"

@@ -1,0 +1,10 @@
+^E:\UE5PROJECTS\VOXEL\VOXELPROJECT\INTERMEDIATE\CMAKETARGET\FASTNOISE\BUILD\CMAKEFILES\FC78C3700142161DD86AAA96A2D19918\GENERATE.STAMP.RULE
+setlocal
+"C:\Program Files\CMake\bin\cmake.exe" -SE:/UE5Projects/Voxel/VoxelProject/Intermediate/CMakeTarget/FastNoise -BE:/UE5Projects/Voxel/VoxelProject/Intermediate/CMakeTarget/FastNoise/build --check-stamp-list CMakeFiles/generate.stamp.list --vs-solution-file E:/UE5Projects/Voxel/VoxelProject/Intermediate/CMakeTarget/FastNoise/build/FastNoise_build.sln
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal & call :cmErrorLevel %errorlevel% & goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd
