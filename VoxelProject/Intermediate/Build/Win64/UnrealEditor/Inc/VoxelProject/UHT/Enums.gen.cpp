@@ -133,16 +133,16 @@ void EmptyLinkFunctionForGeneratedCodeEnums() {}
 		}
 		return Z_Registration_Info_UEnum_EGenerationType.InnerSingleton;
 	}
-	struct Z_CompiledInDeferFile_FID_VoxelProject_Source_VoxelProject_Enums_h_Statics
+	struct Z_CompiledInDeferFile_FID_UE5Projects_Voxel_VoxelProject_Source_VoxelProject_Enums_h_Statics
 	{
 		static const FEnumRegisterCompiledInInfo EnumInfo[];
 	};
-	const FEnumRegisterCompiledInInfo Z_CompiledInDeferFile_FID_VoxelProject_Source_VoxelProject_Enums_h_Statics::EnumInfo[] = {
+	const FEnumRegisterCompiledInInfo Z_CompiledInDeferFile_FID_UE5Projects_Voxel_VoxelProject_Source_VoxelProject_Enums_h_Statics::EnumInfo[] = {
 		{ EBlock_StaticEnum, TEXT("EBlock"), &Z_Registration_Info_UEnum_EBlock, CONSTRUCT_RELOAD_VERSION_INFO(FEnumReloadVersionInfo, 2020427865U) },
 		{ EGenerationType_StaticEnum, TEXT("EGenerationType"), &Z_Registration_Info_UEnum_EGenerationType, CONSTRUCT_RELOAD_VERSION_INFO(FEnumReloadVersionInfo, 2046249519U) },
 	};
-	static FRegisterCompiledInInfo Z_CompiledInDeferFile_FID_VoxelProject_Source_VoxelProject_Enums_h_4143129650(TEXT("/Script/VoxelProject"),
+	static FRegisterCompiledInInfo Z_CompiledInDeferFile_FID_UE5Projects_Voxel_VoxelProject_Source_VoxelProject_Enums_h_4143129650(TEXT("/Script/VoxelProject"),
 		nullptr, 0,
 		nullptr, 0,
-		Z_CompiledInDeferFile_FID_VoxelProject_Source_VoxelProject_Enums_h_Statics::EnumInfo, UE_ARRAY_COUNT(Z_CompiledInDeferFile_FID_VoxelProject_Source_VoxelProject_Enums_h_Statics::EnumInfo));
+		Z_CompiledInDeferFile_FID_UE5Projects_Voxel_VoxelProject_Source_VoxelProject_Enums_h_Statics::EnumInfo, UE_ARRAY_COUNT(Z_CompiledInDeferFile_FID_UE5Projects_Voxel_VoxelProject_Source_VoxelProject_Enums_h_Statics::EnumInfo));
 PRAGMA_ENABLE_DEPRECATION_WARNINGS

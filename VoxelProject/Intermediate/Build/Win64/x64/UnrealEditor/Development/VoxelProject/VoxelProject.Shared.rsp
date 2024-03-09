@@ -1,6 +1,6 @@
 /I "."
-/I "C:\Users\alasd\OneDrive\Documents\Unreal Projects\VoxelProject\Intermediate\Build\Win64\UnrealEditor\Inc\VoxelProject\UHT"
-/I "C:\Users\alasd\OneDrive\Documents\Unreal Projects\VoxelProject\Source"
+/I "E:\UE5Projects\Voxel\VoxelProject\Intermediate\Build\Win64\UnrealEditor\Inc\VoxelProject\UHT"
+/I "E:\UE5Projects\Voxel\VoxelProject\Source"
 /I "Runtime\Core\Public"
 /I "Runtime\Core\Internal"
 /I "Runtime\TraceLog\Public"

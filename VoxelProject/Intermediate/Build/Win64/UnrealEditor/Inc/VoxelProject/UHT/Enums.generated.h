@@ -16,7 +16,7 @@ PRAGMA_DISABLE_DEPRECATION_WARNINGS
 #define VOXELPROJECT_Enums_generated_h
 
 #undef CURRENT_FILE_ID
-#define CURRENT_FILE_ID FID_VoxelProject_Source_VoxelProject_Enums_h
+#define CURRENT_FILE_ID FID_UE5Projects_Voxel_VoxelProject_Source_VoxelProject_Enums_h
 
 
 #define FOREACH_ENUM_EBLOCK(op) \

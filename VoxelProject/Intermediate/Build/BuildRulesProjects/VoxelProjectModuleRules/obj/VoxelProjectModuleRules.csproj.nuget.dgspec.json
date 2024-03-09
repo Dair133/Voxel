@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\alasd\\OneDrive\\Documents\\Unreal Projects\\VoxelProject\\Intermediate\\Build\\BuildRulesProjects\\VoxelProjectModuleRules\\VoxelProjectModuleRules.csproj": {}
+    "E:\\UE5Projects\\Voxel\\VoxelProject\\Intermediate\\Build\\BuildRulesProjects\\VoxelProjectModuleRules\\VoxelProjectModuleRules.csproj": {}
   },
   "projects": {
-    "C:\\Users\\alasd\\OneDrive\\Documents\\Unreal Projects\\VoxelProject\\Intermediate\\Build\\BuildRulesProjects\\VoxelProjectModuleRules\\VoxelProjectModuleRules.csproj": {
+    "E:\\UE5Projects\\Voxel\\VoxelProject\\Intermediate\\Build\\BuildRulesProjects\\VoxelProjectModuleRules\\VoxelProjectModuleRules.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\alasd\\OneDrive\\Documents\\Unreal Projects\\VoxelProject\\Intermediate\\Build\\BuildRulesProjects\\VoxelProjectModuleRules\\VoxelProjectModuleRules.csproj",
+        "projectUniqueName": "E:\\UE5Projects\\Voxel\\VoxelProject\\Intermediate\\Build\\BuildRulesProjects\\VoxelProjectModuleRules\\VoxelProjectModuleRules.csproj",
         "projectName": "VoxelProjectModuleRules",
-        "projectPath": "C:\\Users\\alasd\\OneDrive\\Documents\\Unreal Projects\\VoxelProject\\Intermediate\\Build\\BuildRulesProjects\\VoxelProjectModuleRules\\VoxelProjectModuleRules.csproj",
+        "projectPath": "E:\\UE5Projects\\Voxel\\VoxelProject\\Intermediate\\Build\\BuildRulesProjects\\VoxelProjectModuleRules\\VoxelProjectModuleRules.csproj",
         "packagesPath": "C:\\Users\\alasd\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\alasd\\OneDrive\\Documents\\Unreal Projects\\VoxelProject\\Intermediate\\Build\\BuildRulesProjects\\VoxelProjectModuleRules\\obj\\",
+        "outputPath": "E:\\UE5Projects\\Voxel\\VoxelProject\\Intermediate\\Build\\BuildRulesProjects\\VoxelProjectModuleRules\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "C:\\Users\\alasd\\AppData\\Roaming\\NuGet\\NuGet.Config",
