@@ -8,8 +8,8 @@
           //        Code executed in the worker thread is complete
           //   }, TStatId(), nullptr, ENamedThreads::GameThread);
 #include "Chunk.h"
-
 #include <system_error>
+#include <FastNoise/FastNoise.h>
 #include <VoxelProject/FastNoiseLite.h>
 //#include "Octree/FastNoiseLite.h"
 //#include "Octree/Octree.h"
@@ -23,7 +23,7 @@
 #include <chrono>
 #include <cmath>
 #include <iostream>
-
+#include <Tickable.h>
 
 //#include "Octree/CubeRange.h"
 FTimerHandle MyTimerHandle;
@@ -45,12 +45,8 @@ std::string ToStringEnum(EBlock blockType) {
 
 AChunk::AChunk()
 {
-   
-    
-    
-
      // Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
-    PrimaryActorTick.bCanEverTick = false;
+    PrimaryActorTick.bCanEverTick = true;
 
     Mesh = CreateDefaultSubobject<UProceduralMeshComponent>("Mesh");
 
@@ -81,19 +77,19 @@ AChunk::AChunk()
   //          UE_LOG(LogTemp, Warning, TEXT("Failed to find TreeTest"));
   //  }
 
-    static ConstructorHelpers::FObjectFinder<UBlueprint> MyTreeBlueprintFinder(TEXT("Blueprint'/Game/CUBEGENERATIONMAP/TreeTest.TreeTest'"));
-    // static ConstructorHelpers::FObjectFinder<UBlueprint> MyTreeBlueprintFinder(TEXT("Blueprint'/Game/CUBEGENERATIONMAP/Objects/Trees/Tree01.Tree01'"));
-    if (MyTreeBlueprintFinder.Succeeded())
-    {
-        MyTreeBPClass = (UClass*)MyTreeBlueprintFinder.Object->GeneratedClass;
-        //  UE_LOG(LogTemp, Warning, TEXT("Blueprint loaded successfully."));
-    }
-    else
-    {
-        UE_LOG(LogTemp, Error, TEXT("Failed to load blueprint."));
-    }
-    static ConstructorHelpers::FObjectFinder<UBlueprint> MyGrassBlueprintFinder(TEXT("Blueprint'/Game/CUBEGENERATIONMAP/Objects/Misc/Grass.Grass'"));
-    //MyGrassBPClass = (UClass*)MyGrassBlueprintFinder.Object->GeneratedClass;
+    //static ConstructorHelpers::FObjectFinder<UBlueprint> MyTreeBlueprintFinder(TEXT("Blueprint'/Game/CUBEGENERATIONMAP/TreeTest.TreeTest'"));
+    //// static ConstructorHelpers::FObjectFinder<UBlueprint> MyTreeBlueprintFinder(TEXT("Blueprint'/Game/CUBEGENERATIONMAP/Objects/Trees/Tree01.Tree01'"));
+    //if (MyTreeBlueprintFinder.Succeeded())
+    //{
+    //    MyTreeBPClass = (UClass*)MyTreeBlueprintFinder.Object->GeneratedClass;
+    //    //  UE_LOG(LogTemp, Warning, TEXT("Blueprint loaded successfully."));
+    //}
+    //else
+    //{
+    //    UE_LOG(LogTemp, Error, TEXT("Failed to load blueprint."));
+    //}
+    //static ConstructorHelpers::FObjectFinder<UBlueprint> MyGrassBlueprintFinder(TEXT("Blueprint'/Game/CUBEGENERATIONMAP/Objects/Misc/Grass.Grass'"));
+    ////MyGrassBPClass = (UClass*)MyGrassBlueprintFinder.Object->GeneratedClass;
 
 
 }
@@ -109,89 +105,45 @@ void AChunk::ModifyVoxel(const FIntVector Position, const EBlock Block)
     GenerateMesh();
 
     ApplyMesh();
-    /*  for (FGraphEventRef& Task : TaskList)
-      {
-          FTaskGraphInterface::Get().WaitUntilTaskCompletes(Task);
-      }*/
+
 }
 
 // Called when the game starts or when spawned
 void AChunk::BeginPlay()
 {
- 
-
-// int32 Key1 = -1;
-//  float TimeToDisplay1 = 10.0f; // Display the message for 5 seconds.
-//  FColor DisplayColor1 = FColor::Red; // Display the message in red.
-//  float WorldTime = GetWorld()->GetTimeSeconds();
-//   FString DebugMessage = FString::Printf(TEXT("World Time: %f"), WorldTime);
- //  GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, DebugMessage);
-
-
-
-
     Mesh->SetMaterial(0, BaseMaterial);
 
 
     Super::BeginPlay();
 
-    GenerateBlocks();
-
-
-    GenerateMesh();
-
-
-    ApplyMesh();
-
-    RespawnTrees();
-
-
-
-
 }
-void AChunk::DelayedBeginPlay()
+
+
+
+void AChunk::Tick(float DeltaTime)
 {
+
     // Increment your frame counter
     FrameCounter++;
-
+ 
+    if(FrameCounter < 500){
     // Perform a portion of your logic here
-    if (FrameCounter <= 83) {
-        // Execute 1/33rd of your GenerateBlocks logic
-        int32 Key = -1;
-        float TimeToDisplay = 10.0f; // Display the message for 5 seconds.
-        FColor DisplayColor = FColor::Red; // Display the message in red.
-        FString DebugMessage1 = TEXT("GENERATE BLOCKS");
+    if (FrameCounter == 2) {
         GenerateBlocks();
     }
-    else if ((FrameCounter > 83) && (FrameCounter < 200)) {
-        // Execute 1/33rd of your GenerateMesh logic
-        int32 Key = -1;
-        float TimeToDisplay = 10.0f; // Display the message for 5 seconds.
-        FColor DisplayColor = FColor::Red; // Display the message in red.
-        FString DebugMessage1 = TEXT("generate mesh");
+    else if (FrameCounter == 80) {
         GenerateMesh();
     }
-    else if (FrameCounter > 200) {
-        // Execute 1/34th of your ApplyMesh logic
-        int32 Key = -1;
-        float TimeToDisplay = 10.0f; // Display the message for 5 seconds.
-        FColor DisplayColor = FColor::Red; // Display the message in red.
-        FString DebugMessage1 = TEXT("apply mesh");
+    else if (FrameCounter == 160) {
         ApplyMesh();
     }
-    //check return 
-    //make sure tthis funcion is even being entered
-    //reduce frames from 2000 to probably around max 700 or 800
-    if (FrameCounter < 210) {
-        FString DebugMessage1 = TEXT("Finished");
-        // Schedule another call if we're not done yet
-        GetWorld()->GetTimerManager().SetTimerForNextTick([this]() { this->DelayedBeginPlay(); });
-    }
     else {
-        // We're done
-        FrameCounter = 0;
+        PrimaryActorTick.bCanEverTick = false;
+    }
     }
 }
+
+
 void AChunk::ModifyVoxelData(const FIntVector Position, const EBlock Block)
 {
     const int Index = GetBlockIndex(Position.X, Position.Y, Position.Z);
@@ -212,6 +164,7 @@ void AChunk::ClearMesh()
 
     UE_LOG(LogTemp, Display, TEXT("CLEARING MESH"));
 }
+
 
 
 
@@ -251,21 +204,6 @@ void AChunk::GenerateBlocks()
     RandomNoise->SetFractalLacunarity(2.0f);
     RandomNoise->SetFractalGain(0.9f);
 
-    // // Create noise for platforms
-    // FastNoiseLite* PlatformNoise = new FastNoiseLite();
-    // PlatformNoise->SetNoiseType(FastNoiseLite::NoiseType_OpenSimplex2);
-    // PlatformNoise->SetFrequency(0.0674f);  // The higher frequency will create smaller features that we can interpret as platforms
-    // PlatformNoise->SetFractalOctaves(2);
-    // PlatformNoise->SetFractalLacunarity(2.0f);
-    // PlatformNoise->SetFractalGain(0.2f);
-
-    // Create noise for peak variations this does actually acter the terrain above a certain height and should be useful in the future
- /*   FastNoiseLite* PeakNoise = new FastNoiseLite();
-    PeakNoise->SetNoiseType(FastNoiseLite::NoiseType_Perlin);
-    PeakNoise->SetFrequency(0.05f);
-    PeakNoise->SetFractalOctaves(2);
-    PeakNoise->SetFractalLacunarity(2.0f);
-    PeakNoise->SetFractalGain(0.3f);*/
 
     int amplitude = 4; // The highest point in the wave
     //int period = 2 * amplitude; // The number of points in one complete wave
@@ -287,176 +225,71 @@ void AChunk::GenerateBlocks()
     // Uniform distribution between 1 and 100
     std::uniform_int_distribution<> distrib2(1, 130);
 
-    //ParallelFor(Size, [&](int32 x)
-    //    {
-    for (float x = 0; x < Size; ++x) {
+    ParallelFor(Size, [&](int32 x)
+        {
+   // for (float x = 0; x < Size; ++x) {
         for (float y = 0; y < Size; ++y)
         {
 
-
-                   /*
-                   To increase the amount of mountains in the biome, we can increase the frequency of the noise but this removes the nice ingrooves and roughness of the mountains
-                   therefore consider experimenting with increased platform frequency along with increased MainNoise frequency
-
-                   Second see if I can make the platforms more flat and see if i can get it to create platforms which I can actually stand on while climbing.
-                   */
             float Xpos;
             float Ypos;
 
             float BiomeValue;
-            float EdgeModifier;
-            float BiomeDistance;
+      
 
 
             Xpos = (x * 100 + Location.X) / 100;
             Ypos = (y * 100 + Location.Y) / 100;
 
 
-
-
-
             float CombinedNoise;
             BiomeValue = -0.3;
             if (BiomeValue < -0.2f) // Mountain biome
             {
+            
 
 
-                float PlatformAmplitude = 1.0f;
-
-                BiomeDistance = FMath::Abs(BiomeValue + 0.2f);
-                EdgeModifier = FMath::Pow(FMath::Clamp(BiomeDistance / 0.2f, 0.0f, 1.0f), 0.5f);
-                MainNoise->SetNoiseType(FastNoiseLite::NoiseType_OpenSimplex2);
-                MainNoise->SetFrequency(0.0016f);
-                MainNoise->SetFractalOctaves(6);
-                MainNoise->SetFractalLacunarity(2.0f);
-                MainNoise->SetFractalGain(0.2f);
+                CombinedNoise = MainNoise->GetNoise(Xpos, Ypos);
+             
+         
 
 
 
-                // Amplify the noise to create larger mountains
-                float Amplitude = VerticalHeight * 4;
-
-                // Modify the EdgeModifier to create less aggressive transitions between biomes
-
-
-
-                // Combine the different noise types to create the final terrain
-                CombinedNoise = MainNoise->GetNoise(Xpos, Ypos) * Amplitude * EdgeModifier;
-                //CombinedNoise += PlatformNoise->GetNoise(Xpos, Ypos) * VerticalHeight / 5 * EdgeModifier*PlatformAmplitude;  // Adding the platform noise
-                CombinedNoise += RandomNoise->GetNoise(Xpos, Ypos) * VerticalHeight / 5 * EdgeModifier;  // Adding the platform noise
-
-
-
-                //UE_LOG(LogTemp, Warning, TEXT("Newchunk is  is null!"));
-                if (BiomeDistance < 0.20f) { // This checks if we're within 10% of the edge was originally 0.05f
-                    float DecreaseFactor = FMath::Clamp(BiomeDistance / 0.18f, 0.0f, 1.0f);//was originally 0.1f
-                    CombinedNoise *= DecreaseFactor;
-                }
-                if (CombinedNoise > Size - 30)  // Only add the peak noise if we're above a certain height
-                {
-                    //CombinedNoise += PeakNoise->GetNoise(Xpos, Ypos) * Size / 8;
-                }
-                if (CombinedNoise > 40 && CombinedNoise < 50)
-                {
-                    // CombinedNoise = 45; // Mid-point of the platform
-                }
+                ////UE_LOG(LogTemp, Warning, TEXT("Newchunk is  is null!"));
+                //if (BiomeDistance < 0.20f) { // This checks if we're within 10% of the edge was originally 0.05f
+                //    float DecreaseFactor = FMath::Clamp(BiomeDistance / 0.18f, 0.0f, 1.0f);//was originally 0.1f
+                //    CombinedNoise *= DecreaseFactor;
+                //}
+           
 
 
             }
             else if (BiomeValue > 0.2f) // Flat plains biome with small bumps
             {
-                MainNoise->SetNoiseType(FastNoiseLite::NoiseType_OpenSimplex2);
-                MainNoise->SetFrequency(0.02f);
-                MainNoise->SetFractalOctaves(4);
-                MainNoise->SetFractalLacunarity(2.0f);
-                MainNoise->SetFractalGain(0.3f);
-
-
-                CombinedNoise = MainNoise->GetNoise(Xpos, Ypos) * Size / 10;
+              
 
             }
             else // Transition biome
             {
-                // Set up main noise for transition
-                MainNoise->SetNoiseType(FastNoiseLite::NoiseType_OpenSimplex2);
-                MainNoise->SetFractalOctaves(5);
-                MainNoise->SetFractalLacunarity(2.0f);
-                MainNoise->SetFractalGain(0.4f);
-                MainNoise->SetFrequency(0.01f);
-
-                // Create combined noise
-
-                CombinedNoise = MainNoise->GetNoise(Xpos, Ypos) * Size / 10;
-
+               
 
             }
 
 
-            const int NumberOfSteps = 10;
-            const float StepSize = PI / NumberOfSteps;
-            // Hill configuration
-            const int MaxHillHeight = 5;  // The maximum height of the hills
-            const int FlatPeriod = 10;    // The number of flat steps between hills
-
-            // State variables
-            float CurrentHillHeight = 0;   // The current height of the hill
-            int HillDirection = 1;       // The current direction of the hill (1 for up, -1 for down)
-            int FlatCounter = FlatPeriod; // Counter for the number of flat steps
-
-            double angle = 1.0;
-            double increment = PI / NumberOfSteps; // replace NumberOfSteps with the number of steps for one full cycle
-
-            //for (int i = 0; i < NumberOfSteps; i++)
-            //{
-            //    if (FlatCounter > 0) {
-            //        // We're in a flat period, so don't change the height
-            //        FlatCounter--;
-            //    }
-            //    else {
-            //        // We're on a hill, so change the height
-            //        CurrentHillHeight += HillDirection;
-            //        if (CurrentHillHeight == MaxHillHeight || CurrentHillHeight == 0) {
-            //            // We've reached the top or bottom of the hill, so start a new flat period
-            //            FlatCounter = FlatPeriod;
-            //            // Reverse direction for the next hill
-            //            HillDirection *= -1;
-            //        }
-            //    }
-            //    // ... Use BaseHeight in your terrain generation ...
-            //}
-           // int myInt = rand() % 5;
-           // float myFloat = static_cast<float>(myInt);
-
+          
+      
+        
+         
             //int value = std::round(std::abs(std::sin(i * (2.0 * M_PI / period))) * amplitude) + 1;
             float BaseHeight = 2.0f;
-            BaseHeight += CurrentHillHeight;
-            if (CombinedNoise < BaseHeight) {
-                ////  double min = 1;
-                //  double max = 3;
+          
 
-                  /*
-                  Commendted out code does add a random value maybe work off that?
-                  Also ask copilot
-                  currently no random value is added*/
-                  //  double random_number = min + static_cast<double>(rand()) / RAND_MAX * (max - min);
-                   // UE_LOG(LogTemp, Warning, TEXT("Entering confition random num is %f"),random_number);
-                double waveValue = 5.0 * sin(angle); // calculate value based on sine wave
-
-                BaseHeight += waveValue;
-                // CombinedNoise = BaseHeight;
-
-                angle += increment;
-                // BaseHeight += random_number;
-                CombinedNoise = BaseHeight;
-            }
-            // UE_LOG(LogTemp, Error, TEXT("baseHeight = %f  CurrentHillheight = "),BaseHeight,CurrentHillHeight);
-             //CombinedNoise += 100;
+            // This line right here prevents an array out of bounds error, needs to be investigated
+            CombinedNoise = BaseHeight;
+            
+          
             int Height = FMath::Clamp(CombinedNoise, 0, VerticalHeight);
-            // Use the calculated height when setting the block at this position
-            //Blocks[GetBlockIndex(x, y, Height)] = EBlock::Grass;
-
-
-
+          
             Blocks[GetBlockIndex(x, y, Height - 1)] = EBlock::Grass;
 
 
@@ -475,8 +308,7 @@ void AChunk::GenerateBlocks()
                     }
 
                     else if (!(BiomeValue < -0.2 && BiomeValue > 0.2f)) {
-                        //srand(unsigned int(time(NULL) + rand()));
-                        //  int random = rand() + rand() * rand();
+                       
                         int random = 3;
                         if (random % 2 == 0) {
                             Blocks[GetBlockIndex(x, y, z)] = EBlock::Grass;
@@ -502,7 +334,7 @@ void AChunk::GenerateBlocks()
             }
         }
 
-    }//, EParallelForFlags::PumpRenderingThread);
+    }, EParallelForFlags::PumpRenderingThread);
    // RespawnTrees();
 
 
@@ -549,47 +381,7 @@ void AChunk::ApplyMesh()
     Lock.Unlock();
 }
 
-void AChunk::CreateQuad(FMask Mask, FIntVector AxisMask, FIntVector V1, FIntVector V2, FIntVector V3, FIntVector V4, EBlock Block)
-{
 
-    FScopeLock Lock(&CriticalSection);
-    const auto Normal = FVector(AxisMask * Mask.Normal);
-
-    VertexData.Add(FVector(V1) * 100);
-    VertexData.Add(FVector(V2) * 100);
-    VertexData.Add(FVector(V3) * 100);
-    VertexData.Add(FVector(V4) * 100);
-
-
-    EBlock BlockMaterial = Mask.Block;
-    FColor BlockColor = GetColorFromBlock(BlockMaterial, V1);
-
-    VertexColors.Add(BlockColor);
-    VertexColors.Add(BlockColor);
-    VertexColors.Add(BlockColor);
-    VertexColors.Add(BlockColor);
-
-    TriangleData.Add(VertexCount);
-    TriangleData.Add(VertexCount + 2 + Mask.Normal);
-    TriangleData.Add(VertexCount + 2 - Mask.Normal);
-    TriangleData.Add(VertexCount + 3);
-    TriangleData.Add(VertexCount + 1 - Mask.Normal);
-    TriangleData.Add(VertexCount + 1 + Mask.Normal);
-
-    UVData.Add(FVector2D(V1.X / Size, V1.Y / Size));
-    UVData.Add(FVector2D(V2.X / Size, V2.Y / Size));
-    UVData.Add(FVector2D(V3.X / Size, V3.Y / Size));
-    UVData.Add(FVector2D(V4.X / Size, V4.Y / Size));
-
-    NormalData.Add(Normal);
-    NormalData.Add(Normal);
-    NormalData.Add(Normal);
-    NormalData.Add(Normal);
-
-    VertexCount += 4;
-    Lock.Unlock();
-
-}
 
 int AChunk::GetBlockIndex(int x, int y, int z) const
 {
@@ -611,9 +403,7 @@ bool AChunk::CompareMask(FMask M1, FMask M2) const
     return M1.Block == M2.Block && M1.Normal == M2.Normal;
 }
 
-void AChunk::Tick(float DeltaTime)
-{
-}
+
 
 FColor AChunk::GetColorFromBlock(EBlock Block, FIntVector Location)
 {
@@ -710,8 +500,6 @@ void AChunk::GenerateMesh()
             int Axis1Limit = (Axis1 == 2 ? VerticalHeight : Size);
             int Axis2Limit = (Axis2 == 2 ? VerticalHeight : Size);
 
-
-
             auto DeltaAxis1 = FIntVector::ZeroValue;
             auto DeltaAxis2 = FIntVector::ZeroValue;
 
@@ -721,8 +509,8 @@ void AChunk::GenerateMesh()
             AxisMask[Axis] = 1;
 
             TArray<FMask> Mask;
-            Mask.SetNum(Axis1Limit * Axis2Limit);
-
+            Mask.SetNumUninitialized(Axis1Limit * Axis2Limit);
+        
             // check each slice
             //convert the below loop into a parallel for loop
 
@@ -801,25 +589,35 @@ void AChunk::GenerateMesh()
                             //  FScopeLock Lock(&CriticalSection);
                             DeltaAxis1[Axis1] = width;
                             DeltaAxis2[Axis2] = height;
-                            // Lock.Unlock();
-                           //  FGraphEventRef Task = FFunctionGraphTask::CreateAndDispatchWhenReady([CurrentMask,AxisMask,this,ChunkItr,DeltaAxis1,DeltaAxis2]() {
 
-                                //consider creating struct and putting this values into array and then use multithreade loop to create quads
-                            CreateQuad(CurrentMask, AxisMask,
-                                ChunkItr,
-                                ChunkItr + DeltaAxis1,
-                                ChunkItr + DeltaAxis2,
-                                ChunkItr + DeltaAxis1 + DeltaAxis2,
-                                CurrentMask.Block
-                            );
+                            FQuadData QuadData;
+                            QuadData.CurrentMask = CurrentMask;
+                            QuadData.AxisMask = AxisMask;
+                            QuadData.ChunkItr = ChunkItr;
+                            QuadData.DeltaAxis1 = DeltaAxis1;
+                            QuadData.DeltaAxis2 = DeltaAxis2;
+                            QuadData.Block = CurrentMask.Block;
+                            if (Axis == 0) {
+                              QuadDataQueueOne.Enqueue(QuadData);
+                              quadOneSize++;
+							}
+                            else if (Axis == 1) {
+								QuadDataQueueTwo.Enqueue(QuadData);
+                                quadTwoSize++;
+							}
+                            else if (Axis == 2) {
+								QuadDataQueueThree.Enqueue(QuadData);
+                                quadThreeSize++;
+                            }
 
-                            //   }, TStatId(), nullptr, ENamedThreads::ActualRenderingThread );
-                           //TaskList.Add(Task);
-                           /// Task->Wait();
+                         
+
+
+                          
                             //AnyThreadNormalTask works
                             DeltaAxis1 = FIntVector::ZeroValue;
                             DeltaAxis2 = FIntVector::ZeroValue;
-                            //FScopeLock Lock2(&CriticalSection);
+                    
 
 
                             for (int l = 0; l < height; ++l)
@@ -842,7 +640,90 @@ void AChunk::GenerateMesh()
                     }
                 }
             }
+           
         }, EParallelForFlags::PumpRenderingThread);
+      //Now process the chunk queues in parallel
+
+
+      //now non parallel for loop to process the queues
+
+      ParallelFor(3, [&](int32 Axis) {
+		  FQuadData QuadData;
+          if (Axis == 0) {
+              while (QuadDataQueueOne.Dequeue(QuadData))
+              {
+				  CreateQuad(QuadData.CurrentMask, QuadData.AxisMask,
+                      					  QuadData.ChunkItr,
+                      					  QuadData.ChunkItr + QuadData.DeltaAxis1,
+                      					  QuadData.ChunkItr + QuadData.DeltaAxis2,
+                      					  QuadData.ChunkItr + QuadData.DeltaAxis1 + QuadData.DeltaAxis2,
+                      					  QuadData.Block);
+			  }
+		  }
+          else if (Axis == 1) {
+              while (QuadDataQueueTwo.Dequeue(QuadData))
+              {
+				  CreateQuad(QuadData.CurrentMask, QuadData.AxisMask,
+                      					  QuadData.ChunkItr,
+                      					  QuadData.ChunkItr + QuadData.DeltaAxis1,
+                      					  QuadData.ChunkItr + QuadData.DeltaAxis2,
+                      					  QuadData.ChunkItr + QuadData.DeltaAxis1 + QuadData.DeltaAxis2,
+                      					  QuadData.Block);
+			  }
+		  }
+          else if (Axis == 2) {
+              while (QuadDataQueueThree.Dequeue(QuadData))
+              {
+				  CreateQuad(QuadData.CurrentMask, QuadData.AxisMask,
+                      					  QuadData.ChunkItr,
+                      					  QuadData.ChunkItr + QuadData.DeltaAxis1,
+                      					  QuadData.ChunkItr + QuadData.DeltaAxis2,
+                      					  QuadData.ChunkItr + QuadData.DeltaAxis1 + QuadData.DeltaAxis2,
+                      					  QuadData.Block);
+			  }
+		  }
+	  }, EParallelForFlags::BackgroundPriority);
+
 }
 
+void AChunk::CreateQuad(FMask Mask, FIntVector AxisMask, FIntVector V1, FIntVector V2, FIntVector V3, FIntVector V4, EBlock Block)
+{
 
+    FScopeLock Lock(&CriticalSection);
+    const auto Normal = FVector(AxisMask * Mask.Normal);
+
+    VertexData.Add(FVector(V1) * 100);
+    VertexData.Add(FVector(V2) * 100);
+    VertexData.Add(FVector(V3) * 100);
+    VertexData.Add(FVector(V4) * 100);
+
+
+    EBlock BlockMaterial = Mask.Block;
+    FColor BlockColor = GetColorFromBlock(BlockMaterial, V1);
+
+    VertexColors.Add(BlockColor);
+    VertexColors.Add(BlockColor);
+    VertexColors.Add(BlockColor);
+    VertexColors.Add(BlockColor);
+
+    TriangleData.Add(VertexCount);
+    TriangleData.Add(VertexCount + 2 + Mask.Normal);
+    TriangleData.Add(VertexCount + 2 - Mask.Normal);
+    TriangleData.Add(VertexCount + 3);
+    TriangleData.Add(VertexCount + 1 - Mask.Normal);
+    TriangleData.Add(VertexCount + 1 + Mask.Normal);
+
+    UVData.Add(FVector2D(V1.X / Size, V1.Y / Size));
+    UVData.Add(FVector2D(V2.X / Size, V2.Y / Size));
+    UVData.Add(FVector2D(V3.X / Size, V3.Y / Size));
+    UVData.Add(FVector2D(V4.X / Size, V4.Y / Size));
+
+    NormalData.Add(Normal);
+    NormalData.Add(Normal);
+    NormalData.Add(Normal);
+    NormalData.Add(Normal);
+
+    VertexCount += 4;
+    Lock.Unlock();
+
+}

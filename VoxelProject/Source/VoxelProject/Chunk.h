@@ -15,19 +15,38 @@ class AChunk : public AActor
 {
     GENERATED_BODY()
 
+
+
+public:
     struct FMask
     {
         EBlock Block;
         int Normal;
     };
 
-public:
     struct actorData {
 
         FVector Location;
         FRotator Rotation;
 
     };
+    struct FQuadData
+    {
+        FMask CurrentMask;
+        FIntVector AxisMask;
+        FIntVector ChunkItr;
+        FIntVector DeltaAxis1;
+        FIntVector DeltaAxis2;
+        EBlock Block;
+    };
+    TQueue<FQuadData> QuadDataQueueOne;
+    TQueue<FQuadData> QuadDataQueueTwo;
+    TQueue<FQuadData> QuadDataQueueThree;
+    int quadOneSize = 0;
+    int quadTwoSize = 0;
+    int quadThreeSize = 0;
+
+
     // Sets default values for this actor's properties
     AChunk();
     void ModifyVoxel(const FIntVector Position, const EBlock Block);

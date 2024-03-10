@@ -31,6 +31,36 @@ std::string AVoxelGameModeBase::ToStringEnumFunc(EBlock blockType) {
     default: return "Unknown";
     }
 }
+
+AVoxelGameModeBase::AVoxelGameModeBase()
+
+{
+    // ChunkPool(GetWorld(), AChunk::StaticClass(), );  // Initialize the ChunkPool here
+    static ConstructorHelpers::FObjectFinder<UClass> BP_CharacterClass(TEXT("Class'/Game/ThirdPerson/Blueprints/BP_ThirdPersonCharacter.BP_ThirdPersonCharacter_C'"));
+    if (BP_CharacterClass.Object != NULL) {
+        UE_LOG(LogTemp, Warning, TEXT("BP_CharacterClass is not null"));
+    }
+    else {
+        UE_LOG(LogTemp, Warning, TEXT("BP_CharacterClass is null"));
+        return;
+    }
+
+    MyBlueprintCharacterClass = BP_CharacterClass.Object;
+
+    ChunkToSpawn = AChunk::StaticClass();
+    DefaultPawnClass = MyBlueprintCharacterClass;
+    PlayerControllerClass = APlayerController::StaticClass();
+
+    static ConstructorHelpers::FObjectFinder<UBlueprint> MyTreeBlueprintFinder(TEXT("Blueprint'/Game/CUBEGENERATIONMAP/TreeTest.TreeTest'"));
+    if (MyTreeBlueprintFinder.Succeeded())
+    {
+        MyTreeBPClass = (UClass*)MyTreeBlueprintFinder.Object->GeneratedClass;
+        //  UE_LOG(LogTemp, Warning, TEXT("Blueprint loaded successfully."));
+    }
+
+
+}
+
 void AVoxelGameModeBase::OnCheckUpdateChunks()
 {
     UpdateVisibleChunksAroundPlayers();
@@ -60,7 +90,6 @@ void AVoxelGameModeBase::BeginPlay()
 
 void AVoxelGameModeBase::PostLogin(APlayerController* NewPlayer)
 {
-
 
     playersArray.Add(NewPlayer);
     lastPlayerPostitions.Add(NewPlayer, FVector2D(0.f, 0.f));
@@ -171,15 +200,10 @@ void AVoxelGameModeBase::UpdateVisibleChunks(FVector2D viewerPosition)
                     terrainChunkMap2.Add(position);
                     ChunkQueue.Enqueue(position);
                 }
-              
-
-
-
-
             }
         }
     }
-
+    ProcessChunkQueue();
    
 }
 void AVoxelGameModeBase::ProcessChunkQueue()
@@ -295,8 +319,7 @@ void AVoxelGameModeBase::UpdateVisibleChunksAroundPlayers()
                 {
                     UE_LOG(LogTemp, Warning, TEXT("Player pawn has no controller"));
                 }
-                //current_pc->Possess(playerPawn);
-                //current_pc->SetPawn(playerPawn);
+              
 
                 UpdateVisibleChunks(viewerPosition);
             }
@@ -313,10 +336,6 @@ void AVoxelGameModeBase::UpdateVisibleChunksAroundPlayers()
         {
             UE_LOG(LogTemp, Warning, TEXT("Invalid player controller."));
         }
-
-
-
-
     }
     TreeMap.Empty();
 }
@@ -349,7 +368,6 @@ float AVoxelGameModeBase::GetClosestPlayersDistance(FVector Goal)
 
 AActor* AVoxelGameModeBase::spawnChunk(FVector Loc)
 {
-
     FActorSpawnParameters SpawnParams;
     if (ChunkToSpawn == nullptr)
     {
@@ -386,34 +404,7 @@ bool AVoxelGameModeBase::UpdateChunk(AActor* chunk)
 
     return false;  // Chunk visibility did not change
 }
-AVoxelGameModeBase::AVoxelGameModeBase()
 
-{
-    // ChunkPool(GetWorld(), AChunk::StaticClass(), );  // Initialize the ChunkPool here
-    static ConstructorHelpers::FObjectFinder<UClass> BP_CharacterClass(TEXT("Class'/Game/ThirdPerson/Blueprints/BP_ThirdPersonCharacter.BP_ThirdPersonCharacter_C'"));
-    if (BP_CharacterClass.Object != NULL) {
-        UE_LOG(LogTemp, Warning, TEXT("BP_CharacterClass is not null"));
-    }
-    else {
-        UE_LOG(LogTemp, Warning, TEXT("BP_CharacterClass is null"));
-        return;
-    }
-
-    MyBlueprintCharacterClass = BP_CharacterClass.Object;
-
-    ChunkToSpawn = AChunk::StaticClass();
-    DefaultPawnClass = MyBlueprintCharacterClass;
-    PlayerControllerClass = APlayerController::StaticClass();
-
-    static ConstructorHelpers::FObjectFinder<UBlueprint> MyTreeBlueprintFinder(TEXT("Blueprint'/Game/CUBEGENERATIONMAP/TreeTest.TreeTest'"));
-    if (MyTreeBlueprintFinder.Succeeded())
-    {
-        MyTreeBPClass = (UClass*)MyTreeBlueprintFinder.Object->GeneratedClass;
-        //  UE_LOG(LogTemp, Warning, TEXT("Blueprint loaded successfully."));
-    }
-
-
-}
 void AVoxelGameModeBase::GenerateTreeMap(const FVector& PlayerPosition)
 {
     int maxTrees = 0;
