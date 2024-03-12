@@ -42,6 +42,10 @@ public:
     TQueue<FQuadData> QuadDataQueueOne;
     TQueue<FQuadData> QuadDataQueueTwo;
     TQueue<FQuadData> QuadDataQueueThree;
+
+
+
+
     int quadOneSize = 0;
     int quadTwoSize = 0;
     int quadThreeSize = 0;
@@ -127,9 +131,11 @@ private:
             3,2,7,6  // Down
     };
 
-
+    float QueryNoiseValue(const std::vector<float>& noiseOutput, int x, int y, int z, int Width, int Height);
 
     void GenerateMesh();
+
+    void SetupBiomeNoise();
 
     void SpawnTree(const FVector& Location);
 

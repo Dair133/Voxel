@@ -165,18 +165,80 @@ void AChunk::ClearMesh()
     UE_LOG(LogTemp, Display, TEXT("CLEARING MESH"));
 }
 
+void AChunk::SetupBiomeNoise() 
+{
+   
+    std::vector<float> noiseOutput(Size * Size * VerticalHeight);
+    auto fnSimplex = FastNoise::New<FastNoise::Simplex>();
+    auto fnFractal = FastNoise::New<FastNoise::FractalFBm>();
 
+    fnFractal->SetSource(fnSimplex);
+    fnFractal->SetOctaveCount(5);
+    fnFractal->SetGain(0.5f);
+    //Size Size VerticalHeight?? Instead of 0,0,0
+    fnFractal->GenUniformGrid3D(noiseOutput.data(), 0, 0, 0, Size,Size,VerticalHeight, 0.1f, 1337);
+ 
+  
+    float* noiseArray = noiseOutput.data();
+
+    float randomPointTen = QueryNoiseValue(noiseOutput, 10, 10, 10, Size, VerticalHeight);
+    float randomPointNine = QueryNoiseValue(noiseOutput, 9, 9, 9, Size, VerticalHeight);
+    float randomPointEight = QueryNoiseValue(noiseOutput, 8, 8, 8, Size, VerticalHeight);
+    UE_LOG(LogTemp, Warning, TEXT("3dNoiseSize:%d   Eight:%f   Nine:%f  Ten:%f"),noiseOutput.size(), randomPointEight,randomPointNine,randomPointTen);
+ //   for (int x = 0; x < Size; x++) {
+ //       for (int y = 0; y < Size; y++) {
+ //           for (int z = 0; z < VerticalHeight; z++) {
+	//			int index = GetBlockIndex(x, y, z);
+	//			Blocks[index] = EBlock::Air;
+ //               if (noiseArray[index] > 0.5f) {
+	//				Blocks[index] = EBlock::Stone;
+	//			}
+	//		}
+	//	}
+	//}
+}
+float AChunk::QueryNoiseValue(const std::vector<float>& noiseOutput, int x, int y, int z, int Width, int Depth) {
+    
+
+    int index = z * (Width * Width) + y * Width + x;
+    if (index > noiseOutput.size() - 1) {
+		return 0;
+	}
+    return noiseOutput[index];
+}
 
 
 void AChunk::GenerateBlocks()
 {
+      std::vector<float> noiseOutput(Size * Size * VerticalHeight);
+      //log size of noiseOutput
+      
+    auto fnSimplex = FastNoise::New<FastNoise::Simplex>();
+    auto fnFractal = FastNoise::New<FastNoise::FractalFBm>();
 
+    fnFractal->SetSource(fnSimplex);
+    fnFractal->SetOctaveCount(1);
+    fnFractal->SetGain(0.1f);
+    //Size Size VerticalHeight?? Instead of 0,0,0
+    fnFractal->GenUniformGrid3D(noiseOutput.data(), 0, 0, 0, Size,Size,VerticalHeight, 0.1f, 1337);
+ 
+  
+  
+    float* noiseArray = noiseOutput.data();
 
     int numTrees = 0;
 
     MainNoise = new FastNoiseLite();
-    MainNoise->SetNoiseType(FastNoiseLite::NoiseType_OpenSimplex2);
-    MainNoise->SetFractalType(FastNoiseLite::FractalType_FBm);
+    MainNoise->SetNoiseType(FastNoiseLite::NoiseType_Perlin);
+    //Fractal type ridged makes terrain more like swiss cheezer and very cavey, could be cool canyon if done right?
+
+
+    //MainNoise->SetFractalType(FastNoiseLite::FractalType_FBm);// Changing types seems to have significant effect on terrain
+    MainNoise->SetFractalOctaves(0.01);// Seems to have no effect
+    MainNoise->SetFrequency(0.015);// Higher values seems to make mountains more jagged and extremely laggy
+    MainNoise->SetFractalLacunarity(0.01f);
+    MainNoise->SetFractalGain(0.01);
+    //MainNoise->SetFractalType(FastNoiseLite::FractalType_FBm);
 
     FastNoiseLite* ElevationNoise = new FastNoiseLite();
     FastNoiseLite* FeatureNoise = new FastNoiseLite();
@@ -205,6 +267,8 @@ void AChunk::GenerateBlocks()
     RandomNoise->SetFractalGain(0.9f);
 
 
+    float baseMultiplier = VerticalHeight * 4;
+
     int amplitude = 4; // The highest point in the wave
     //int period = 2 * amplitude; // The number of points in one complete wave
     //int iterations = 20; // The number of points to generate
@@ -228,110 +292,100 @@ void AChunk::GenerateBlocks()
     ParallelFor(Size, [&](int32 x)
         {
    // for (float x = 0; x < Size; ++x) {
-        for (float y = 0; y < Size; ++y)
+        for (int y = 0; y < Size; ++y)
         {
+            // Noise values produced are usually very small, so we multiply them by a large number to make them more visible, if very small decimal then
+            // terrain will be totally flat despite alid noise being generated
 
-            float Xpos;
-            float Ypos;
+
+     
 
             float BiomeValue;
       
 
 
-            Xpos = (x * 100 + Location.X) / 100;
-            Ypos = (y * 100 + Location.Y) / 100;
+          
 
 
             float CombinedNoise;
             BiomeValue = -0.3;
             if (BiomeValue < -0.2f) // Mountain biome
             {
-            
-
-
-                CombinedNoise = MainNoise->GetNoise(Xpos, Ypos);
-             
-         
-
-
-
-                ////UE_LOG(LogTemp, Warning, TEXT("Newchunk is  is null!"));
-                //if (BiomeDistance < 0.20f) { // This checks if we're within 10% of the edge was originally 0.05f
-                //    float DecreaseFactor = FMath::Clamp(BiomeDistance / 0.18f, 0.0f, 1.0f);//was originally 0.1f
-                //    CombinedNoise *= DecreaseFactor;
-                //}
-           
-
-
+                
+              
             }
             else if (BiomeValue > 0.2f) // Flat plains biome with small bumps
             {
-              
 
             }
             else // Transition biome
             {
-               
 
             }
-
-
-          
-      
-        
-         
             //int value = std::round(std::abs(std::sin(i * (2.0 * M_PI / period))) * amplitude) + 1;
             float BaseHeight = 2.0f;
           
+           /* if (CombinedNoise < BaseHeight)
+            {
+				CombinedNoise = BaseHeight;
+			}*/
+       
 
             // This line right here prevents an array out of bounds error, needs to be investigated
-            CombinedNoise = BaseHeight;
-            
+            //CombinedNoise = BaseHeight;
+            //CombinedNoise += 2;
           
-            int Height = FMath::Clamp(CombinedNoise, 0, VerticalHeight);
+            //int Height = FMath::Clamp(CombinedNoise, 0, VerticalHeight);
           
-            Blocks[GetBlockIndex(x, y, Height - 1)] = EBlock::Grass;
+          // Blocks[GetBlockIndex(x, y, Height - 1)] = EBlock::Grass;
 
 
            
-            for (int z = 0; z < Height; z++)
+            for (int z = 0; z < VerticalHeight; z++)
             {
+                float Xpos = (float)x;
+                float Ypos = (float)y;
+                float Zpos = (float)z;
 
-                if (z == Height - 1) {
-
-                    if (BiomeValue < -0.2) {
-                        Blocks[GetBlockIndex(x, y, z)] = EBlock::Grass;
-                    }
-
-                    else if (BiomeValue > 0.2f) {
-                        Blocks[GetBlockIndex(x, y, z)] = EBlock::SnowGrass;
-                    }
-
-                    else if (!(BiomeValue < -0.2 && BiomeValue > 0.2f)) {
-                       
-                        int random = 3;
-                        if (random % 2 == 0) {
-                            Blocks[GetBlockIndex(x, y, z)] = EBlock::Grass;
-                        }
-
-                        else {
-                            Blocks[GetBlockIndex(x, y, z)] = EBlock::SnowGrass;
-                        }
-                    }
+                // Following coordinate manipulations is what allows the 
+                Xpos = (x * 100 + Location.X) / 100;
+                Ypos = (y * 100 + Location.Y) / 100;
+                Zpos = (z * 100 + Location.Z) / 100;
+                //UE_LOG(LogTemp, Warning, TEXT("X:%d     Y:%d     Z:%d"), x,y,z);
+                CombinedNoise = MainNoise->GetNoise(Xpos, Ypos, Zpos);
+                CombinedNoise = CombinedNoise * 70;
+                //UE_LOG(LogTemp, Warning, TEXT("Combine nouse IS:%f"), CombinedNoise);
+                if (CombinedNoise > VerticalHeight) 
+                {
+                   CombinedNoise = VerticalHeight;
                 }
-                else {
-                    Blocks[GetBlockIndex(x, y, z)] = EBlock::Stone;
+
+
+
+                if (CombinedNoise < 0)
+                {
+					CombinedNoise = CombinedNoise * -1;
+				}
+                //UE_LOG(LogTemp, Warning, TEXT("Combine nouse IS:%f"), CombinedNoise);
+                     int Height = (int)CombinedNoise;
+                //UE_LOG(LogTemp, Warning, TEXT("HEIGHT IS:%d"), Height);
+                if (z < Height) {
+                  Blocks[GetBlockIndex(x, y, z)] = EBlock::Stone;
+                }
+
+                if (z > Height) {
+                   Blocks[GetBlockIndex(x, y, z)] = EBlock::Air;
                 }
             }
      
-            for (int z = Height; z < VerticalHeight; z++)
-            {
+            //for (int z = Height; z < VerticalHeight; z++)
+            //{
 
-                Blocks[GetBlockIndex(x, y, z)] = EBlock::Air;
+            //    Blocks[GetBlockIndex(x, y, z)] = EBlock::Air;
 
-                //if(z % 25 == 0)
-               // GetWorld()->GetTimerManager().SetTimer(MyTimerHandle, this, &AChunk::GenerateBlocks, 0.15f, false);
-            }
+            //    //if(z % 25 == 0)
+            //   // GetWorld()->GetTimerManager().SetTimer(MyTimerHandle, this, &AChunk::GenerateBlocks, 0.15f, false);
+            //}
         }
 
     }, EParallelForFlags::PumpRenderingThread);
