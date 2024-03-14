@@ -24,7 +24,7 @@ class  AVoxelGameModeBase : public AGameModeBase
 
     // UProperties
     UPROPERTY(EditDefaultsOnly, Category = "Performance")
-    float maxViewDst = 3;
+    float maxViewDst = 8;
 
     UPROPERTY(EditDefaultsOnly, Category = "Performance")
     int ChunkSize = 16;

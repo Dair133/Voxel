@@ -44,7 +44,28 @@ public:
     TQueue<FQuadData> QuadDataQueueThree;
 
 
+    TArray<FVector> VertexDataOne;
+    TArray<FVector> VertexDataTwo;
+    TArray<FVector> VertexDataThree;
 
+    TArray<FColor> VertexColorsOne;
+    TArray<FColor> VertexColorsTwo;
+    TArray<FColor> VertexColorsThree;
+
+    TArray<int> TriangleDataOne;
+    TArray<int> TriangleDataTwo;
+    TArray<int> TriangleDataThree;
+
+    TArray<FVector2D> UVDataOne;
+    TArray<FVector2D> UVDataTwo;
+    TArray<FVector2D> UVDataThree;
+
+    TArray<FVector> NormalDataOne;
+    TArray<FVector> NormalDataTwo;
+    TArray<FVector> NormalDataThree;
+
+
+    TArray<FGraphEventRef> TaskDependencies;
 
     int quadOneSize = 0;
     int quadTwoSize = 0;
@@ -141,8 +162,9 @@ private:
 
     void ApplyMesh();
 
-    void CreateQuad(FMask Mask, FIntVector AxisMask, FIntVector V1, FIntVector V2, FIntVector V3, FIntVector V4, EBlock Block);
-
+    void CreateQuadOne(FMask Mask, FIntVector AxisMask, FIntVector V1, FIntVector V2, FIntVector V3, FIntVector V4, EBlock Block);
+    void CreateQuadTwo(FMask Mask, FIntVector AxisMask, FIntVector V1, FIntVector V2, FIntVector V3, FIntVector V4, EBlock Block);
+       void CreateQuadThree(FMask Mask, FIntVector AxisMask, FIntVector V1, FIntVector V2, FIntVector V3, FIntVector V4, EBlock Block);
     int GetBlockIndex(int x, int y, int z) const;
 
     EBlock GetBlock(FIntVector Index) const;

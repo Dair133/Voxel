@@ -131,10 +131,10 @@ void AChunk::Tick(float DeltaTime)
     if (FrameCounter == 2) {
         GenerateBlocks();
     }
-    else if (FrameCounter == 80) {
+    else if (FrameCounter == 20) {
         GenerateMesh();
     }
-    else if (FrameCounter == 160) {
+    else if (FrameCounter == 100) {
         ApplyMesh();
     }
     else {
@@ -142,7 +142,15 @@ void AChunk::Tick(float DeltaTime)
     }
     }
 }
-
+void PerformBusyWait(int32 NumberOfIterations)
+{
+    for (int32 i = 0; i < NumberOfIterations; ++i)
+    {
+        // Perform a simple operation to avoid compiler optimization out the loop
+        int g = 0;
+        g++;
+    }
+}
 
 void AChunk::ModifyVoxelData(const FIntVector Position, const EBlock Block)
 {
@@ -233,12 +241,12 @@ void AChunk::GenerateBlocks()
     //Fractal type ridged makes terrain more like swiss cheezer and very cavey, could be cool canyon if done right?
 
 
-    //MainNoise->SetFractalType(FastNoiseLite::FractalType_FBm);// Changing types seems to have significant effect on terrain
-    MainNoise->SetFractalOctaves(0.01);// Seems to have no effect
-    MainNoise->SetFrequency(0.015);// Higher values seems to make mountains more jagged and extremely laggy
-    MainNoise->SetFractalLacunarity(0.01f);
-    MainNoise->SetFractalGain(0.01);
-    //MainNoise->SetFractalType(FastNoiseLite::FractalType_FBm);
+    //MainNoise->SetFractalType(FastNoiseLite::FractalType_DomainWarpProgressive);// Changing types seems to have significant effect on terrain
+    MainNoise->SetFractalOctaves(1.2f);// Seems to have no effect with a 
+    MainNoise->SetFrequency(0.006f);// Higher values seems to make mountains more jagged and extremely laggy
+    MainNoise->SetFractalLacunarity(0.10f);
+    MainNoise->SetFractalGain(1);
+    MainNoise->SetFractalType(FastNoiseLite::FractalType_FBm);
 
     FastNoiseLite* ElevationNoise = new FastNoiseLite();
     FastNoiseLite* FeatureNoise = new FastNoiseLite();
@@ -307,7 +315,7 @@ void AChunk::GenerateBlocks()
           
 
 
-            float CombinedNoise;
+            float combinedNoise;
             BiomeValue = -0.3;
             if (BiomeValue < -0.2f) // Mountain biome
             {
@@ -352,22 +360,23 @@ void AChunk::GenerateBlocks()
                 Ypos = (y * 100 + Location.Y) / 100;
                 Zpos = (z * 100 + Location.Z) / 100;
                 //UE_LOG(LogTemp, Warning, TEXT("X:%d     Y:%d     Z:%d"), x,y,z);
-                CombinedNoise = MainNoise->GetNoise(Xpos, Ypos, Zpos);
-                CombinedNoise = CombinedNoise * 70;
+                combinedNoise = MainNoise->GetNoise(Xpos, Ypos, Zpos);
+                combinedNoise = combinedNoise * VerticalHeight;
+            
                 //UE_LOG(LogTemp, Warning, TEXT("Combine nouse IS:%f"), CombinedNoise);
-                if (CombinedNoise > VerticalHeight) 
+                if (combinedNoise > VerticalHeight) 
                 {
-                   CombinedNoise = VerticalHeight;
+                   combinedNoise = VerticalHeight;
                 }
 
 
 
-                if (CombinedNoise < 0)
+                if (combinedNoise < 0)
                 {
-					CombinedNoise = CombinedNoise * -1;
+					combinedNoise = combinedNoise * -1;
 				}
                 //UE_LOG(LogTemp, Warning, TEXT("Combine nouse IS:%f"), CombinedNoise);
-                     int Height = (int)CombinedNoise;
+                     int Height = (int)combinedNoise;
                 //UE_LOG(LogTemp, Warning, TEXT("HEIGHT IS:%d"), Height);
                 if (z < Height) {
                   Blocks[GetBlockIndex(x, y, z)] = EBlock::Stone;
@@ -616,6 +625,12 @@ void AChunk::GenerateMesh()
                             ChunkItr[Axis1] = i;
                             ChunkItr[Axis2] = j;
 
+
+                            if (i % 10 == 0) {
+                                PerformBusyWait(20);
+                            }
+                              
+
                             int width = 1;
 
                             //   for (width = 1; i + width < Axis1Limit && CompareMask(Mask[N + width], CurrentMask); ++width)
@@ -701,46 +716,151 @@ void AChunk::GenerateMesh()
 
       //now non parallel for loop to process the queues
 
-      ParallelFor(3, [&](int32 Axis) {
-		  FQuadData QuadData;
-          if (Axis == 0) {
+   
+
+
+      FGraphEventRef TaskOne = FFunctionGraphTask::CreateAndDispatchWhenReady([&]()
+             {
+              FQuadData QuadData;
               while (QuadDataQueueOne.Dequeue(QuadData))
               {
-				  CreateQuad(QuadData.CurrentMask, QuadData.AxisMask,
-                      					  QuadData.ChunkItr,
-                      					  QuadData.ChunkItr + QuadData.DeltaAxis1,
-                      					  QuadData.ChunkItr + QuadData.DeltaAxis2,
-                      					  QuadData.ChunkItr + QuadData.DeltaAxis1 + QuadData.DeltaAxis2,
-                      					  QuadData.Block);
-			  }
-		  }
-          else if (Axis == 1) {
+                  CreateQuadOne(QuadData.CurrentMask, QuadData.AxisMask,
+                      QuadData.ChunkItr,
+                      QuadData.ChunkItr + QuadData.DeltaAxis1,
+                      QuadData.ChunkItr + QuadData.DeltaAxis2,
+                      QuadData.ChunkItr + QuadData.DeltaAxis1 + QuadData.DeltaAxis2,
+                      QuadData.Block);
+              }
+
+
+
+
+             }, TStatId(), nullptr, ENamedThreads::AnyThread );
+
+
+      FGraphEventRef TaskTwo = FFunctionGraphTask::CreateAndDispatchWhenReady([&]()
+          {
+              FQuadData QuadData;
+
               while (QuadDataQueueTwo.Dequeue(QuadData))
               {
-				  CreateQuad(QuadData.CurrentMask, QuadData.AxisMask,
-                      					  QuadData.ChunkItr,
-                      					  QuadData.ChunkItr + QuadData.DeltaAxis1,
-                      					  QuadData.ChunkItr + QuadData.DeltaAxis2,
-                      					  QuadData.ChunkItr + QuadData.DeltaAxis1 + QuadData.DeltaAxis2,
-                      					  QuadData.Block);
-			  }
-		  }
-          else if (Axis == 2) {
+                  CreateQuadTwo(QuadData.CurrentMask, QuadData.AxisMask,
+                      QuadData.ChunkItr,
+                      QuadData.ChunkItr + QuadData.DeltaAxis1,
+                      QuadData.ChunkItr + QuadData.DeltaAxis2,
+                      QuadData.ChunkItr + QuadData.DeltaAxis1 + QuadData.DeltaAxis2,
+                      QuadData.Block);
+              }
+
+
+
+
+
+          }, TStatId(), nullptr, ENamedThreads::AnyThread);
+
+
+      FGraphEventRef TaskThree = FFunctionGraphTask::CreateAndDispatchWhenReady([&]()
+          {
+              FQuadData QuadData;
               while (QuadDataQueueThree.Dequeue(QuadData))
               {
-				  CreateQuad(QuadData.CurrentMask, QuadData.AxisMask,
-                      					  QuadData.ChunkItr,
-                      					  QuadData.ChunkItr + QuadData.DeltaAxis1,
-                      					  QuadData.ChunkItr + QuadData.DeltaAxis2,
-                      					  QuadData.ChunkItr + QuadData.DeltaAxis1 + QuadData.DeltaAxis2,
-                      					  QuadData.Block);
-			  }
-		  }
-	  }, EParallelForFlags::BackgroundPriority);
+                  CreateQuadThree(QuadData.CurrentMask, QuadData.AxisMask,
+                      QuadData.ChunkItr,
+                      QuadData.ChunkItr + QuadData.DeltaAxis1,
+                      QuadData.ChunkItr + QuadData.DeltaAxis2,
+                      QuadData.ChunkItr + QuadData.DeltaAxis1 + QuadData.DeltaAxis2,
+                      QuadData.Block);
+              }
 
+
+
+
+          }, TStatId(), nullptr, ENamedThreads::AnyThread);
 }
 
-void AChunk::CreateQuad(FMask Mask, FIntVector AxisMask, FIntVector V1, FIntVector V2, FIntVector V3, FIntVector V4, EBlock Block)
+void AChunk::CreateQuadOne(FMask Mask, FIntVector AxisMask, FIntVector V1, FIntVector V2, FIntVector V3, FIntVector V4, EBlock Block)
+{
+
+    FScopeLock Lock(&CriticalSection);
+    const auto Normal = FVector(AxisMask * Mask.Normal);
+
+    VertexData.Add(FVector(V1) * 100);
+    VertexData.Add(FVector(V2) * 100);
+    VertexData.Add(FVector(V3) * 100);
+    VertexData.Add(FVector(V4) * 100);
+
+
+    EBlock BlockMaterial = Mask.Block;
+    FColor BlockColor = GetColorFromBlock(BlockMaterial, V1);
+
+    VertexColors.Add(BlockColor);
+    VertexColors.Add(BlockColor);
+    VertexColors.Add(BlockColor);
+    VertexColors.Add(BlockColor);
+
+    TriangleData.Add(VertexCount);
+    TriangleData.Add(VertexCount + 2 + Mask.Normal);
+    TriangleData.Add(VertexCount + 2 - Mask.Normal);
+    TriangleData.Add(VertexCount + 3);
+    TriangleData.Add(VertexCount + 1 - Mask.Normal);
+    TriangleData.Add(VertexCount + 1 + Mask.Normal);
+
+    UVData.Add(FVector2D(V1.X / Size, V1.Y / Size));
+    UVData.Add(FVector2D(V2.X / Size, V2.Y / Size));
+    UVData.Add(FVector2D(V3.X / Size, V3.Y / Size));
+    UVData.Add(FVector2D(V4.X / Size, V4.Y / Size));
+
+    NormalData.Add(Normal);
+    NormalData.Add(Normal);
+    NormalData.Add(Normal);
+    NormalData.Add(Normal);
+
+    VertexCount += 4;
+    Lock.Unlock();
+
+}
+void AChunk::CreateQuadTwo(FMask Mask, FIntVector AxisMask, FIntVector V1, FIntVector V2, FIntVector V3, FIntVector V4, EBlock Block)
+{
+
+    FScopeLock Lock(&CriticalSection);
+    const auto Normal = FVector(AxisMask * Mask.Normal);
+
+    VertexData.Add(FVector(V1) * 100);
+    VertexData.Add(FVector(V2) * 100);
+    VertexData.Add(FVector(V3) * 100);
+    VertexData.Add(FVector(V4) * 100);
+
+
+    EBlock BlockMaterial = Mask.Block;
+    FColor BlockColor = GetColorFromBlock(BlockMaterial, V1);
+
+    VertexColors.Add(BlockColor);
+    VertexColors.Add(BlockColor);
+    VertexColors.Add(BlockColor);
+    VertexColors.Add(BlockColor);
+
+    TriangleData.Add(VertexCount);
+    TriangleData.Add(VertexCount + 2 + Mask.Normal);
+    TriangleData.Add(VertexCount + 2 - Mask.Normal);
+    TriangleData.Add(VertexCount + 3);
+    TriangleData.Add(VertexCount + 1 - Mask.Normal);
+    TriangleData.Add(VertexCount + 1 + Mask.Normal);
+
+    UVData.Add(FVector2D(V1.X / Size, V1.Y / Size));
+    UVData.Add(FVector2D(V2.X / Size, V2.Y / Size));
+    UVData.Add(FVector2D(V3.X / Size, V3.Y / Size));
+    UVData.Add(FVector2D(V4.X / Size, V4.Y / Size));
+
+    NormalData.Add(Normal);
+    NormalData.Add(Normal);
+    NormalData.Add(Normal);
+    NormalData.Add(Normal);
+
+    VertexCount += 4;
+    Lock.Unlock();
+
+}
+void AChunk::CreateQuadThree(FMask Mask, FIntVector AxisMask, FIntVector V1, FIntVector V2, FIntVector V3, FIntVector V4, EBlock Block)
 {
 
     FScopeLock Lock(&CriticalSection);
