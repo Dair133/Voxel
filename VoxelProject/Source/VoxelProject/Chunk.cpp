@@ -11,8 +11,6 @@
 #include <system_error>
 #include <FastNoise/FastNoise.h>
 #include <VoxelProject/FastNoiseLite.h>
-//#include "Octree/FastNoiseLite.h"
-//#include "Octree/Octree.h"
 #include "ProceduralMeshComponent.h"
 #include <random>
 #include <Engine/StaticMeshActor.h>
@@ -60,7 +58,7 @@ AChunk::AChunk()
     // Set Mesh as Root
     SetRootComponent(Mesh);
 
-    static ConstructorHelpers::FObjectFinder<UMaterialInterface> Material(TEXT("Material'/Game/CUBEGENERATIONMAP/BASECUBE.BASECUBE'"));
+    static ConstructorHelpers::FObjectFinder<UMaterialInterface> Material(TEXT("Material'/Game/Cubedeps/Basecube.Basecube'"));
     if (Material.Succeeded())
     {
         // UE_LOG(LogTemp, Warning, TEXT("Suceeded in finding obj"));
@@ -125,13 +123,16 @@ void AChunk::Tick(float DeltaTime)
 
     // Increment your frame counter
     FrameCounter++;
+
+
+
  
     if(FrameCounter < 500){
     // Perform a portion of your logic here
     if (FrameCounter == 2) {
         GenerateBlocks();
     }
-    else if (FrameCounter == 20) {
+    else if (FrameCounter == 50) {
         GenerateMesh();
     }
     else if (FrameCounter == 100) {
@@ -218,62 +219,16 @@ float AChunk::QueryNoiseValue(const std::vector<float>& noiseOutput, int x, int 
 
 void AChunk::GenerateBlocks()
 {
-      std::vector<float> noiseOutput(Size * Size * VerticalHeight);
-      //log size of noiseOutput
-      
-    auto fnSimplex = FastNoise::New<FastNoise::Simplex>();
-    auto fnFractal = FastNoise::New<FastNoise::FractalFBm>();
-
-    fnFractal->SetSource(fnSimplex);
-    fnFractal->SetOctaveCount(1);
-    fnFractal->SetGain(0.1f);
-    //Size Size VerticalHeight?? Instead of 0,0,0
-    fnFractal->GenUniformGrid3D(noiseOutput.data(), 0, 0, 0, Size,Size,VerticalHeight, 0.1f, 1337);
- 
-  
-  
-    float* noiseArray = noiseOutput.data();
-
-    int numTrees = 0;
 
     MainNoise = new FastNoiseLite();
     MainNoise->SetNoiseType(FastNoiseLite::NoiseType_Perlin);
-    //Fractal type ridged makes terrain more like swiss cheezer and very cavey, could be cool canyon if done right?
-
-
-    //MainNoise->SetFractalType(FastNoiseLite::FractalType_DomainWarpProgressive);// Changing types seems to have significant effect on terrain
     MainNoise->SetFractalOctaves(1.2f);// Seems to have no effect with a 
     MainNoise->SetFrequency(0.006f);// Higher values seems to make mountains more jagged and extremely laggy
     MainNoise->SetFractalLacunarity(0.10f);
     MainNoise->SetFractalGain(1);
     MainNoise->SetFractalType(FastNoiseLite::FractalType_FBm);
 
-    FastNoiseLite* ElevationNoise = new FastNoiseLite();
-    FastNoiseLite* FeatureNoise = new FastNoiseLite();
-    FastNoiseLite* BiomeNoise = new FastNoiseLite();
-
-    ElevationNoise->SetNoiseType(FastNoiseLite::NoiseType_OpenSimplex2);
-    ElevationNoise->SetFractalType(FastNoiseLite::FractalType_FBm);
-
-    FeatureNoise->SetNoiseType(FastNoiseLite::NoiseType_OpenSimplex2);
-    FeatureNoise->SetFractalType(FastNoiseLite::FractalType_FBm);
-
-    BiomeNoise->SetNoiseType(FastNoiseLite::NoiseType_OpenSimplex2);
-    BiomeNoise->SetFrequency(0.001f);
-
-    FastNoiseLite* FlatTerrainNoise = new FastNoiseLite();
-
-    FlatTerrainNoise->SetNoiseType(FastNoiseLite::NoiseType_OpenSimplex2);
-    FlatTerrainNoise->SetFrequency(2.0f); // Frequency is set to 0, effectively disabling variation
-    FlatTerrainNoise->SetFractalType(FastNoiseLite::FractalType_None);
-
-    FastNoiseLite* RandomNoise = new FastNoiseLite();
-    RandomNoise->SetNoiseType(FastNoiseLite::NoiseType_OpenSimplex2);
-    RandomNoise->SetFrequency(0.0039f);  // The lower frequency will create larger, more gradual changes
-    RandomNoise->SetFractalOctaves(1); // Only one octave for simplicity
-    RandomNoise->SetFractalLacunarity(2.0f);
-    RandomNoise->SetFractalGain(0.9f);
-
+    
 
     float baseMultiplier = VerticalHeight * 4;
 
@@ -284,120 +239,59 @@ void AChunk::GenerateBlocks()
 
     const auto Location = GetActorLocation();
     const float baseHeight = VerticalHeight / 4.0f;  //
+    TArray<float> NoiseMap;
+    int TotalElements = Size * Size * VerticalHeight;
+    NoiseMap.SetNum(TotalElements);
+ 
+  
+    // Ensure NoiseMap has been initialized to the right dimensions before this
+    ParallelFor(Size, [&](int32 x) {
+        ParallelFor(Size, [&](int32 y) {
+            for (int z = 0; z < VerticalHeight; z++) {
+                float Xpos = (x * 100 + Location.X) / 100;
+                float Ypos = (y * 100 + Location.Y) / 100;
+                float Zpos = (z * 100 + Location.Z) / 100;
 
-    std::random_device rd;
-    std::mt19937 gen(rd());
+                // Calculate the noise value
+                float combinedNoise = MainNoise->GetNoise(Xpos, Ypos, Zpos);
+                float normalizedNoise = (combinedNoise + 1) / 2.0f;
+                float curvedNoise = FMath::Pow(normalizedNoise, 2);
 
-    // Uniform distribution between 1 and 100
-    std::uniform_int_distribution<> distrib(1, 200);
-
-    std::random_device rd2;
-    std::mt19937 gen2(rd2());
-
-    // Uniform distribution between 1 and 100
-    std::uniform_int_distribution<> distrib2(1, 130);
-
-    ParallelFor(Size, [&](int32 x)
-        {
-   // for (float x = 0; x < Size; ++x) {
-        for (int y = 0; y < Size; ++y)
-        {
-            // Noise values produced are usually very small, so we multiply them by a large number to make them more visible, if very small decimal then
-            // terrain will be totally flat despite alid noise being generated
-
-
-     
-
-            float BiomeValue;
-      
-
-
-          
-
-
-            float combinedNoise;
-            BiomeValue = -0.3;
-            if (BiomeValue < -0.2f) // Mountain biome
-            {
-                
-              
+                // Convert 3D indices (x, y, z) into a single linear index for the flat array
+                int Index = x + y * Size + z * Size * Size;
+                // Store the curved noise value using the linear index
+                NoiseMap[Index] = curvedNoise * VerticalHeight;
             }
-            else if (BiomeValue > 0.2f) // Flat plains biome with small bumps
-            {
-
-            }
-            else // Transition biome
-            {
-
-            }
-            //int value = std::round(std::abs(std::sin(i * (2.0 * M_PI / period))) * amplitude) + 1;
-            float BaseHeight = 2.0f;
-          
-           /* if (CombinedNoise < BaseHeight)
-            {
-				CombinedNoise = BaseHeight;
-			}*/
-       
-
-            // This line right here prevents an array out of bounds error, needs to be investigated
-            //CombinedNoise = BaseHeight;
-            //CombinedNoise += 2;
-          
-            //int Height = FMath::Clamp(CombinedNoise, 0, VerticalHeight);
-          
-          // Blocks[GetBlockIndex(x, y, Height - 1)] = EBlock::Grass;
+            }, EParallelForFlags::BackgroundPriority);
+        }, EParallelForFlags::BackgroundPriority);
 
 
-           
-            for (int z = 0; z < VerticalHeight; z++)
-            {
-                float Xpos = (float)x;
-                float Ypos = (float)y;
-                float Zpos = (float)z;
 
-                // Following coordinate manipulations is what allows the 
-                Xpos = (x * 100 + Location.X) / 100;
-                Ypos = (y * 100 + Location.Y) / 100;
-                Zpos = (z * 100 + Location.Z) / 100;
-                //UE_LOG(LogTemp, Warning, TEXT("X:%d     Y:%d     Z:%d"), x,y,z);
-                combinedNoise = MainNoise->GetNoise(Xpos, Ypos, Zpos);
-                combinedNoise = combinedNoise * VerticalHeight;
-            
-                //UE_LOG(LogTemp, Warning, TEXT("Combine nouse IS:%f"), CombinedNoise);
-                if (combinedNoise > VerticalHeight) 
-                {
-                   combinedNoise = VerticalHeight;
+    //float combinedNoise;
+
+    ParallelFor(Size, [&](int32 x) {
+        ParallelFor(Size, [&](int32 y) {
+        //for (int y = 0; y < Size; ++y) {
+            for (int z = 0; z < VerticalHeight; z++) {
+                // Convert 3D indices (x, y, z) into a single linear index for accessing the flat array
+                int Index = x + y * Size + z * Size * Size;
+
+                // Access the pre-calculated noise value using the linear index
+                int Height = static_cast<int>(NoiseMap[Index]);
+
+                if (z < Height - 1) {
+                    Blocks[GetBlockIndex(x, y, z)] = EBlock::Stone;
                 }
-
-
-
-                if (combinedNoise < 0)
-                {
-					combinedNoise = combinedNoise * -1;
-				}
-                //UE_LOG(LogTemp, Warning, TEXT("Combine nouse IS:%f"), CombinedNoise);
-                     int Height = (int)combinedNoise;
-                //UE_LOG(LogTemp, Warning, TEXT("HEIGHT IS:%d"), Height);
-                if (z < Height) {
-                  Blocks[GetBlockIndex(x, y, z)] = EBlock::Stone;
+                else if (z == Height || z == Height - 1) {
+                    Blocks[GetBlockIndex(x, y, z)] = EBlock::Grass;
                 }
 
                 if (z > Height) {
-                   Blocks[GetBlockIndex(x, y, z)] = EBlock::Air;
+                    Blocks[GetBlockIndex(x, y, z)] = EBlock::Air;
                 }
             }
-     
-            //for (int z = Height; z < VerticalHeight; z++)
-            //{
-
-            //    Blocks[GetBlockIndex(x, y, z)] = EBlock::Air;
-
-            //    //if(z % 25 == 0)
-            //   // GetWorld()->GetTimerManager().SetTimer(MyTimerHandle, this, &AChunk::GenerateBlocks, 0.15f, false);
-            //}
-        }
-
-    }, EParallelForFlags::PumpRenderingThread);
+        }, EParallelForFlags::PumpRenderingThread);
+        }, EParallelForFlags::PumpRenderingThread);
    // RespawnTrees();
 
 
@@ -466,74 +360,48 @@ bool AChunk::CompareMask(FMask M1, FMask M2) const
 
 
 
+
 FColor AChunk::GetColorFromBlock(EBlock Block, FIntVector Location)
 {
-    
-
+    // Convert FIntVector to FVector for noise calculation
+    FVector ConvertedLocation = FVector(Location.X, Location.Y, Location.Z) * 0.1f; // Scale to adjust frequency
+    float NoiseValue = FMath::PerlinNoise3D(ConvertedLocation);
+    NoiseValue = (NoiseValue + 1.0f) * 0.5f; // Normalize to 0-1
     switch (Block)
     {
     case EBlock::Null:
-        UE_LOG(LogTemp, Warning, TEXT("returning null"));
-        return FColor::FromHex("#F3F6FB");
+        return FColor();
         break;
     case EBlock::Air:
-        UE_LOG(LogTemp, Warning, TEXT("returning grass"));
         return FColor();
         break;
     case EBlock::Stone:
-        UE_LOG(LogTemp, Warning, TEXT("returning stone"));
-        // for grey stone, we want equal amount of red, green and blue
-        return FColor(255, 255, 255, 255.f);
+        return FColor::FromHex("#505050");
         break;
     case EBlock::Dirt:
-        UE_LOG(LogTemp, Warning, TEXT("returning dirt"));
         return FColor::FromHex("#9B7653");
         break;
     case EBlock::Grass:
-    {
-        UE_LOG(LogTemp, Warning, TEXT("returning grass"));
-        //// Define the base green color (a vibrant middle green)
-        //FLinearColor BaseGreen = FColor::FromHex("#00FF00");
-
-        //// Define how much the color should vary from the base color (lighter and darker variations)
-        //FLinearColor DarkerVariation = FColor::FromHex("#007000");
-        //FLinearColor LighterVariation = FColor::FromHex("#7FFF00");
-
-        //// Calculate a sine-based oscillation factor, ranging from -1 to 1
-        //float Oscillation = FMath::Sin(Alpha * 2.0f * PI + FMath::FRandRange(0.0f, PI));
-
-        //// Depending on the Oscillation value, choose a range for interpolation
-        //FLinearColor LowerBound;
-        //FLinearColor UpperBound;
-
-        //if (Oscillation < 0)
-        //{
-        //    // If Oscillation is negative, we are in the 'darker' half of the cycle
-        //    LowerBound = DarkerVariation;
-        //    UpperBound = BaseGreen;
-        //}
-        //else
-        //{
-        //    // If Oscillation is positive, we are in the 'lighter' half of the cycle
-        //    LowerBound = BaseGreen;
-        //    UpperBound = LighterVariation;
-        //}
-
-        //// Adjust Oscillation to a 0 to 1 range for interpolation
-        //Oscillation = Oscillation * 0.5f + 0.5f;
-
-        //// Interpolate between the chosen color bounds based on the adjusted oscillation
-        //FLinearColor InterpolatedColor = FMath::Lerp(LowerBound, UpperBound, Oscillation);
-
-        return FColor::FromHex("#00FF00");
-    }
-    break;
+      
+        // Map the normalized noise value to different shades of green
+        if (NoiseValue < 0.33f)
+        {
+            return FColor::FromHex("#4CBB17"); // Slightly Lighter Green than the base
+        }
+        else if (NoiseValue < 0.66f)
+        {
+            return FColor::FromHex("#228B22"); // Intermediate Green, closer to the base
+        }
+        else
+        {
+            return FColor::FromHex("#DFFF00"); // Darkest Green as the base
+        }
     break;
     case EBlock::SnowGrass:
         return FColor::FromHex("#F3F6FB");
         break;
     default:
-        return FColor();
+        return FColor::FromHex("#00FF00");
         break;
     }
 }
@@ -617,9 +485,9 @@ void AChunk::GenerateMesh()
                             ChunkItr[Axis2] = j;
 
 
-                            if (i % 10 == 0) {
+                           /* if (i % 10 == 0) {
                                 PerformBusyWait(20);
-                            }
+                            }*/
                               
 
                             int width = 1;
@@ -707,7 +575,7 @@ void AChunk::GenerateMesh()
 
       //now non parallel for loop to process the queues
 
-   
+    
 
 
       FGraphEventRef TaskOne = FFunctionGraphTask::CreateAndDispatchWhenReady([&]()
@@ -715,6 +583,7 @@ void AChunk::GenerateMesh()
               FQuadData QuadData;
               while (QuadDataQueueOne.Dequeue(QuadData))
               {
+
                   CreateQuadOne(QuadData.CurrentMask, QuadData.AxisMask,
                       QuadData.ChunkItr,
                       QuadData.ChunkItr + QuadData.DeltaAxis1,
@@ -742,17 +611,13 @@ void AChunk::GenerateMesh()
                       QuadData.ChunkItr + QuadData.DeltaAxis1 + QuadData.DeltaAxis2,
                       QuadData.Block);
               }
-
-
-
-
-
           }, TStatId(), nullptr, ENamedThreads::AnyThread);
 
-
+      TaskOne->Wait();
       FGraphEventRef TaskThree = FFunctionGraphTask::CreateAndDispatchWhenReady([&]()
           {
               FQuadData QuadData;
+
               while (QuadDataQueueThree.Dequeue(QuadData))
               {
                   CreateQuadThree(QuadData.CurrentMask, QuadData.AxisMask,
@@ -762,9 +627,6 @@ void AChunk::GenerateMesh()
                       QuadData.ChunkItr + QuadData.DeltaAxis1 + QuadData.DeltaAxis2,
                       QuadData.Block);
               }
-
-
-
 
           }, TStatId(), nullptr, ENamedThreads::AnyThread);
 }

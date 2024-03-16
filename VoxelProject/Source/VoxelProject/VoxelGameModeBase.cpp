@@ -99,7 +99,7 @@ void AVoxelGameModeBase::PostLogin(APlayerController* NewPlayer)
     UE_LOG(LogTemp, Warning, TEXT("Inside post loginc"));
     if (!NewPlayer->GetPawn())
     {
-        FVector spawnLocation = FVector(-2200.0f, 250.f, 2000.f);
+        FVector spawnLocation = FVector(-2200.0f, 250.f, 15000.f);
         FActorSpawnParameters SpawnParams;
         SpawnParams.Owner = NewPlayer;
         SpawnParams.bNoFail = true;
@@ -209,7 +209,7 @@ void AVoxelGameModeBase::UpdateVisibleChunks(FVector2D viewerPosition)
 void AVoxelGameModeBase::ProcessChunkQueue()
 {
 
-    //UE_LOG(LogTemp, Warning, TEXT("Processing chunk queue"));
+    UE_LOG(LogTemp, Warning, TEXT("Processing chunk queue"));
     //UE_LOG(LogTemp, Warning, TEXT("Pcrocess entered"));
     if (ChunkQueue.IsEmpty())
     {
@@ -238,20 +238,20 @@ void AVoxelGameModeBase::ProcessChunkQueue()
     // Set a timer to call this function again after 1.0 second, if there are more chunks in the queue.
     if (!ChunkQueue.IsEmpty())
     {//130
-        if (GetWorld()->GetTimeSeconds() > 20 + maxViewDst)
+        if (GetWorld()->GetTimeSeconds() > 40 )
         {
-            float TimeToDisplay1 = 10.0f; // Display the message for 5 seconds.
+            float TimeToDisplay1 = 5.0f; // Display the message for 5 seconds.
             FColor DisplayColor1 = FColor::Red; // Display the message in red.
             float WorldTime = GetWorld()->GetTimeSeconds();
             FString DebugMessage = FString::Printf(TEXT("World Time SECTION TWO: %f"), WorldTime);
             GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, DebugMessage);
-            GetWorld()->GetTimerManager().SetTimer(SpawnTimerHandle, this, &AVoxelGameModeBase::ProcessChunkQueue, 0.42f, false);
+            GetWorld()->GetTimerManager().SetTimer(SpawnTimerHandle, this, &AVoxelGameModeBase::ProcessChunkQueue, 0.72f, false);
             //0.55 is a good value
             //0.42 is a good value(main value used for testing over previous days)
         }
         else {
             int32 Key1 = -1;
-            float TimeToDisplay1 = 10.0f; // Display the message for 5 seconds.
+            float TimeToDisplay1 = 5.0f; // Display the message for 5 seconds.
             FColor DisplayColor1 = FColor::Red; // Display the message in red.
             float WorldTime = GetWorld()->GetTimeSeconds();
             FString DebugMessage = FString::Printf(TEXT("World Time: %f"), WorldTime);
@@ -290,7 +290,7 @@ void AVoxelGameModeBase::UpdateVisibleChunksAroundPlayers()
             FVector2D viewerPosition = FVector2D(PawnPosition.X, PawnPosition.Y);
 
             //UE_LOG(LogTemp, Warning, TEXT("Function being entered early"));
-
+            UE_LOG(LogTemp, Warning, TEXT("Updating visible chunks once"));
             UpdateVisibleChunks(viewerPosition);
 
             //  GenerateTreeMap(PawnPosition);
@@ -322,7 +322,7 @@ void AVoxelGameModeBase::UpdateVisibleChunksAroundPlayers()
                     UE_LOG(LogTemp, Warning, TEXT("Player pawn has no controller"));
                 }
               
-
+                UE_LOG(LogTemp, Warning, TEXT("Updating visible chunks twice"));
                 UpdateVisibleChunks(viewerPosition);
             }
             else if(!current_pc) {
@@ -330,6 +330,7 @@ void AVoxelGameModeBase::UpdateVisibleChunksAroundPlayers()
                 APawn* playerPawn = current_pc->GetPawn();
                 FVector PawnPosition = playerPawn->GetTransform().GetLocation();
                 FVector2D viewerPosition = FVector2D(PawnPosition.X, PawnPosition.Y);
+                UE_LOG(LogTemp, Warning, TEXT("Updating visible chunks three"));
                 UpdateVisibleChunks(viewerPosition);
 
             }

@@ -88,7 +88,7 @@ public:
     UPROPERTY()
     UStaticMesh* MyTreeMesh;
 
-    int VerticalHeight = 160;
+    int VerticalHeight = 200;
     UClass* MyTreeBPClass;
     UClass* MyGrassBPClass;
     // UFUNCTION(BlueprintCallable, Category = "Chunk")
@@ -116,9 +116,11 @@ protected:
 private:
     UProceduralMeshComponent* Mesh;
     FastNoiseLite* MainNoise;
+    FastNoiseLite* ColorNoise;
     FastNoiseLite* SecondaryNoise;
     bool tree = false;
     TArray<EBlock> Blocks;
+    TArray<int> NoiseNumbers;
     TArray<actorData> Trees;
     TArray<FVector> VertexData;
     TArray<FVector> NormalData;
@@ -127,6 +129,7 @@ private:
     TArray<FColor> VertexColors;
     FCriticalSection CriticalSection;
     FCriticalSection VertexCriticalSection;
+    FCriticalSection GenerateBlocksLock;
     int VertexCount = 0;
 
     void ModifyVoxelData(const FIntVector Position, EBlock Block);
@@ -157,6 +160,11 @@ private:
     void GenerateMesh();
 
     void SetupBiomeNoise();
+
+    void StartSequentialTasksWithDelay();
+    void DispatchTaskOne();
+    void DispatchTaskTwo();
+    void DispatchTaskThree();
 
     void SpawnTree(const FVector& Location);
 
