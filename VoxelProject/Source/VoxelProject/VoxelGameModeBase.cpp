@@ -164,7 +164,7 @@ void AVoxelGameModeBase::HideOutOfRangeChunks()
 void AVoxelGameModeBase::UpdateVisibleChunks(FVector2D viewerPosition)
 {
 
-
+    //UE_LOG(LogTemp, Warning, TEXT("Testing process chunk queue %d"), test);
     FBox2D viewBox(
         FVector2D(viewerPosition.X - chunksVisibleInViewDst * ChunkSizeInMeters, viewerPosition.Y - chunksVisibleInViewDst * ChunkSizeInMeters),
         FVector2D(viewerPosition.X + chunksVisibleInViewDst * ChunkSizeInMeters, viewerPosition.Y + chunksVisibleInViewDst * ChunkSizeInMeters)
@@ -208,6 +208,7 @@ void AVoxelGameModeBase::UpdateVisibleChunks(FVector2D viewerPosition)
 }
 void AVoxelGameModeBase::ProcessChunkQueue()
 {
+
     //UE_LOG(LogTemp, Warning, TEXT("Processing chunk queue"));
     //UE_LOG(LogTemp, Warning, TEXT("Pcrocess entered"));
     if (ChunkQueue.IsEmpty())
@@ -237,14 +238,14 @@ void AVoxelGameModeBase::ProcessChunkQueue()
     // Set a timer to call this function again after 1.0 second, if there are more chunks in the queue.
     if (!ChunkQueue.IsEmpty())
     {//130
-        if (GetWorld()->GetTimeSeconds() > 20)
+        if (GetWorld()->GetTimeSeconds() > 20 + maxViewDst)
         {
             float TimeToDisplay1 = 10.0f; // Display the message for 5 seconds.
             FColor DisplayColor1 = FColor::Red; // Display the message in red.
             float WorldTime = GetWorld()->GetTimeSeconds();
             FString DebugMessage = FString::Printf(TEXT("World Time SECTION TWO: %f"), WorldTime);
             GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, DebugMessage);
-            GetWorld()->GetTimerManager().SetTimer(SpawnTimerHandle, this, &AVoxelGameModeBase::ProcessChunkQueue, 0.52f, false);
+            GetWorld()->GetTimerManager().SetTimer(SpawnTimerHandle, this, &AVoxelGameModeBase::ProcessChunkQueue, 0.42f, false);
             //0.55 is a good value
             //0.42 is a good value(main value used for testing over previous days)
         }
@@ -255,7 +256,7 @@ void AVoxelGameModeBase::ProcessChunkQueue()
             float WorldTime = GetWorld()->GetTimeSeconds();
             FString DebugMessage = FString::Printf(TEXT("World Time: %f"), WorldTime);
             GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, DebugMessage);
-            GetWorld()->GetTimerManager().SetTimer(SpawnTimerHandle, this, &AVoxelGameModeBase::ProcessChunkQueue, 0.05f, false);
+            GetWorld()->GetTimerManager().SetTimer(SpawnTimerHandle, this, &AVoxelGameModeBase::ProcessChunkQueue, 0.01f, false);
         }
         //7 chunk render distance at 0.000 takes 55 secs roughly
     }
@@ -324,7 +325,8 @@ void AVoxelGameModeBase::UpdateVisibleChunksAroundPlayers()
 
                 UpdateVisibleChunks(viewerPosition);
             }
-            else {
+            else if(!current_pc) {
+                UE_LOG(LogTemp, Warning, TEXT("Likely Error,else if entered inside UpdateVisibleChunksAroundPlayer"));
                 APawn* playerPawn = current_pc->GetPawn();
                 FVector PawnPosition = playerPawn->GetTransform().GetLocation();
                 FVector2D viewerPosition = FVector2D(PawnPosition.X, PawnPosition.Y);

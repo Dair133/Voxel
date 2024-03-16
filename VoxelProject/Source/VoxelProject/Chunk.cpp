@@ -437,8 +437,6 @@ void AChunk::SpawnActorAtLocation(float X, float Y, float Z, UClass* ActorToSpaw
 
 void AChunk::ApplyMesh()
 {
-
-
     FScopeLock Lock(&CriticalSection);
     Mesh->CreateMeshSection(0, VertexData, TriangleData, NormalData, UVData, VertexColors, TArray<FProcMeshTangent>(), true);
     Lock.Unlock();
@@ -470,71 +468,64 @@ bool AChunk::CompareMask(FMask M1, FMask M2) const
 
 FColor AChunk::GetColorFromBlock(EBlock Block, FIntVector Location)
 {
-    MainNoise->SetFrequency(0.008f);
-    MainNoise->SetNoiseType(FastNoiseLite::NoiseType_OpenSimplex2);
-    MainNoise->SetFractalOctaves(6);
-    MainNoise->SetFractalLacunarity(2.0f);
-    MainNoise->SetFractalGain(0.2f);
-    FVector ActorLocation = GetActorLocation();
-    const float Xpos = Location.X + ActorLocation.X / 3200;
-    const float Ypos = Location.Y + ActorLocation.Y / 3200;
-
-    float Alpha = (MainNoise->GetNoise(Xpos * 1, Ypos * 1) + 1) * 0.5f;
-
-    float r, g, b;
+    
 
     switch (Block)
     {
     case EBlock::Null:
-        return FColor();
+        UE_LOG(LogTemp, Warning, TEXT("returning null"));
+        return FColor::FromHex("#F3F6FB");
         break;
     case EBlock::Air:
+        UE_LOG(LogTemp, Warning, TEXT("returning grass"));
         return FColor();
         break;
     case EBlock::Stone:
+        UE_LOG(LogTemp, Warning, TEXT("returning stone"));
         // for grey stone, we want equal amount of red, green and blue
-        r = g = b = Alpha * 255;
-        return FColor(r, g, b, 255.f);
+        return FColor(255, 255, 255, 255.f);
         break;
     case EBlock::Dirt:
+        UE_LOG(LogTemp, Warning, TEXT("returning dirt"));
         return FColor::FromHex("#9B7653");
         break;
     case EBlock::Grass:
     {
-        // Define the base green color (a vibrant middle green)
-        FLinearColor BaseGreen = FColor::FromHex("#00FF00");
+        UE_LOG(LogTemp, Warning, TEXT("returning grass"));
+        //// Define the base green color (a vibrant middle green)
+        //FLinearColor BaseGreen = FColor::FromHex("#00FF00");
 
-        // Define how much the color should vary from the base color (lighter and darker variations)
-        FLinearColor DarkerVariation = FColor::FromHex("#007000");
-        FLinearColor LighterVariation = FColor::FromHex("#7FFF00");
+        //// Define how much the color should vary from the base color (lighter and darker variations)
+        //FLinearColor DarkerVariation = FColor::FromHex("#007000");
+        //FLinearColor LighterVariation = FColor::FromHex("#7FFF00");
 
-        // Calculate a sine-based oscillation factor, ranging from -1 to 1
-        float Oscillation = FMath::Sin(Alpha * 2.0f * PI + FMath::FRandRange(0.0f, PI));
+        //// Calculate a sine-based oscillation factor, ranging from -1 to 1
+        //float Oscillation = FMath::Sin(Alpha * 2.0f * PI + FMath::FRandRange(0.0f, PI));
 
-        // Depending on the Oscillation value, choose a range for interpolation
-        FLinearColor LowerBound;
-        FLinearColor UpperBound;
+        //// Depending on the Oscillation value, choose a range for interpolation
+        //FLinearColor LowerBound;
+        //FLinearColor UpperBound;
 
-        if (Oscillation < 0)
-        {
-            // If Oscillation is negative, we are in the 'darker' half of the cycle
-            LowerBound = DarkerVariation;
-            UpperBound = BaseGreen;
-        }
-        else
-        {
-            // If Oscillation is positive, we are in the 'lighter' half of the cycle
-            LowerBound = BaseGreen;
-            UpperBound = LighterVariation;
-        }
+        //if (Oscillation < 0)
+        //{
+        //    // If Oscillation is negative, we are in the 'darker' half of the cycle
+        //    LowerBound = DarkerVariation;
+        //    UpperBound = BaseGreen;
+        //}
+        //else
+        //{
+        //    // If Oscillation is positive, we are in the 'lighter' half of the cycle
+        //    LowerBound = BaseGreen;
+        //    UpperBound = LighterVariation;
+        //}
 
-        // Adjust Oscillation to a 0 to 1 range for interpolation
-        Oscillation = Oscillation * 0.5f + 0.5f;
+        //// Adjust Oscillation to a 0 to 1 range for interpolation
+        //Oscillation = Oscillation * 0.5f + 0.5f;
 
-        // Interpolate between the chosen color bounds based on the adjusted oscillation
-        FLinearColor InterpolatedColor = FMath::Lerp(LowerBound, UpperBound, Oscillation);
+        //// Interpolate between the chosen color bounds based on the adjusted oscillation
+        //FLinearColor InterpolatedColor = FMath::Lerp(LowerBound, UpperBound, Oscillation);
 
-        return InterpolatedColor.ToFColor(true);
+        return FColor::FromHex("#00FF00");
     }
     break;
     break;
