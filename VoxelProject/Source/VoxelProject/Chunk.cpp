@@ -220,78 +220,116 @@ float AChunk::QueryNoiseValue(const std::vector<float>& noiseOutput, int x, int 
 void AChunk::GenerateBlocks()
 {
 
-    MainNoise = new FastNoiseLite();
-    MainNoise->SetNoiseType(FastNoiseLite::NoiseType_Perlin);
-    MainNoise->SetFractalOctaves(1.2f);// Seems to have no effect with a 
-    MainNoise->SetFrequency(0.006f);// Higher values seems to make mountains more jagged and extremely laggy
-    MainNoise->SetFractalLacunarity(0.10f);
-    MainNoise->SetFractalGain(1);
-    MainNoise->SetFractalType(FastNoiseLite::FractalType_FBm);
+    auto biomeNoiseMap = new FastNoiseLite();
+    biomeNoiseMap->SetNoiseType(FastNoiseLite::NoiseType_Perlin);
+    biomeNoiseMap->SetFrequency(1.1f);
+ 
 
-    
+    HillyPlains = new FastNoiseLite();
+    HillyPlains->SetNoiseType(FastNoiseLite::NoiseType_Perlin);
+    HillyPlains->SetFractalOctaves(1.2f);// Seems to have no effect with a 
+    HillyPlains->SetFrequency(0.006f);// Higher values seems to make mountains more jagged and extremely laggy
+    HillyPlains->SetFractalLacunarity(0.10f);
+    HillyPlains->SetFractalGain(1);
+    HillyPlains->SetFractalType(FastNoiseLite::FractalType_FBm);
+
+    auto River = new FastNoiseLite();
+    River->SetNoiseType(FastNoiseLite::NoiseType_Perlin); // Perlin noise for smooth gradients
+    River->SetFrequency(0.006f); // Lower frequency for smoother, broader features
+    River->SetFractalOctaves(1.2f); // Use more octaves for smoother transitions
+    River->SetFractalLacunarity(0.10f); // Higher lacunarity for more variation between octaves
+    River->SetFractalGain(1); // Lower gain to reduce the amplitude of higher octaves
+    River->SetFractalType(FastNoiseLite::FractalType_FBm); // FBm for natural-looking features
 
     float baseMultiplier = VerticalHeight * 4;
 
     int amplitude = 4; // The highest point in the wave
     //int period = 2 * amplitude; // The number of points in one complete wave
     //int iterations = 20; // The number of points to generate
-
-
+  
     const auto Location = GetActorLocation();
-    const float baseHeight = VerticalHeight / 4.0f;  //
+    const float baseHeight = VerticalHeight / 4.0f;  
     TArray<float> NoiseMap;
     int TotalElements = Size * Size * VerticalHeight;
     NoiseMap.SetNum(TotalElements);
  
-  
+    // 0 equals hilly
+    //1 equals river
+    int biomeNumber = 0;
+
+  /*  float biomeNoise;
+    float combinedNoise;
+    float normalizedNoise;
+    float curvedNoise;
+    int index;*/
     // Ensure NoiseMap has been initialized to the right dimensions before this
-    ParallelFor(Size, [&](int32 x) {
-        ParallelFor(Size, [&](int32 y) {
-            for (int z = 0; z < VerticalHeight; z++) {
+  // Assuming biomeNoiseMap is correctly initialized and configured
+ TArray<TFunction<void()>> Operations;
+    
+    for (int x = 0; x < Size; x++)
+    {
+        for (int y = 0; y < Size; y++)
+        {
+            Operations.Add([=, &NoiseMap]()
+            {
                 float Xpos = (x * 100 + Location.X) / 100;
                 float Ypos = (y * 100 + Location.Y) / 100;
-                float Zpos = (z * 100 + Location.Z) / 100;
-
-                // Calculate the noise value
-                float combinedNoise = MainNoise->GetNoise(Xpos, Ypos, Zpos);
-                float normalizedNoise = (combinedNoise + 1) / 2.0f;
-                float curvedNoise = FMath::Pow(normalizedNoise, 2);
-
-                // Convert 3D indices (x, y, z) into a single linear index for the flat array
-                int Index = x + y * Size + z * Size * Size;
-                // Store the curved noise value using the linear index
-                NoiseMap[Index] = curvedNoise * VerticalHeight;
-            }
-            }, EParallelForFlags::BackgroundPriority);
+                float biomeNoise = biomeNoiseMap->GetNoise(Xpos, Ypos);
+                float normalizedBiomeNoise = (biomeNoise + 1) / 2.0f;
+                
+                for (int z = 0; z < VerticalHeight; z++)
+                {
+                    float Zpos = (z * 100 + Location.Z) / 100;
+                    float combinedNoise;
+                    int biomeNumber;
+                    
+                    if (normalizedBiomeNoise <= 0.77)
+                    {
+                        float hillyNoise = HillyPlains->GetNoise(Xpos, Ypos, Zpos);
+                        combinedNoise = hillyNoise;
+                        biomeNumber = 0;
+                    }
+                    else
+                    {
+                        float riverNoise = River->GetNoise(Xpos, Ypos, Zpos);
+                        combinedNoise = riverNoise;
+                        biomeNumber = 1;
+                    }
+                    
+                    float normalizedNoise = (combinedNoise + 1) / 2.0f;
+                    float curvedNoise = FMath::Pow(normalizedNoise, 2);
+                    int index = x + y * Size + z * Size * Size;
+                    NoiseMap[index] = curvedNoise * VerticalHeight;
+                }
+            });
+        }
+    }
+    ParallelFor(Operations.Num(), [&](int32 Index)
+        {
+            Operations[Index]();
         }, EParallelForFlags::BackgroundPriority);
-
 
 
     //float combinedNoise;
 
     ParallelFor(Size, [&](int32 x) {
-        ParallelFor(Size, [&](int32 y) {
-        //for (int y = 0; y < Size; ++y) {
+        for (int y = 0; y < Size; ++y) {
             for (int z = 0; z < VerticalHeight; z++) {
-                // Convert 3D indices (x, y, z) into a single linear index for accessing the flat array
                 int Index = x + y * Size + z * Size * Size;
-
-                // Access the pre-calculated noise value using the linear index
                 int Height = static_cast<int>(NoiseMap[Index]);
+                EBlock BlockType = EBlock::Air;
 
                 if (z < Height - 1) {
-                    Blocks[GetBlockIndex(x, y, z)] = EBlock::Stone;
+                    BlockType = biomeNumber == 0 ? EBlock::Stone : EBlock::Dirt;
                 }
                 else if (z == Height || z == Height - 1) {
-                    Blocks[GetBlockIndex(x, y, z)] = EBlock::Grass;
+                    BlockType = biomeNumber == 0 ? EBlock::Grass : EBlock::Dirt;
                 }
 
-                if (z > Height) {
-                    Blocks[GetBlockIndex(x, y, z)] = EBlock::Air;
-                }
+                Blocks[GetBlockIndex(x, y, z)] = BlockType;
             }
-        }, EParallelForFlags::PumpRenderingThread);
-        }, EParallelForFlags::PumpRenderingThread);
+        }
+        }, EParallelForFlags::BackgroundPriority);
    // RespawnTrees();
 
 
@@ -379,7 +417,7 @@ FColor AChunk::GetColorFromBlock(EBlock Block, FIntVector Location)
         return FColor::FromHex("#505050");
         break;
     case EBlock::Dirt:
-        return FColor::FromHex("#9B7653");
+        return FColor::FromHex("#31A0C3");//blue temporarily to test river
         break;
     case EBlock::Grass:
       
