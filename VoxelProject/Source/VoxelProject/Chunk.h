@@ -44,25 +44,6 @@ public:
     TQueue<FQuadData> QuadDataQueueThree;
 
 
-    TArray<FVector> VertexDataOne;
-    TArray<FVector> VertexDataTwo;
-    TArray<FVector> VertexDataThree;
-
-    TArray<FColor> VertexColorsOne;
-    TArray<FColor> VertexColorsTwo;
-    TArray<FColor> VertexColorsThree;
-
-    TArray<int> TriangleDataOne;
-    TArray<int> TriangleDataTwo;
-    TArray<int> TriangleDataThree;
-
-    TArray<FVector2D> UVDataOne;
-    TArray<FVector2D> UVDataTwo;
-    TArray<FVector2D> UVDataThree;
-
-    TArray<FVector> NormalDataOne;
-    TArray<FVector> NormalDataTwo;
-    TArray<FVector> NormalDataThree;
 
 
     TArray<FGraphEventRef> TaskDependencies;
@@ -88,7 +69,7 @@ public:
     UPROPERTY()
     UStaticMesh* MyTreeMesh;
 
-    int VerticalHeight = 400;
+    int VerticalHeight = 200;
     UClass* MyTreeBPClass;
     UClass* MyGrassBPClass;
     // UFUNCTION(BlueprintCallable, Category = "Chunk")
@@ -119,6 +100,8 @@ private:
     FastNoiseLite* ColorNoise;
     FastNoiseLite* SecondaryNoise;
     bool tree = false;
+
+    // Primcary block storage array
     TArray<EBlock> Blocks;
     TArray<int> NoiseNumbers;
     TArray<actorData> Trees;
@@ -160,7 +143,7 @@ private:
     void GenerateMesh();
 
     void SetupBiomeNoise();
-
+    void CreateQuads();
     void StartSequentialTasksWithDelay();
     void DispatchTaskOne();
     void DispatchTaskTwo();

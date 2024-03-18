@@ -64,7 +64,7 @@ class  AVoxelGameModeBase : public AGameModeBase
 
     UClass* MyBlueprintCharacterClass;
 
-
+    int numTimers;
     void UpdateVisibleChunks(FVector2D viewerPosition);
     void UpdateVisibleChunksAroundPlayers();
     int InitialChunkPoolSize = 100;

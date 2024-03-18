@@ -104,6 +104,31 @@ void AChunk::ModifyVoxel(const FIntVector Position, const EBlock Block)
 
     ApplyMesh();
 
+    // Removes the entire blocks array from memory
+    // // 10.3 gigs memeory used when NOT destroying this array
+    //Blocks.Empty(0);
+    NoiseNumbers.Empty(0);
+    QuadDataQueueOne.Empty();
+
+    QuadDataQueueTwo.Empty();
+    QuadDataQueueThree.Empty();
+    TaskDependencies.Empty(0);
+    VertexColors.Empty();
+    VertexData.Empty();
+    TriangleData.Empty();
+    NormalData.Empty();
+    UVData.Empty();
+
+
+    /*
+    Hacky way to clear the memory of the arrays if concerns about not deallocating correctly
+    TArray<FVector>().Swap(VertexData);
+TArray<FVector>().Swap(NormalData);
+TArray<int>().Swap(TriangleData);
+TArray<FVector2D>().Swap(UVData);
+    
+    */
+
 }
 
 // Called when the game starts or when spawned
@@ -264,13 +289,16 @@ void AChunk::GenerateBlocks()
     int index;*/
     // Ensure NoiseMap has been initialized to the right dimensions before this
   // Assuming biomeNoiseMap is correctly initialized and configured
- TArray<TFunction<void()>> Operations;
-    
+ TArray<TFunction<void()>> NoiseMapOperations;
+ 
+ // ParallelFor(Size, [&](int32 x) {
+ 
     for (int x = 0; x < Size; x++)
     {
         for (int y = 0; y < Size; y++)
         {
-            Operations.Add([=, &NoiseMap]()
+            // By passing &NoiseMap we are passing a reference to each labmda function, not a unique copy thus improving memoery overhead.
+            NoiseMapOperations.Add([=, &NoiseMap]()
             {
                 float Xpos = (x * 100 + Location.X) / 100;
                 float Ypos = (y * 100 + Location.Y) / 100;
@@ -304,36 +332,47 @@ void AChunk::GenerateBlocks()
             });
         }
     }
-    ParallelFor(Operations.Num(), [&](int32 Index)
+    ParallelFor(NoiseMapOperations.Num(), [&](int32 Index)
         {
-            Operations[Index]();
+            NoiseMapOperations[Index]();
         }, EParallelForFlags::BackgroundPriority);
 
 
     //float combinedNoise;
-
+    TArray<TFunction<void()>> BlockOperations;
     ParallelFor(Size, [&](int32 x) {
+      //  for (int x = 0; x < Size; x++){
+
         for (int y = 0; y < Size; ++y) {
-            for (int z = 0; z < VerticalHeight; z++) {
-                int Index = x + y * Size + z * Size * Size;
-                int Height = static_cast<int>(NoiseMap[Index]);
-                EBlock BlockType = EBlock::Air;
 
-                if (z < Height - 1) {
-                    BlockType = biomeNumber == 0 ? EBlock::Stone : EBlock::Dirt;
-                }
-                else if (z == Height || z == Height - 1) {
-                    BlockType = biomeNumber == 0 ? EBlock::Grass : EBlock::Dirt;
-                }
+       //     BlockOperations.Add([=, &NoiseMap]()
+         //       {
+                    for (int z = 0; z < VerticalHeight; z++) {
+                        int Index = x + y * Size + z * Size * Size;
+                        int Height = static_cast<int>(NoiseMap[Index]);
+                        EBlock BlockType = EBlock::Air;
 
-                Blocks[GetBlockIndex(x, y, z)] = BlockType;
-            }
+                        if (z < Height - 1) {
+                            BlockType = biomeNumber == 0 ? EBlock::Stone : EBlock::Dirt;
+                        }
+                        else if (z == Height || z == Height - 1) {
+                            BlockType = biomeNumber == 0 ? EBlock::Grass : EBlock::Dirt;
+                        }
+
+                        Blocks[GetBlockIndex(x, y, z)] = BlockType;
+                    }
+                //});
         }
         }, EParallelForFlags::BackgroundPriority);
    // RespawnTrees();
 
-
-
+      /*  ParallelFor(NoiseMapOperations.Num(), [&](int32 Index)
+            {
+               BlockOperations[Index]();
+            }, EParallelForFlags::BackgroundPriority);*/
+    delete HillyPlains;
+    delete River;
+    delete biomeNoiseMap;
 }
 
 void AChunk::RespawnTrees() {
@@ -607,13 +646,13 @@ void AChunk::GenerateMesh()
                 }
             }
            
-        }, EParallelForFlags::PumpRenderingThread);
+        }, EParallelForFlags::BackgroundPriority);
       //Now process the chunk queues in parallel
 
 
       //now non parallel for loop to process the queues
-
-    
+      TArray<FQuadData> QuadDataList;
+      TArray<FGraphEventRef> Tasks;
 
 
       FGraphEventRef TaskOne = FFunctionGraphTask::CreateAndDispatchWhenReady([&]()
@@ -633,7 +672,7 @@ void AChunk::GenerateMesh()
 
 
 
-             }, TStatId(), nullptr, ENamedThreads::AnyThread );
+             }, TStatId(), nullptr, ENamedThreads::BackgroundThreadPriority );
 
 
       FGraphEventRef TaskTwo = FFunctionGraphTask::CreateAndDispatchWhenReady([&]()
@@ -649,7 +688,7 @@ void AChunk::GenerateMesh()
                       QuadData.ChunkItr + QuadData.DeltaAxis1 + QuadData.DeltaAxis2,
                       QuadData.Block);
               }
-          }, TStatId(), nullptr, ENamedThreads::AnyThread);
+          }, TStatId(), nullptr, ENamedThreads::BackgroundThreadPriority);
 
       TaskOne->Wait();
       FGraphEventRef TaskThree = FFunctionGraphTask::CreateAndDispatchWhenReady([&]()
@@ -666,7 +705,7 @@ void AChunk::GenerateMesh()
                       QuadData.Block);
               }
 
-          }, TStatId(), nullptr, ENamedThreads::AnyThread);
+          }, TStatId(), nullptr, ENamedThreads::BackgroundThreadPriority);
 }
 
 void AChunk::CreateQuadOne(FMask Mask, FIntVector AxisMask, FIntVector V1, FIntVector V2, FIntVector V3, FIntVector V4, EBlock Block)
