@@ -27,7 +27,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <PropertyGroup Label="Globals">
-    <ProjectGuid>{48B69BF9-8E2F-3D68-9832-FE73FF49B58B}</ProjectGuid>
+    <ProjectGuid>{62D59201-F487-314B-A691-CF62FD69D88B}</ProjectGuid>
     <RootNamespace>VoxelProject</RootNamespace>
   </PropertyGroup>
   <Import Project="UECommon.props" />
