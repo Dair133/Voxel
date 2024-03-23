@@ -79,7 +79,7 @@ public:
     int AmtBlocksVertically = 1;
 
    
-    int FrameCounter = 0;
+    int frameCounter = 0;
     int CurrentX, CurrentY;
     int MaxX, MaxY;
     FTimerHandle WorkTimerHandle;
@@ -95,7 +95,9 @@ protected:
     virtual void BeginPlay() override;
 
 private:
-    UProceduralMeshComponent* Mesh;
+    UProceduralMeshComponent* MeshOne;
+    UProceduralMeshComponent* MeshTwo;
+    UProceduralMeshComponent* MeshThree;
     FastNoiseLite* HillyPlains;
     FastNoiseLite* ColorNoise;
     FastNoiseLite* SecondaryNoise;
@@ -105,15 +107,41 @@ private:
     TArray<EBlock> Blocks;
     TArray<int> NoiseNumbers;
     TArray<actorData> Trees;
+
+    TArray<FVector> AxisOneVertexData;
+    TArray<FVector> AxisOneNormalData;
+    TArray<int> AxisOneTriangleData;
+    TArray<FVector2D> AxisOneUVData;
+    TArray<FColor> AxisOneVertexColors;
+
+    TArray<FVector> AxisTwoVertexData;
+    TArray<FVector> AxisTwoNormalData;
+    TArray<int> AxisTwoTriangleData;
+    TArray<FVector2D> AxisTwoUVData;
+    TArray<FColor> AxisTwoVertexColors;
+
+    TArray<FVector> AxisThreeVertexData;
+    TArray<FVector> AxisThreeNormalData;
+    TArray<int> AxisThreeTriangleData;
+    TArray<FVector2D> AxisThreeUVData;
+    TArray<FColor> AxisThreeVertexColors;
+
     TArray<FVector> VertexData;
     TArray<FVector> NormalData;
     TArray<int> TriangleData;
     TArray<FVector2D> UVData;
     TArray<FColor> VertexColors;
+
+    TArray<FVector> EmptyArray;
+
+
     FCriticalSection CriticalSection;
     FCriticalSection VertexCriticalSection;
     FCriticalSection GenerateBlocksLock;
+
     int VertexCount = 0;
+    bool finishedCreateQuad = false;
+    bool resetQuadFrameTimer = false;
 
     void ModifyVoxelData(const FIntVector Position, EBlock Block);
     void ClearMesh();
@@ -141,14 +169,14 @@ private:
     float QueryNoiseValue(const std::vector<float>& noiseOutput, int x, int y, int z, int Width, int Height);
 
     void GenerateMesh();
-
+    void PerformBusyWait(int32 NumberOfIterations);
     void SetupBiomeNoise();
     void CreateQuads();
     void StartSequentialTasksWithDelay();
     void DispatchTaskOne();
     void DispatchTaskTwo();
     void DispatchTaskThree();
-
+    void RemoveDegenerateTriangles(TArray<int32>& TriangleData);
     void SpawnTree(const FVector& Location);
 
     void ApplyMesh();

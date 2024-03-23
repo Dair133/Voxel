@@ -40,58 +40,61 @@ std::string ToStringEnum(EBlock blockType) {
     default: return "Unknown";
     }
 }
-
 AChunk::AChunk()
 {
     // Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
     PrimaryActorTick.bCanEverTick = true;
 
-    Mesh = CreateDefaultSubobject<UProceduralMeshComponent>("Mesh");
+    // Create a default scene component as the root
+    RootComponent = CreateDefaultSubobject<USceneComponent>(TEXT("RootComponent"));
 
-    //Initialize Blocks
+    MeshOne = CreateDefaultSubobject<UProceduralMeshComponent>("Mesh");
+    MeshTwo = CreateDefaultSubobject<UProceduralMeshComponent>("Meshx");
+    MeshThree = CreateDefaultSubobject<UProceduralMeshComponent>("Meshy");
+
+    // Attach the mesh components to the root component
+    MeshOne->SetupAttachment(RootComponent);
+    MeshTwo->SetupAttachment(RootComponent);
+    MeshThree->SetupAttachment(RootComponent);
+
+    // Initialize Blocks
     Blocks.SetNum(Size * Size * VerticalHeight);
-    //Blocks.Init(EBlock::Air, Size * Size * VerticalHeight);
 
     // Mesh Settings
-    Mesh->SetCastShadow(false);
-
-    // Set Mesh as Root
-    SetRootComponent(Mesh);
+    MeshOne->SetCastShadow(false);
+    MeshTwo->SetCastShadow(false);
+    MeshThree->SetCastShadow(false);
 
     static ConstructorHelpers::FObjectFinder<UMaterialInterface> Material(TEXT("Material'/Game/Cubedeps/Basecube.Basecube'"));
     if (Material.Succeeded())
     {
-        // UE_LOG(LogTemp, Warning, TEXT("Suceeded in finding obj"));
         BaseMaterial = Material.Object;
     }
-
-
-    //static ConstructorHelpers::FObjectFinder<UStaticMesh> MyTreeFinder(TEXT("StaticMesh'/Game/CUBEGENERATIONMAP/TreeTest.TreeTest'"));
-   // if (MyTreeFinder.Succeeded())
-   // {
-   //     MyTreeMesh = MyTreeFinder.Object;
-   // }
-  //  else {
-  //          UE_LOG(LogTemp, Warning, TEXT("Failed to find TreeTest"));
-  //  }
-
-    //static ConstructorHelpers::FObjectFinder<UBlueprint> MyTreeBlueprintFinder(TEXT("Blueprint'/Game/CUBEGENERATIONMAP/TreeTest.TreeTest'"));
-    //// static ConstructorHelpers::FObjectFinder<UBlueprint> MyTreeBlueprintFinder(TEXT("Blueprint'/Game/CUBEGENERATIONMAP/Objects/Trees/Tree01.Tree01'"));
-    //if (MyTreeBlueprintFinder.Succeeded())
-    //{
-    //    MyTreeBPClass = (UClass*)MyTreeBlueprintFinder.Object->GeneratedClass;
-    //    //  UE_LOG(LogTemp, Warning, TEXT("Blueprint loaded successfully."));
-    //}
-    //else
-    //{
-    //    UE_LOG(LogTemp, Error, TEXT("Failed to load blueprint."));
-    //}
-    //static ConstructorHelpers::FObjectFinder<UBlueprint> MyGrassBlueprintFinder(TEXT("Blueprint'/Game/CUBEGENERATIONMAP/Objects/Misc/Grass.Grass'"));
-    ////MyGrassBPClass = (UClass*)MyGrassBlueprintFinder.Object->GeneratedClass;
-
-
 }
 
+void AChunk::ApplyMesh()
+{
+    FScopeLock Lock(&CriticalSection);
+
+  
+
+    Lock.Unlock();
+}
+void AChunk::RemoveDegenerateTriangles(TArray<int32>& TriangleDataRemove)
+{
+    for (int32 i = 0; i < TriangleDataRemove.Num(); i += 3)
+    {
+        int32 Index1 = TriangleDataRemove[i];
+        int32 Index2 = TriangleDataRemove[i + 1];
+        int32 Index3 = TriangleDataRemove[i + 2];
+
+        if (Index1 == Index2 || Index1 == Index3 || Index2 == Index3)
+        {
+            TriangleDataRemove.RemoveAt(i, 3);
+            i -= 3;
+        }
+    }
+}
 void AChunk::ModifyVoxel(const FIntVector Position, const EBlock Block)
 {
     if (Position.X >= Size || Position.Y >= Size || Position.Z >= VerticalHeight || Position.X < 0 || Position.Y < 0 || Position.Z < 0) return;
@@ -113,11 +116,11 @@ void AChunk::ModifyVoxel(const FIntVector Position, const EBlock Block)
     QuadDataQueueTwo.Empty();
     QuadDataQueueThree.Empty();
     TaskDependencies.Empty(0);
-    VertexColors.Empty();
+ /*   VertexColors.Empty();
     VertexData.Empty();
     TriangleData.Empty();
     NormalData.Empty();
-    UVData.Empty();
+    UVData.Empty();*/
 
 
     /*
@@ -134,9 +137,9 @@ TArray<FVector2D>().Swap(UVData);
 // Called when the game starts or when spawned
 void AChunk::BeginPlay()
 {
-    Mesh->SetMaterial(0, BaseMaterial);
-
-
+    MeshOne->SetMaterial(0, BaseMaterial);
+    MeshTwo->SetMaterial(0, BaseMaterial);
+    MeshThree->SetMaterial(0, BaseMaterial);
     Super::BeginPlay();
 
 }
@@ -147,28 +150,61 @@ void AChunk::Tick(float DeltaTime)
 {
 
     // Increment your frame counter
-    FrameCounter++;
+    frameCounter++;
 
 
 
 
-    if (FrameCounter < 500) {
+
+
+
+
+
+    if (frameCounter < 500) {
         // Perform a portion of your logic here
-        if (FrameCounter == 2) {
+        if (frameCounter == 2) {
             GenerateBlocks();
         }
-        else if (FrameCounter == 50) {
+        else if (frameCounter == 50) {
             GenerateMesh();
         }
-        else if (FrameCounter == 100) {
+        else if (frameCounter == 100) {
             ApplyMesh();
         }
         else {
-            PrimaryActorTick.bCanEverTick = false;
+           // PrimaryActorTick.bCanEverTick = false;
         }
     }
+
+
+    if (finishedCreateQuad) {
+
+        if (!resetQuadFrameTimer) {
+			frameCounter = 0;
+            resetQuadFrameTimer = true;
+		}
+        if (frameCounter == 1) {
+            MeshOne->CreateMeshSection(0, AxisOneVertexData, AxisOneTriangleData, AxisOneNormalData, AxisOneUVData, AxisOneVertexColors, TArray<FProcMeshTangent>(), true);
+            MeshOne->SetMaterial(0, BaseMaterial);
+        }
+        if (frameCounter == 10) {
+            MeshTwo->CreateMeshSection(0, AxisTwoVertexData, AxisTwoTriangleData, AxisTwoNormalData, AxisTwoUVData, AxisTwoVertexColors, TArray<FProcMeshTangent>(), true);
+            MeshTwo->SetMaterial(0, BaseMaterial);
+        }
+        if (frameCounter == 25) {
+            MeshThree->CreateMeshSection(0, AxisThreeVertexData, AxisThreeTriangleData, AxisThreeNormalData, AxisThreeUVData, AxisThreeVertexColors, TArray<FProcMeshTangent>(), true);
+            MeshThree->SetMaterial(0, BaseMaterial);
+        }
+
+
+
+
+    }
+
+
+
 }
-void PerformBusyWait(int32 NumberOfIterations)
+void AChunk::PerformBusyWait(int32 NumberOfIterations)
 {
     for (int32 i = 0; i < NumberOfIterations; ++i)
     {
@@ -190,11 +226,11 @@ void AChunk::ClearMesh()
 
     VertexCount = 0;
 
-    VertexData.Empty();
-    TriangleData.Empty();
-    NormalData.Empty();
-    UVData.Empty();
-    VertexColors.Empty();
+    //VertexData.Empty();
+    //TriangleData.Empty();
+    //NormalData.Empty();
+    //UVData.Empty();
+    //VertexColors.Empty();
 
     UE_LOG(LogTemp, Display, TEXT("CLEARING MESH"));
 }
@@ -409,12 +445,6 @@ void AChunk::SpawnActorAtLocation(float X, float Y, float Z, UClass* ActorToSpaw
     }
 }
 
-void AChunk::ApplyMesh()
-{
-    FScopeLock Lock(&CriticalSection);
-    Mesh->CreateMeshSection(0, VertexData, TriangleData, NormalData, UVData, VertexColors, TArray<FProcMeshTangent>(), true);
-    Lock.Unlock();
-}
 
 
 
@@ -585,9 +615,9 @@ void AChunk::GenerateMesh()
                             ChunkItr[Axis2] = j;
 
 
-                        /*     if (i % 10 == 0) {
-                                 PerformBusyWait(10);
-                             }*/
+                            /*     if (i % 10 == 0) {
+                                     PerformBusyWait(10);
+                                 }*/
 
 
                             int width = 1;
@@ -702,7 +732,20 @@ void AChunk::GenerateMesh()
 
 
         }, TStatId(), nullptr, ENamedThreads::BackgroundThreadPriority);
-   
+    TaskOne->Wait();
+    AxisOneNormalData = NormalData;
+    AxisOneTriangleData = TriangleData;
+    AxisOneVertexData = VertexData;
+    AxisOneUVData = UVData;
+    AxisOneVertexColors = VertexColors;
+    VertexCount = 0;
+
+   NormalData.Empty();
+   TriangleData.Empty();
+   VertexData.Empty();
+   UVData.Empty();
+   VertexColors.Empty();
+
 
 
 
@@ -725,6 +768,19 @@ void AChunk::GenerateMesh()
                     QuadData.Block);
             }
         }, TStatId(), nullptr, ENamedThreads::BackgroundThreadPriority);
+    TaskTwo->Wait();
+    AxisTwoNormalData = NormalData;
+    AxisTwoTriangleData = TriangleData;
+    AxisTwoVertexData = VertexData;
+    AxisTwoUVData = UVData;
+    AxisTwoVertexColors = VertexColors;
+
+    NormalData.Empty(0);
+    TriangleData.Empty(0);
+    VertexData.Empty(0);
+    UVData.Empty(0);
+    VertexColors.Empty(0);
+    VertexCount = 0;
 
     FGraphEventRef TaskThree = FFunctionGraphTask::CreateAndDispatchWhenReady([&]()
         {
@@ -736,8 +792,8 @@ void AChunk::GenerateMesh()
                 iterationCount++;
                 if (iterationCount % 100 == 0)
                 {
-					PerformBusyWait(20);
-				}
+                    PerformBusyWait(20);
+                }
                 CreateQuadThree(QuadData.CurrentMask, QuadData.AxisMask,
                     QuadData.ChunkItr,
                     QuadData.ChunkItr + QuadData.DeltaAxis1,
@@ -747,16 +803,32 @@ void AChunk::GenerateMesh()
             }
 
         }, TStatId(), nullptr, ENamedThreads::BackgroundThreadPriority);
+    TaskThree->Wait();
+    AxisThreeNormalData = NormalData;
+    AxisThreeTriangleData = TriangleData;
+    AxisThreeVertexData = VertexData;
+    AxisThreeUVData = UVData;
+    AxisThreeVertexColors = VertexColors;
 
-    //one vertdex data array per axis?????????
-    //and then seperate apply mesh functions for each axis, so applyMeshOne() applyMeshTwo() applyMeshThree()??/
+
+    finishedCreateQuad = true;
+
 }
 
 void AChunk::CreateQuadOne(FMask Mask, FIntVector AxisMask, FIntVector V1, FIntVector V2, FIntVector V3, FIntVector V4, EBlock Block)
 {
 
-    //FScopeLock Lock(&CriticalSection);
+    FScopeLock Lock(&CriticalSection);
     const auto Normal = FVector(AxisMask * Mask.Normal);
+
+
+
+    EBlock BlockMaterial = Mask.Block;
+    FColor BlockColor = GetColorFromBlock(BlockMaterial, V1);
+
+
+ 
+
 
     VertexData.Add(FVector(V1) * 100);
     VertexData.Add(FVector(V2) * 100);
@@ -764,8 +836,6 @@ void AChunk::CreateQuadOne(FMask Mask, FIntVector AxisMask, FIntVector V1, FIntV
     VertexData.Add(FVector(V4) * 100);
 
 
-    EBlock BlockMaterial = Mask.Block;
-    FColor BlockColor = GetColorFromBlock(BlockMaterial, V1);
 
     VertexColors.Add(BlockColor);
     VertexColors.Add(BlockColor);
@@ -790,23 +860,23 @@ void AChunk::CreateQuadOne(FMask Mask, FIntVector AxisMask, FIntVector V1, FIntV
     NormalData.Add(Normal);
 
     VertexCount += 4;
-    //Lock.Unlock();
+    Lock.Unlock();
 
 }
 void AChunk::CreateQuadTwo(FMask Mask, FIntVector AxisMask, FIntVector V1, FIntVector V2, FIntVector V3, FIntVector V4, EBlock Block)
 {
 
-    //FScopeLock Lock(&CriticalSection);
+    FScopeLock Lock(&CriticalSection);
     const auto Normal = FVector(AxisMask * Mask.Normal);
+
+
+    EBlock BlockMaterial = Mask.Block;
+    FColor BlockColor = GetColorFromBlock(BlockMaterial, V1);
 
     VertexData.Add(FVector(V1) * 100);
     VertexData.Add(FVector(V2) * 100);
     VertexData.Add(FVector(V3) * 100);
     VertexData.Add(FVector(V4) * 100);
-
-
-    EBlock BlockMaterial = Mask.Block;
-    FColor BlockColor = GetColorFromBlock(BlockMaterial, V1);
 
     VertexColors.Add(BlockColor);
     VertexColors.Add(BlockColor);
@@ -830,24 +900,25 @@ void AChunk::CreateQuadTwo(FMask Mask, FIntVector AxisMask, FIntVector V1, FIntV
     NormalData.Add(Normal);
     NormalData.Add(Normal);
 
-    VertexCount += 4;
-    //Lock.Unlock();
+
+   VertexCount += 4;
+    Lock.Unlock();
 
 }
 void AChunk::CreateQuadThree(FMask Mask, FIntVector AxisMask, FIntVector V1, FIntVector V2, FIntVector V3, FIntVector V4, EBlock Block)
 {
 
-   // FScopeLock Lock(&CriticalSection);
+    FScopeLock Lock(&CriticalSection);
     const auto Normal = FVector(AxisMask * Mask.Normal);
+
+    EBlock BlockMaterial = Mask.Block;
+    FColor BlockColor = GetColorFromBlock(BlockMaterial, V1);
+
 
     VertexData.Add(FVector(V1) * 100);
     VertexData.Add(FVector(V2) * 100);
     VertexData.Add(FVector(V3) * 100);
     VertexData.Add(FVector(V4) * 100);
-
-
-    EBlock BlockMaterial = Mask.Block;
-    FColor BlockColor = GetColorFromBlock(BlockMaterial, V1);
 
     VertexColors.Add(BlockColor);
     VertexColors.Add(BlockColor);
@@ -871,7 +942,12 @@ void AChunk::CreateQuadThree(FMask Mask, FIntVector AxisMask, FIntVector V1, FIn
     NormalData.Add(Normal);
     NormalData.Add(Normal);
 
+
+
     VertexCount += 4;
-   // Lock.Unlock();
+    Lock.Unlock();
 
 }
+
+
+
