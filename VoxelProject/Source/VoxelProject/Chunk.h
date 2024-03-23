@@ -69,7 +69,7 @@ public:
     UPROPERTY()
     UStaticMesh* MyTreeMesh;
 
-    int VerticalHeight = 400;
+    int VerticalHeight = 450;
     UClass* MyTreeBPClass;
     UClass* MyGrassBPClass;
     // UFUNCTION(BlueprintCallable, Category = "Chunk")
@@ -78,7 +78,7 @@ public:
     UPROPERTY(EditAnywhere, Category = "Chunk")
     int AmtBlocksVertically = 1;
 
-
+   
     int FrameCounter = 0;
     int CurrentX, CurrentY;
     int MaxX, MaxY;

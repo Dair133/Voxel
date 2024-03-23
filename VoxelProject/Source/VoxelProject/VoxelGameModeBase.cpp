@@ -15,6 +15,7 @@
 #include <thread>
 #include <GameFramework/CharacterMovementComponent.h>
 #include <EditorCategoryUtils.h>
+#include <random>
 //#include "Octree/Octree.h"
 //#include "Octree/Enums.h"
 
@@ -240,17 +241,24 @@ void AVoxelGameModeBase::ProcessChunkQueue()
     // Set a timer to call this function again after 1.0 second, if there are more chunks in the queue.
     if (!ChunkQueue.IsEmpty())
     {//130
-        if (GetWorld()->GetTimeSeconds() > 40)
+        if (GetWorld()->GetTimeSeconds() > 60)
         {
           
             if (!GetWorld()->GetTimerManager().IsTimerActive(SpawnTimerHandle))
             {
+                std::random_device rd;
+                std::mt19937 gen(rd());
+                std::uniform_real_distribution<> distrib(0.0, 1.0); // Range from 0.0 to 1.0
+
+                double randomFloat = distrib(gen); // Generates a random double between 0.0 and 1.0
+
+
                 float TimeToDisplay1 = 5.0f; // Display the message for 5 seconds.
                 FColor DisplayColor1 = FColor::Red; // Display the message in red.
                 float WorldTime = GetWorld()->GetTimeSeconds();
                 FString DebugMessage = FString::Printf(TEXT("World Time SECTION TWO: %f"), WorldTime);
                 GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, DebugMessage);
-                GetWorld()->GetTimerManager().SetTimer(SpawnTimerHandle, this, &AVoxelGameModeBase::ProcessChunkQueue, 0.72f, false);
+                GetWorld()->GetTimerManager().SetTimer(SpawnTimerHandle, this, &AVoxelGameModeBase::ProcessChunkQueue, 0.12f+(randomFloat/2), false);
             }
             //0.55 is a good value
             //0.42 is a good value(main value used for testing over previous days)

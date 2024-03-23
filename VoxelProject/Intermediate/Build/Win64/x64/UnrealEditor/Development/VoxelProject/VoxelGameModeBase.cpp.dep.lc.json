@@ -67,7 +67,9 @@
             "e:\\ue5\\ue_5.3\\engine\\source\\runtime\\engine\\public\\charactermovementcomponentasync.h",
             "e:\\ue5\\ue_5.3\\engine\\intermediate\\build\\win64\\unrealeditor\\inc\\engine\\uht\\charactermovementcomponentasync.generated.h",
             "e:\\ue5\\ue_5.3\\engine\\intermediate\\build\\win64\\unrealeditor\\inc\\engine\\uht\\charactermovementcomponent.generated.h",
-            "e:\\ue5\\ue_5.3\\engine\\source\\editor\\unrealed\\public\\editorcategoryutils.h"
+            "e:\\ue5\\ue_5.3\\engine\\source\\editor\\unrealed\\public\\editorcategoryutils.h",
+            "c:\\program files\\microsoft visual studio\\2022\\community\\vc\\tools\\msvc\\14.36.32532\\include\\random",
+            "c:\\program files\\microsoft visual studio\\2022\\community\\vc\\tools\\msvc\\14.36.32532\\include\\__msvc_int128.hpp"
         ],
         "ImportedModules": [],
         "ImportedHeaderUnits": []

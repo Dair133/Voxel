@@ -104,9 +104,21 @@ void AChunk::ModifyVoxel(const FIntVector Position, const EBlock Block)
 
     ApplyMesh();
 
+    // Removes the entire blocks array from memory
+    // // 10.3 gigs memeory used when NOT destroying this array
+    //Blocks.Empty(0);
+    NoiseNumbers.Empty(0);
+    QuadDataQueueOne.Empty();
 
+    QuadDataQueueTwo.Empty();
+    QuadDataQueueThree.Empty();
+    TaskDependencies.Empty(0);
+    VertexColors.Empty();
+    VertexData.Empty();
+    TriangleData.Empty();
+    NormalData.Empty();
+    UVData.Empty();
 
-    // In order to test RAM usage I should add a funciton which destroys the chunks once they are all generated to see if memeory usage goes down properly?
 
     /*
     Hacky way to clear the memory of the arrays if concerns about not deallocating correctly
@@ -139,38 +151,20 @@ void AChunk::Tick(float DeltaTime)
 
 
 
+
     if (FrameCounter < 500) {
         // Perform a portion of your logic here
         if (FrameCounter == 2) {
-
             GenerateBlocks();
-
         }
         else if (FrameCounter == 50) {
             GenerateMesh();
-
         }
         else if (FrameCounter == 100) {
             ApplyMesh();
         }
-        else if (FrameCounter == 499) {
+        else {
             PrimaryActorTick.bCanEverTick = false;
-
-            // UE_LOG(LogTemp, Warning, TEXT("Freeing all data"));
-             //TEST TO MAKE SURE THIS CODE RUNS
-            NoiseNumbers.Empty(0);
-            QuadDataQueueOne.Empty();
-
-
-            QuadDataQueueTwo.Empty();
-            QuadDataQueueThree.Empty();
-            TaskDependencies.Empty(0);
-            VertexColors.Empty();
-            VertexData.Empty();
-            TriangleData.Empty();
-            NormalData.Empty();
-            UVData.Empty();
-
         }
     }
 }
@@ -250,117 +244,7 @@ float AChunk::QueryNoiseValue(const std::vector<float>& noiseOutput, int x, int 
 
 void AChunk::GenerateBlocks()
 {
-    std::vector<float> noiseOutput(Size * Size * VerticalHeight);
-    auto fnSimplex = FastNoise::New<FastNoise::Simplex>();
-    auto fnFractal = FastNoise::New<FastNoise::FractalFBm>();
-    fnFractal->SetSource(fnSimplex);
-    fnFractal->SetOctaveCount(4);
-    fnFractal->SetGain(1.1f);
-    fnFractal->SetLacunarity(1.1f);
-    fnFractal->SetWeightedStrength(1.1f);
-    auto fnDomainscale = FastNoise::New<FastNoise::DomainScale>();
-    fnDomainscale->SetScale(0.1f);
-    fnDomainscale->SetSource(fnFractal);
-    auto fnDomainWarpGradient = FastNoise::New<FastNoise::DomainWarpGradient>();
-    fnDomainWarpGradient->SetWarpAmplitude(0.2f);
-    fnDomainWarpGradient->SetWarpFrequency(0.1f);
-    fnDomainWarpGradient->SetSource(fnDomainscale);
-    auto fnDomainWarpFractalProgessive = FastNoise::New<FastNoise::DomainWarpFractalProgressive>();
-    fnDomainWarpFractalProgessive->SetGain(0.7f);
-    fnDomainWarpFractalProgessive->SetWeightedStrength(0.5f);
-    fnDomainWarpFractalProgessive->SetLacunarity(0.5f);
-    fnDomainWarpFractalProgessive->SetOctaveCount(2);
-    fnDomainWarpFractalProgessive->SetSource(fnDomainWarpGradient);
 
-    const auto Location = GetActorLocation();
-
-    // Calculate the chunk's position in the world
-    int chunkX = Location.X / (Size * 100);
-    int chunkY = Location.Y / (Size * 100);
-    int chunkZ = Location.Z / (VerticalHeight * 100);
-
-
-    // Generate the noise map for the chunk
-   // Create two separate noise output vectors for each thread
-  // Generate the noise map for the chunk
-// Create four separate noise output vectors for each thread
-    std::vector<float> noiseOutputThread1(Size * Size * VerticalHeight / 4);
-    std::vector<float> noiseOutputThread2(Size * Size * VerticalHeight / 4);
-    std::vector<float> noiseOutputThread3(Size * Size * VerticalHeight / 4);
-    std::vector<float> noiseOutputThread4(Size * Size * VerticalHeight / 4);
-
-    auto NoiseTask1 = FFunctionGraphTask::CreateAndDispatchWhenReady([&]()
-
-        {
-
-            fnDomainWarpFractalProgessive->GenUniformGrid3D(noiseOutputThread1.data(), chunkX * Size, chunkY * Size, chunkZ * VerticalHeight, Size / 2, Size / 2, VerticalHeight / 2, 0.05f, 1337);
-
-        }, TStatId(), nullptr, ENamedThreads::AnyBackgroundHiPriTask);
-
-    auto NoiseTask2 = FFunctionGraphTask::CreateAndDispatchWhenReady([&]()
-
-        {
-
-            fnDomainWarpFractalProgessive->GenUniformGrid3D(noiseOutputThread2.data(), chunkX * Size + Size / 2, chunkY * Size, chunkZ * VerticalHeight, Size / 2, Size / 2, VerticalHeight / 2, 0.05f, 1337);
-
-        }, TStatId(), nullptr, ENamedThreads::AnyThread);
-
-    auto NoiseTask3 = FFunctionGraphTask::CreateAndDispatchWhenReady([&]()
-
-        {
-
-            fnDomainWarpFractalProgessive->GenUniformGrid3D(noiseOutputThread3.data(), chunkX * Size, chunkY * Size + Size / 2, chunkZ * VerticalHeight, Size / 2, Size / 2, VerticalHeight / 2, 0.05f, 1337);
-
-        }, TStatId(), nullptr, ENamedThreads::AnyThread);
-
-    auto NoiseTask4 = FFunctionGraphTask::CreateAndDispatchWhenReady([&]()
-
-        {
-
-            fnDomainWarpFractalProgessive->GenUniformGrid3D(noiseOutputThread4.data(), chunkX * Size + Size / 2, chunkY * Size + Size / 2, chunkZ * VerticalHeight, Size / 2, Size / 2, VerticalHeight / 2, 0.05f, 1337);
-
-        }, TStatId(), nullptr, ENamedThreads::AnyThread);
-
-    // Wait for all noise generation tasks to complete
-
-    FTaskGraphInterface::Get().WaitUntilTasksComplete({ NoiseTask1, NoiseTask2, NoiseTask3, NoiseTask4 }, ENamedThreads::GameThread);
-
-    // Combine the noise output from all threads into a single vector
-
-    noiseOutput.resize(Size * Size * VerticalHeight);
-
-    for (int z = 0; z < VerticalHeight / 2; ++z)
-
-    {
-
-        for (int y = 0; y < Size / 2; ++y)
-
-        {
-
-            for (int x = 0; x < Size / 2; ++x)
-
-            {
-
-                int index = x + y * Size / 2 + z * Size * Size / 4;
-
-                noiseOutput[x + y * Size + z * Size * Size] = noiseOutputThread1[index];
-
-                noiseOutput[x + Size / 2 + y * Size + z * Size * Size] = noiseOutputThread2[index];
-
-                noiseOutput[x + (y + Size / 2) * Size + z * Size * Size] = noiseOutputThread3[index];
-
-                noiseOutput[x + Size / 2 + (y + Size / 2) * Size + z * Size * Size] = noiseOutputThread4[index];
-
-            }
-
-        }
-
-    }
-
-    float* noiseArray = noiseOutput.data();
-    float randomPointTen = QueryNoiseValue(noiseOutput, 10, 10, 10, Size, VerticalHeight);
-
-    // UE_LOG(LogTemp, Warning, TEXT("3dNoiseSize:%d   Eight:%f   Nine:%f  Ten:%f"), noiseOutput.size(), randomPointEight, randomPointNine, randomPointTen);
     auto biomeNoiseMap = new FastNoiseLite();
     biomeNoiseMap->SetNoiseType(FastNoiseLite::NoiseType_Perlin);
     biomeNoiseMap->SetFrequency(1.1f);
@@ -388,6 +272,7 @@ void AChunk::GenerateBlocks()
     //int period = 2 * amplitude; // The number of points in one complete wave
     //int iterations = 20; // The number of points to generate
 
+    const auto Location = GetActorLocation();
     const float baseHeight = VerticalHeight / 4.0f;
     TArray<float> NoiseMap;
     int TotalElements = Size * Size * VerticalHeight;
@@ -395,56 +280,99 @@ void AChunk::GenerateBlocks()
 
     // 0 equals hilly
     //1 equals river
-   // int biomeNumber = 0;
+    int biomeNumber = 0;
 
-  /*  float biomeNoise;
-    float combinedNoise;
-    float normalizedNoise;
-    float curvedNoise;
-    int index;*/
-    // Ensure NoiseMap has been initialized to the right dimensions before this
-  // Assuming biomeNoiseMap is correctly initialized and configured
+    /*  float biomeNoise;
+      float combinedNoise;
+      float normalizedNoise;
+      float curvedNoise;
+      int index;*/
+      // Ensure NoiseMap has been initialized to the right dimensions before this
+    // Assuming biomeNoiseMap is correctly initialized and configured
     TArray<TFunction<void()>> NoiseMapOperations;
+
+    // ParallelFor(Size, [&](int32 x) {
+
+    for (int x = 0; x < Size; x++)
+    {
+        NoiseMapOperations.Add([=, &NoiseMap]()
+            {
+        for (int y = 0; y < Size; y++)
+        {
+            // By passing &NoiseMap we are passing a reference to each labmda function, not a unique copy thus improving memoery overhead.
+           
+                    float Xpos = (x * 100 + Location.X) / 100;
+                    float Ypos = (y * 100 + Location.Y) / 100;
+                    float biomeNoise = biomeNoiseMap->GetNoise(Xpos, Ypos);
+                    float normalizedBiomeNoise = (biomeNoise + 1) / 2.0f;
+
+                    for (int z = 0; z < VerticalHeight; z++)
+                    {
+                        float Zpos = (z * 100 + Location.Z) / 100;
+                        float combinedNoise;
+                        int biomeNumber;
+
+                        if (normalizedBiomeNoise <= 0.77)
+                        {
+                            float hillyNoise = HillyPlains->GetNoise(Xpos, Ypos, Zpos);
+                            combinedNoise = hillyNoise;
+                            biomeNumber = 0;
+                        }
+                        else
+                        {
+                            float riverNoise = River->GetNoise(Xpos, Ypos, Zpos);
+                            combinedNoise = riverNoise;
+                            biomeNumber = 1;
+                        }
+
+                        float normalizedNoise = (combinedNoise + 1) / 2.0f;
+                        float curvedNoise = FMath::Pow(normalizedNoise, 2);
+                        int index = x + y * Size + z * Size * Size;
+                        NoiseMap[index] = curvedNoise * VerticalHeight;
+                    }
+           
+        }
+            });
+    }
+    ParallelFor(NoiseMapOperations.Num(), [&](int32 Index)
+        {
+            NoiseMapOperations[Index]();
+        }, EParallelForFlags::BackgroundPriority);
 
 
     //float combinedNoise;
     TArray<TFunction<void()>> BlockOperations;
-    // ParallelFor(Size, [&](int32 x) {
-    for (int x = 0; x < Size; x++) {
-
+    //ParallelFor(Size, [&](int32 x) {
+          for (int x = 0; x < Size; x++){
+              BlockOperations.Add([=, &NoiseMap]()
+                  {
         for (int y = 0; y < Size; ++y) {
 
-            BlockOperations.Add([=, &noiseArray]()
-                {
-                    for (int z = 0; z < VerticalHeight; z++) {
-                        int Index = x + y * Size + z * Size * Size;
-                        float preHeight = noiseArray[x + y * Size + z * Size * Size];
-                        preHeight = preHeight * 1000;
-                        int Height = static_cast<int>(preHeight);
-                        EBlock BlockType = EBlock::Air;
+         
+            for (int z = 0; z < VerticalHeight; z++) {
+                int Index = x + y * Size + z * Size * Size;
+                int Height = static_cast<int>(NoiseMap[Index]);
+                EBlock BlockType = EBlock::Air;
 
-                        if (z == 0) {
-                            BlockType = EBlock::Stone;
-                        }
+                if (z < Height - 1) {
+                    BlockType = biomeNumber == 0 ? EBlock::Stone : EBlock::Dirt;
+                }
+                else if (z == Height || z == Height - 1) {
+                    BlockType = biomeNumber == 0 ? EBlock::Grass : EBlock::Dirt;
+                }
 
-                        if (z < Height - 1) {
-                            BlockType = EBlock::Stone;
-                        }
-                        else if (z == Height || z == Height - 1) {
-                            BlockType = EBlock::Grass;
-                        }
-
-                        Blocks[GetBlockIndex(x, y, z)] = BlockType;
-                    }
-                });
+                Blocks[GetBlockIndex(x, y, z)] = BlockType;
+            }
+           
         }
-    }//, EParallelForFlags::BackgroundPriority);
-// RespawnTrees();
+        });
+        }//, EParallelForFlags::BackgroundPriority);
+    // RespawnTrees();
 
-    ParallelFor(BlockOperations.Num(), [&](int32 Index)
-        {
-            BlockOperations[Index]();
-        }, EParallelForFlags::BackgroundPriority);
+         ParallelFor(NoiseMapOperations.Num(), [&](int32 Index)
+             {
+                BlockOperations[Index]();
+             }, EParallelForFlags::BackgroundPriority);
     delete HillyPlains;
     delete River;
     delete biomeNoiseMap;
@@ -455,6 +383,7 @@ void AChunk::RespawnTrees() {
     FActorSpawnParameters TreeSpawnParams;
     TreeSpawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::DontSpawnIfColliding;
     for (int i = 0; i < Trees.Num(); i++) {
+        //UE_LOG(LogTemp, Warning, TEXT("Respawning trees"));
         actorData myActorData = Trees[i];
 
         AActor* NewTreeActor = GetWorld()->SpawnActor<AActor>(MyTreeBPClass, myActorData.Location, myActorData.Rotation, TreeSpawnParams);
@@ -557,6 +486,8 @@ FColor AChunk::GetColorFromBlock(EBlock Block, FIntVector Location)
     }
 }
 
+
+
 void AChunk::GenerateMesh()
 {
 
@@ -593,33 +524,51 @@ void AChunk::GenerateMesh()
 
                 int N = 0;
 
-                for (ChunkItr[Axis2] = 0; ChunkItr[Axis2] < Axis2Limit; ++ChunkItr[Axis2])
-                {
-                    for (ChunkItr[Axis1] = 0; ChunkItr[Axis1] < Axis1Limit; ++ChunkItr[Axis1])
+                ParallelFor(Axis2Limit, [&](int32 Axis2Index)
                     {
+                        TArray<FMask> LocalMask;
+                        LocalMask.SetNumUninitialized(Axis1Limit);
 
+                        auto LocalChunkItr = ChunkItr;
+                        LocalChunkItr[Axis2] = Axis2Index;
 
-                        const auto& CurrentBlock = GetBlock(ChunkItr);
-                        const auto& CompareBlock = GetBlock(ChunkItr + AxisMask);
-
-                        const bool CurrentBlockOpaque = CurrentBlock != EBlock::Air && CurrentBlock != EBlock::Null;
-                        const bool CompareBlockOpaque = CompareBlock != EBlock::Air && CompareBlock != EBlock::Null;
-
-                        if (CurrentBlockOpaque == CompareBlockOpaque)
+                        for (int Axis1Index = 0; Axis1Index < Axis1Limit; ++Axis1Index)
                         {
-                            Mask[N++] = FMask{ EBlock::Null, 0 };
-                        }
-                        else if (CurrentBlockOpaque)
-                        {
-                            Mask[N++] = FMask{ CurrentBlock, 1 };
-                        }
-                        else
-                        {
-                            Mask[N++] = FMask{ CompareBlock, -1 };
-                        }
+                            LocalChunkItr[Axis1] = Axis1Index;
 
-                    }
-                }
+                            const auto& CurrentBlock = GetBlock(LocalChunkItr);
+                            const auto& CompareBlock = GetBlock(LocalChunkItr + AxisMask);
+
+                            const bool CurrentBlockOpaque = CurrentBlock != EBlock::Air;
+                            const bool CompareBlockOpaque = CompareBlock != EBlock::Air;
+
+                            FMask Result;
+                            if (CurrentBlockOpaque == CompareBlockOpaque)
+                            {
+                                Result = FMask{ EBlock::Null, 0 };
+                            }
+                            else if (CurrentBlockOpaque)
+                            {
+                                Result = FMask{ CurrentBlock, 1 };
+                            }
+                            else
+                            {
+                                Result = FMask{ CompareBlock, -1 };
+                            }
+
+                            // Assuming Mask is not accessed concurrently or using thread-safe mechanism
+                            LocalMask[Axis1Index] = Result;
+                        }
+                        for (int Axis1Index = 0; Axis1Index < Axis1Limit; ++Axis1Index)
+                        {
+                            // Calculate the global index for Mask array
+                            int globalIndex = Axis2Index * Axis1Limit + Axis1Index;
+                            Mask[globalIndex] = LocalMask[Axis1Index];
+                        }
+                        // Merge local results into global Mask here
+                        // Ensure this is done in a thread-safe manner
+                    }, EParallelForFlags::BackgroundPriority); // Adjust flags as needed
+
 
                 ++ChunkItr[Axis];
                 N = 0;
@@ -636,8 +585,8 @@ void AChunk::GenerateMesh()
                             ChunkItr[Axis2] = j;
 
 
-                            /* if (i % 10 == 0) {
-                                 PerformBusyWait(20);
+                        /*     if (i % 10 == 0) {
+                                 PerformBusyWait(10);
                              }*/
 
 
@@ -731,10 +680,16 @@ void AChunk::GenerateMesh()
 
     FGraphEventRef TaskOne = FFunctionGraphTask::CreateAndDispatchWhenReady([&]()
         {
+            int iterationCount = 0;
             FQuadData QuadData;
             while (QuadDataQueueOne.Dequeue(QuadData))
             {
 
+                iterationCount++;
+                if (iterationCount % 100 == 0)
+                {
+                    PerformBusyWait(20);
+                }
                 CreateQuadOne(QuadData.CurrentMask, QuadData.AxisMask,
                     QuadData.ChunkItr,
                     QuadData.ChunkItr + QuadData.DeltaAxis1,
@@ -747,14 +702,21 @@ void AChunk::GenerateMesh()
 
 
         }, TStatId(), nullptr, ENamedThreads::BackgroundThreadPriority);
+   
+
 
 
     FGraphEventRef TaskTwo = FFunctionGraphTask::CreateAndDispatchWhenReady([&]()
         {
             FQuadData QuadData;
-
+            int iterationCount = 0;
             while (QuadDataQueueTwo.Dequeue(QuadData))
             {
+                iterationCount++;
+                if (iterationCount % 100 == 0)
+                {
+                    PerformBusyWait(20);
+                }
                 CreateQuadTwo(QuadData.CurrentMask, QuadData.AxisMask,
                     QuadData.ChunkItr,
                     QuadData.ChunkItr + QuadData.DeltaAxis1,
@@ -764,13 +726,18 @@ void AChunk::GenerateMesh()
             }
         }, TStatId(), nullptr, ENamedThreads::BackgroundThreadPriority);
 
-    TaskOne->Wait();
     FGraphEventRef TaskThree = FFunctionGraphTask::CreateAndDispatchWhenReady([&]()
         {
+            int iterationCount = 0;
             FQuadData QuadData;
 
             while (QuadDataQueueThree.Dequeue(QuadData))
             {
+                iterationCount++;
+                if (iterationCount % 100 == 0)
+                {
+					PerformBusyWait(20);
+				}
                 CreateQuadThree(QuadData.CurrentMask, QuadData.AxisMask,
                     QuadData.ChunkItr,
                     QuadData.ChunkItr + QuadData.DeltaAxis1,
@@ -781,17 +748,14 @@ void AChunk::GenerateMesh()
 
         }, TStatId(), nullptr, ENamedThreads::BackgroundThreadPriority);
 
-
+    //one vertdex data array per axis?????????
+    //and then seperate apply mesh functions for each axis, so applyMeshOne() applyMeshTwo() applyMeshThree()??/
 }
-
-
-
-
 
 void AChunk::CreateQuadOne(FMask Mask, FIntVector AxisMask, FIntVector V1, FIntVector V2, FIntVector V3, FIntVector V4, EBlock Block)
 {
 
-    FScopeLock Lock(&CriticalSection);
+    //FScopeLock Lock(&CriticalSection);
     const auto Normal = FVector(AxisMask * Mask.Normal);
 
     VertexData.Add(FVector(V1) * 100);
@@ -826,13 +790,13 @@ void AChunk::CreateQuadOne(FMask Mask, FIntVector AxisMask, FIntVector V1, FIntV
     NormalData.Add(Normal);
 
     VertexCount += 4;
-    Lock.Unlock();
+    //Lock.Unlock();
 
 }
 void AChunk::CreateQuadTwo(FMask Mask, FIntVector AxisMask, FIntVector V1, FIntVector V2, FIntVector V3, FIntVector V4, EBlock Block)
 {
 
-    FScopeLock Lock(&CriticalSection);
+    //FScopeLock Lock(&CriticalSection);
     const auto Normal = FVector(AxisMask * Mask.Normal);
 
     VertexData.Add(FVector(V1) * 100);
@@ -867,13 +831,13 @@ void AChunk::CreateQuadTwo(FMask Mask, FIntVector AxisMask, FIntVector V1, FIntV
     NormalData.Add(Normal);
 
     VertexCount += 4;
-    Lock.Unlock();
+    //Lock.Unlock();
 
 }
 void AChunk::CreateQuadThree(FMask Mask, FIntVector AxisMask, FIntVector V1, FIntVector V2, FIntVector V3, FIntVector V4, EBlock Block)
 {
 
-    FScopeLock Lock(&CriticalSection);
+   // FScopeLock Lock(&CriticalSection);
     const auto Normal = FVector(AxisMask * Mask.Normal);
 
     VertexData.Add(FVector(V1) * 100);
@@ -908,6 +872,6 @@ void AChunk::CreateQuadThree(FMask Mask, FIntVector AxisMask, FIntVector V1, FIn
     NormalData.Add(Normal);
 
     VertexCount += 4;
-    Lock.Unlock();
+   // Lock.Unlock();
 
 }
