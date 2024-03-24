@@ -4,6 +4,14 @@
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
 #include <VoxelProject/Enums.h>
+#include <DynamicMesh/DynamicMesh3.h>
+#include <DynamicMesh/DynamicAttribute.h>
+#include <DynamicMesh/DynamicVertexAttribute.h>
+#include <DynamicMesh/DynamicMeshAttributeSet.h>
+#include <GeometryCoreModule.h>
+#include <GeometryBase.h>
+#include <DynamicMeshActor.h>
+#include <DynamicMesh/ColliderMesh.h>
 #include "Chunk.generated.h"
 
 enum class EDirection1;
@@ -95,9 +103,16 @@ protected:
     virtual void BeginPlay() override;
 
 private:
-    UProceduralMeshComponent* MeshOne;
-    UProceduralMeshComponent* MeshTwo;
-    UProceduralMeshComponent* MeshThree;
+  
+
+    UStaticMesh* StaticMeshOne;
+    UStaticMesh* StaticMeshTwo;
+    UStaticMesh* StaticMeshThree;
+
+    UDynamicMeshComponent* MeshOne;
+    UDynamicMeshComponent* MeshTwo;
+    UDynamicMeshComponent* MeshThree;
+
     FastNoiseLite* HillyPlains;
     FastNoiseLite* ColorNoise;
     FastNoiseLite* SecondaryNoise;
@@ -134,12 +149,14 @@ private:
 
     TArray<FVector> EmptyArray;
 
-
+    TArray<FVector2D> placeholderUVData;
     FCriticalSection CriticalSection;
     FCriticalSection VertexCriticalSection;
     FCriticalSection GenerateBlocksLock;
-
     int VertexCount = 0;
+    int AxisOneVertexCount = 0;
+    int AxisTwoVertexCount = 0;
+    int AxisThreeVertexCount = 0;
     bool finishedCreateQuad = false;
     bool resetQuadFrameTimer = false;
 

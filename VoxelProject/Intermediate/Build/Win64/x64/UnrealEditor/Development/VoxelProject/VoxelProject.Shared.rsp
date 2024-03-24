@@ -261,6 +261,11 @@
 /I "Developer\WidgetRegistration\Public"
 /I "..\Plugins\Runtime\ProceduralMeshComponent\Intermediate\Build\Win64\UnrealEditor\Inc\ProceduralMeshComponent\UHT"
 /I "..\Plugins\Runtime\ProceduralMeshComponent\Source\ProceduralMeshComponent\Public"
+/I "..\Plugins\Runtime\GeometryProcessing\Source\DynamicMesh\Public"
+/I "..\Plugins\Runtime\GeometryProcessing\Source\GeometryAlgorithms\Public"
+/I "..\Intermediate\Build\Win64\UnrealEditor\Inc\GeometryFramework\UHT"
+/I "Runtime\GeometryFramework\Public"
+/I "Runtime\MeshConversion\Public"
 /external:W0
 /external:I "ThirdParty\mimalloc\include"
 /external:I "ThirdParty\LibTiff\Source\Win64"

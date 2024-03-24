@@ -11,6 +11,10 @@
 #include <system_error>
 #include <FastNoise/FastNoise.h>
 #include <VoxelProject/FastNoiseLite.h>
+#include <GeometryCoreModule.h>
+#include <GeometryBase.h>
+#include <DynamicMeshActor.h>
+#include <DynamicMesh/ColliderMesh.h>
 #include "ProceduralMeshComponent.h"
 #include <random>
 #include <Engine/StaticMeshActor.h>
@@ -22,10 +26,20 @@
 #include <cmath>
 #include <iostream>
 #include <Tickable.h>
+#include <DynamicMesh/DynamicMesh3.h>
+#include <DynamicMesh/DynamicAttribute.h>
+#include <DynamicMesh/DynamicVertexAttribute.h>
+#include <DynamicMesh/DynamicMeshAttributeSet.h>
+#include <DynamicMesh/MeshAttributeUtil.h>
+#include <DynamicMesh/Operations/SplitAttributeWelder.h>
+
 
 //#include "Octree/CubeRange.h"
 FTimerHandle MyTimerHandle;
 // Sets default values
+
+
+
 
 std::string ToStringEnum(EBlock blockType) {
     switch (blockType) {
@@ -48,9 +62,10 @@ AChunk::AChunk()
     // Create a default scene component as the root
     RootComponent = CreateDefaultSubobject<USceneComponent>(TEXT("RootComponent"));
 
-    MeshOne = CreateDefaultSubobject<UProceduralMeshComponent>("Mesh");
-    MeshTwo = CreateDefaultSubobject<UProceduralMeshComponent>("Meshx");
-    MeshThree = CreateDefaultSubobject<UProceduralMeshComponent>("Meshy");
+
+    MeshOne = CreateDefaultSubobject<UDynamicMeshComponent>("MeshOne");
+    MeshTwo = CreateDefaultSubobject<UDynamicMeshComponent>("MeshTwo");
+    MeshThree = CreateDefaultSubobject<UDynamicMeshComponent>("MeshThree");
 
     // Attach the mesh components to the root component
     MeshOne->SetupAttachment(RootComponent);
@@ -74,11 +89,46 @@ AChunk::AChunk()
 
 void AChunk::ApplyMesh()
 {
-    FScopeLock Lock(&CriticalSection);
 
-  
+    FDynamicMesh3 DynamicMeshOne;
+    DynamicMeshOne.EnableAttributes();
+    DynamicMeshOne.EnableVertexUVs(FVector2f::Zero());
+    DynamicMeshOne.EnableVertexColors(FVector3f::Zero());
+    DynamicMeshOne.Attributes()->EnablePrimaryColors();
+    DynamicMeshOne.EnableVertexNormals(FVector3f::Zero());
+    for (int32 i = 0; i < VertexData.Num(); ++i) {
+        DynamicMeshOne.AppendVertex(FVector3d(VertexData[i]));
+    }
+    for (int32 i = 0; i < TriangleData.Num(); i += 3) {
+        DynamicMeshOne.AppendTriangle(UE::Geometry::FIndex3i::FIndex3i(TriangleData[i], TriangleData[i + 1], TriangleData[i + 2]));
+    }
 
-    Lock.Unlock();
+       DynamicMeshOne.Attributes()->SetNumUVLayers(1);
+       for (int32 i = 0; i < UVData.Num(); ++i) {
+           // UV data is an array of FVector2D
+           DynamicMeshOne.SetVertexUV(i, FVector2f(UVData[i]));
+       }
+       DynamicMeshOne.Attributes()->SetNumNormalLayers(1);
+       for (int32 i = 0; i < NormalData.Num(); ++i) {
+           // Normal data is an array of FVectors
+           DynamicMeshOne.SetVertexNormal(i, FVector3f(NormalData[i]));
+       }
+       for (int32 i = 0; i < DynamicMeshOne.VertexCount(); ++i) {
+           FColor Color = VertexColors[i];
+           FVector3f ColorVector(Color.R / 255.0f, Color.G / 255.0f, Color.B / 255.0f);
+           DynamicMeshOne.SetVertexColor(i, ColorVector);
+           //DynamicMeshOne.SetVertexColor(i, FVector3f(1, 0, 0)); // Set all vertices to red
+       }
+       auto colorBuffer= DynamicMeshOne.GetColorsBuffer();
+    // Normal data and uvs are being applied correctly but the vertex colors are not being applied
+    UE::Geometry::CopyVertexNormalsToOverlay(DynamicMeshOne, *DynamicMeshOne.Attributes()->PrimaryNormals());     
+    UE::Geometry::CopyVertexUVsToOverlay(DynamicMeshOne, *DynamicMeshOne.Attributes()->PrimaryUV());
+    // 'CopyVertexColorsToOverlay' is not a function in the Geometry namespace
+    //UE::Geometry::CopyVertexColorsToOverlay(DynamicMeshOne, *DynamicMeshOne.Attributes()->PrimaryColors());
+    MeshOne->GetDynamicMesh()->SetMesh(DynamicMeshOne);
+    MeshOne->SetMaterial(0, BaseMaterial);
+    MeshOne->SetCollisionEnabled(ECollisionEnabled::QueryAndProbe);
+    MeshOne->EnableComplexAsSimpleCollision();
 }
 void AChunk::RemoveDegenerateTriangles(TArray<int32>& TriangleDataRemove)
 {
@@ -137,9 +187,10 @@ TArray<FVector2D>().Swap(UVData);
 // Called when the game starts or when spawned
 void AChunk::BeginPlay()
 {
-    MeshOne->SetMaterial(0, BaseMaterial);
-    MeshTwo->SetMaterial(0, BaseMaterial);
-    MeshThree->SetMaterial(0, BaseMaterial);
+
+   
+
+
     Super::BeginPlay();
 
 }
@@ -151,13 +202,6 @@ void AChunk::Tick(float DeltaTime)
 
     // Increment your frame counter
     frameCounter++;
-
-
-
-
-
-
-
 
 
     if (frameCounter < 500) {
@@ -176,34 +220,121 @@ void AChunk::Tick(float DeltaTime)
         }
     }
 
-
-    if (finishedCreateQuad) {
-
-        if (!resetQuadFrameTimer) {
-			frameCounter = 0;
-            resetQuadFrameTimer = true;
-		}
-        if (frameCounter == 1) {
-            MeshOne->CreateMeshSection(0, AxisOneVertexData, AxisOneTriangleData, AxisOneNormalData, AxisOneUVData, AxisOneVertexColors, TArray<FProcMeshTangent>(), true);
-            MeshOne->SetMaterial(0, BaseMaterial);
-        }
-        if (frameCounter == 10) {
-            MeshTwo->CreateMeshSection(0, AxisTwoVertexData, AxisTwoTriangleData, AxisTwoNormalData, AxisTwoUVData, AxisTwoVertexColors, TArray<FProcMeshTangent>(), true);
-            MeshTwo->SetMaterial(0, BaseMaterial);
-        }
-        if (frameCounter == 25) {
-            MeshThree->CreateMeshSection(0, AxisThreeVertexData, AxisThreeTriangleData, AxisThreeNormalData, AxisThreeUVData, AxisThreeVertexColors, TArray<FProcMeshTangent>(), true);
-            MeshThree->SetMaterial(0, BaseMaterial);
-        }
+    //if (finishedCreateQuad) {
+    //    if (!resetQuadFrameTimer) {
+    //        frameCounter = 0;
+    //        resetQuadFrameTimer = true;
+    //    }
+    //   
+    //    if (frameCounter == 1) {
+    //        FDynamicMesh3 DynamicMeshOne;
+    //        DynamicMeshOne.EnableAttributes();
+    //        DynamicMeshOne.EnableVertexUVs(FVector2f::Zero());
+    //        DynamicMeshOne.EnableVertexColors(FVector3f::Zero());
+    //        DynamicMeshOne.EnableVertexNormals(FVector3f::Zero());
 
 
+    //        for (int32 i = 0; i < AxisOneVertexData.Num(); ++i) {
+    //            DynamicMeshOne.AppendVertex(FVector3d(AxisOneVertexData[i]));
+    //        }
+    //        for (int32 i = 0; i < AxisOneTriangleData.Num(); i += 3) {
+    //            DynamicMeshOne.AppendTriangle(UE::Geometry::FIndex3i::FIndex3i(AxisOneTriangleData[i], AxisOneTriangleData[i + 1], AxisOneTriangleData[i + 2]));
+    //        }
 
+    //        for (int32 i = 0; i < AxisOneUVData.Num(); ++i) {
+    //           // DynamicMeshOne.Attributes()->SetUV(0, i, FVector2f(placeholderUVData[i]));
+    //            DynamicMeshOne.SetVertexUV(i,FVector2f(AxisOneUVData[i]));
+    //        }
+    //        for (int32 i = 0; i < AxisOneNormalData.Num(); ++i) {
+    //            DynamicMeshOne.SetVertexNormal(i,FVector3f(AxisOneNormalData[i]));
+    //        }
+    //        for (int32 i = 0; i < AxisOneVertexColors.Num(); ++i) {
+    //            DynamicMeshOne.SetVertexColor(i, FVector3f(AxisOneVertexColors[i]));
+    //        }
+    //       // Dont know what the 'CopyVertex' functions do but they seem work
+    //        UE::Geometry::CopyVertexNormalsToOverlay(DynamicMeshOne, *DynamicMeshOne.Attributes()->PrimaryNormals());
+    //        UE::Geometry::CopyVertexUVsToOverlay(DynamicMeshOne, *DynamicMeshOne.Attributes()->PrimaryUV());
+    //        // Somehow add color here?
+    //        MeshOne->GetDynamicMesh()->SetMesh(MoveTemp(DynamicMeshOne)); 
+    //        MeshOne->SetCollisionEnabled(ECollisionEnabled::QueryAndProbe);
+    //        MeshOne->EnableComplexAsSimpleCollision();
+    //        MeshOne->SetMaterial(0, BaseMaterial);
+    //    }
 
+    //    if (frameCounter == 40) {
+    //        FDynamicMesh3 DynamicMeshTwo;
+    //        for (int32 i = 0; i < AxisTwoVertexData.Num(); ++i) {
+    //            DynamicMeshTwo.AppendVertex(FVector3d(AxisTwoVertexData[i]));
+    //        }
+    //        for (int32 i = 0; i < AxisTwoTriangleData.Num(); i += 3) {
+    //            DynamicMeshTwo.AppendTriangle(UE::Geometry::FIndex3i::FIndex3i(AxisTwoTriangleData[i], AxisTwoTriangleData[i + 1], AxisTwoTriangleData[i + 2]));
+    //        }
+    //        DynamicMeshTwo.EnableAttributes();
+
+    //        DynamicMeshTwo.Attributes()->SetNumUVLayers(1);
+    //        for (int32 i = 0; i < AxisTwoUVData.Num(); ++i) {
+    //            // DynamicMeshOne.Attributes()->SetUV(0, i, FVector2f(placeholderUVData[i]));
+    //            DynamicMeshTwo.SetVertexUV(i, FVector2f(AxisTwoUVData[i]));
+    //        }
+    //        DynamicMeshTwo.Attributes()->SetNumNormalLayers(1);
+    //        for (int32 i = 0; i < AxisTwoNormalData.Num(); ++i) {
+    //            DynamicMeshTwo.SetVertexNormal(i, FVector3f(AxisTwoNormalData[i]));
+    //        }
+    //        DynamicMeshTwo.EnableVertexColors(FVector3f::Zero());
+    //        DynamicMeshTwo.Attributes()->EnablePrimaryColors();
+    //        for (int32 i = 0; i < AxisTwoVertexColors.Num(); ++i) {
+    //            DynamicMeshTwo.SetVertexColor(i, FVector3f(AxisTwoVertexColors[i]));
+    //        }
+    //        UE::Geometry::CopyVertexNormalsToOverlay(DynamicMeshTwo, *DynamicMeshTwo.Attributes()->PrimaryNormals());
+    //        UE::Geometry::CopyVertexUVsToOverlay(DynamicMeshTwo, *DynamicMeshTwo.Attributes()->PrimaryUV());
+    //        MeshTwo->GetDynamicMesh()->SetMesh(MoveTemp(DynamicMeshTwo));
+    //        MeshTwo->SetCollisionEnabled(ECollisionEnabled::QueryAndProbe);
+    //        MeshTwo->EnableComplexAsSimpleCollision();
+    //        MeshTwo->SetMaterial(0, BaseMaterial);
+    //    }
+
+    //    if (frameCounter == 80) {
+    //        FDynamicMesh3 DynamicMeshThree;
+    //        for (int32 i = 0; i < AxisThreeVertexData.Num(); ++i) {
+    //            DynamicMeshThree.AppendVertex(FVector3d(AxisThreeVertexData[i]));
+    //        }
+    //        for (int32 i = 0; i < AxisThreeTriangleData.Num(); i += 3) {
+    //            DynamicMeshThree.AppendTriangle(UE::Geometry::FIndex3i::FIndex3i(AxisThreeTriangleData[i], AxisThreeTriangleData[i + 1], AxisThreeTriangleData[i + 2]));
+    //        }
+    //        DynamicMeshThree.EnableAttributes();
+    //        DynamicMeshThree.Attributes()->SetNumUVLayers(1);
+    //        for (int32 i = 0; i < AxisThreeUVData.Num(); ++i) {
+    //            // DynamicMeshOne.Attributes()->SetUV(0, i, FVector2f(placeholderUVData[i]));
+    //            DynamicMeshThree.SetVertexUV(i, FVector2f(AxisThreeUVData[i]));
+    //        }
+    //        DynamicMeshThree.Attributes()->SetNumNormalLayers(1);
+    //        for (int32 i = 0; i < AxisThreeNormalData.Num(); ++i) {
+    //            DynamicMeshThree.SetVertexNormal(i, FVector3f(AxisThreeNormalData[i]));
+    //        }
+    //        DynamicMeshThree.EnableVertexColors(FVector3f::Zero());
+    //        DynamicMeshThree.Attributes()->EnablePrimaryColors();
+    //        for (int32 i = 0; i < AxisThreeVertexColors.Num(); ++i) {
+    //            DynamicMeshThree.SetVertexColor(i, FVector3f(AxisThreeVertexColors[i]));
+    //        }
+    //        UE::Geometry::CopyVertexNormalsToOverlay(DynamicMeshThree, *DynamicMeshThree.Attributes()->PrimaryNormals());
+    //        UE::Geometry::CopyVertexUVsToOverlay(DynamicMeshThree, *DynamicMeshThree.Attributes()->PrimaryUV());
+    //        MeshThree->GetDynamicMesh()->SetMesh(MoveTemp(DynamicMeshThree));
+    //        MeshThree->SetCollisionEnabled(ECollisionEnabled::QueryAndProbe);
+    //        MeshThree->EnableComplexAsSimpleCollision();
+    //        MeshThree->SetMaterial(0, BaseMaterial);
+    //    }
     }
+ 
+        
 
 
 
-}
+
+
+
+
+
+
 void AChunk::PerformBusyWait(int32 NumberOfIterations)
 {
     for (int32 i = 0; i < NumberOfIterations; ++i)
@@ -224,7 +355,7 @@ void AChunk::ModifyVoxelData(const FIntVector Position, const EBlock Block)
 void AChunk::ClearMesh()
 {
 
-    VertexCount = 0;
+    //VertexCount = 0;
 
     //VertexData.Empty();
     //TriangleData.Empty();
@@ -710,16 +841,9 @@ void AChunk::GenerateMesh()
 
     FGraphEventRef TaskOne = FFunctionGraphTask::CreateAndDispatchWhenReady([&]()
         {
-            int iterationCount = 0;
             FQuadData QuadData;
             while (QuadDataQueueOne.Dequeue(QuadData))
             {
-
-                iterationCount++;
-                if (iterationCount % 100 == 0)
-                {
-                    PerformBusyWait(20);
-                }
                 CreateQuadOne(QuadData.CurrentMask, QuadData.AxisMask,
                     QuadData.ChunkItr,
                     QuadData.ChunkItr + QuadData.DeltaAxis1,
@@ -732,19 +856,9 @@ void AChunk::GenerateMesh()
 
 
         }, TStatId(), nullptr, ENamedThreads::BackgroundThreadPriority);
-    TaskOne->Wait();
-    AxisOneNormalData = NormalData;
-    AxisOneTriangleData = TriangleData;
-    AxisOneVertexData = VertexData;
-    AxisOneUVData = UVData;
-    AxisOneVertexColors = VertexColors;
-    VertexCount = 0;
+   
 
-   NormalData.Empty();
-   TriangleData.Empty();
-   VertexData.Empty();
-   UVData.Empty();
-   VertexColors.Empty();
+  
 
 
 
@@ -752,14 +866,9 @@ void AChunk::GenerateMesh()
     FGraphEventRef TaskTwo = FFunctionGraphTask::CreateAndDispatchWhenReady([&]()
         {
             FQuadData QuadData;
-            int iterationCount = 0;
             while (QuadDataQueueTwo.Dequeue(QuadData))
             {
-                iterationCount++;
-                if (iterationCount % 100 == 0)
-                {
-                    PerformBusyWait(20);
-                }
+               
                 CreateQuadTwo(QuadData.CurrentMask, QuadData.AxisMask,
                     QuadData.ChunkItr,
                     QuadData.ChunkItr + QuadData.DeltaAxis1,
@@ -768,32 +877,16 @@ void AChunk::GenerateMesh()
                     QuadData.Block);
             }
         }, TStatId(), nullptr, ENamedThreads::BackgroundThreadPriority);
-    TaskTwo->Wait();
-    AxisTwoNormalData = NormalData;
-    AxisTwoTriangleData = TriangleData;
-    AxisTwoVertexData = VertexData;
-    AxisTwoUVData = UVData;
-    AxisTwoVertexColors = VertexColors;
+   
 
-    NormalData.Empty(0);
-    TriangleData.Empty(0);
-    VertexData.Empty(0);
-    UVData.Empty(0);
-    VertexColors.Empty(0);
-    VertexCount = 0;
 
     FGraphEventRef TaskThree = FFunctionGraphTask::CreateAndDispatchWhenReady([&]()
         {
-            int iterationCount = 0;
             FQuadData QuadData;
 
             while (QuadDataQueueThree.Dequeue(QuadData))
             {
-                iterationCount++;
-                if (iterationCount % 100 == 0)
-                {
-                    PerformBusyWait(20);
-                }
+               
                 CreateQuadThree(QuadData.CurrentMask, QuadData.AxisMask,
                     QuadData.ChunkItr,
                     QuadData.ChunkItr + QuadData.DeltaAxis1,
@@ -803,12 +896,6 @@ void AChunk::GenerateMesh()
             }
 
         }, TStatId(), nullptr, ENamedThreads::BackgroundThreadPriority);
-    TaskThree->Wait();
-    AxisThreeNormalData = NormalData;
-    AxisThreeTriangleData = TriangleData;
-    AxisThreeVertexData = VertexData;
-    AxisThreeUVData = UVData;
-    AxisThreeVertexColors = VertexColors;
 
 
     finishedCreateQuad = true;
@@ -827,8 +914,32 @@ void AChunk::CreateQuadOne(FMask Mask, FIntVector AxisMask, FIntVector V1, FIntV
     FColor BlockColor = GetColorFromBlock(BlockMaterial, V1);
 
 
- 
+    AxisOneVertexData.Add(FVector(V1) * 100);
+    AxisOneVertexData.Add(FVector(V2) * 100);
+    AxisOneVertexData.Add(FVector(V3) * 100);
+    AxisOneVertexData.Add(FVector(V4) * 100);
 
+    AxisOneVertexColors.Add(BlockColor);
+    AxisOneVertexColors.Add(BlockColor);
+    AxisOneVertexColors.Add(BlockColor);
+    AxisOneVertexColors.Add(BlockColor);
+
+    AxisOneTriangleData.Add(AxisOneVertexCount);
+    AxisOneTriangleData.Add(AxisOneVertexCount + 2 + Mask.Normal);
+    AxisOneTriangleData.Add(AxisOneVertexCount + 2 - Mask.Normal);
+    AxisOneTriangleData.Add(AxisOneVertexCount + 3);
+    AxisOneTriangleData.Add(AxisOneVertexCount + 1 - Mask.Normal);
+    AxisOneTriangleData.Add(AxisOneVertexCount + 1 + Mask.Normal);
+
+    AxisOneUVData.Add(FVector2D(V1.X / Size, V1.Y / Size));
+    AxisOneUVData.Add(FVector2D(V2.X / Size, V2.Y / Size));
+    AxisOneUVData.Add(FVector2D(V3.X / Size, V3.Y / Size));
+    AxisOneUVData.Add(FVector2D(V4.X / Size, V4.Y / Size));
+
+    AxisOneNormalData.Add(Normal);
+    AxisOneNormalData.Add(Normal);
+    AxisOneNormalData.Add(Normal);
+    AxisOneNormalData.Add(Normal);
 
     VertexData.Add(FVector(V1) * 100);
     VertexData.Add(FVector(V2) * 100);
@@ -860,6 +971,7 @@ void AChunk::CreateQuadOne(FMask Mask, FIntVector AxisMask, FIntVector V1, FIntV
     NormalData.Add(Normal);
 
     VertexCount += 4;
+    AxisOneVertexCount += 4;
     Lock.Unlock();
 
 }
@@ -873,10 +985,39 @@ void AChunk::CreateQuadTwo(FMask Mask, FIntVector AxisMask, FIntVector V1, FIntV
     EBlock BlockMaterial = Mask.Block;
     FColor BlockColor = GetColorFromBlock(BlockMaterial, V1);
 
+    AxisTwoVertexData.Add(FVector(V1) * 100);
+    AxisTwoVertexData.Add(FVector(V2) * 100);
+    AxisTwoVertexData.Add(FVector(V3) * 100);
+    AxisTwoVertexData.Add(FVector(V4) * 100);
+
+    AxisTwoVertexColors.Add(BlockColor);
+    AxisTwoVertexColors.Add(BlockColor);
+    AxisTwoVertexColors.Add(BlockColor);
+    AxisTwoVertexColors.Add(BlockColor);
+
+    AxisTwoTriangleData.Add(AxisTwoVertexCount);
+    AxisTwoTriangleData.Add(AxisTwoVertexCount + 2 + Mask.Normal);
+    AxisTwoTriangleData.Add(AxisTwoVertexCount + 2 - Mask.Normal);
+    AxisTwoTriangleData.Add(AxisTwoVertexCount + 3);
+    AxisTwoTriangleData.Add(AxisTwoVertexCount + 1 - Mask.Normal);
+    AxisTwoTriangleData.Add(AxisTwoVertexCount + 1 + Mask.Normal);
+
+    AxisTwoUVData.Add(FVector2D(V1.X / Size, V1.Y / Size));
+    AxisTwoUVData.Add(FVector2D(V2.X / Size, V2.Y / Size));
+    AxisTwoUVData.Add(FVector2D(V3.X / Size, V3.Y / Size));
+    AxisTwoUVData.Add(FVector2D(V4.X / Size, V4.Y / Size));
+
+    AxisTwoNormalData.Add(Normal);
+    AxisTwoNormalData.Add(Normal);
+    AxisTwoNormalData.Add(Normal);
+    AxisTwoNormalData.Add(Normal);
+
     VertexData.Add(FVector(V1) * 100);
     VertexData.Add(FVector(V2) * 100);
     VertexData.Add(FVector(V3) * 100);
     VertexData.Add(FVector(V4) * 100);
+
+
 
     VertexColors.Add(BlockColor);
     VertexColors.Add(BlockColor);
@@ -900,8 +1041,8 @@ void AChunk::CreateQuadTwo(FMask Mask, FIntVector AxisMask, FIntVector V1, FIntV
     NormalData.Add(Normal);
     NormalData.Add(Normal);
 
-
-   VertexCount += 4;
+    AxisTwoVertexCount += 4;
+    VertexCount += 4;
     Lock.Unlock();
 
 }
@@ -915,10 +1056,39 @@ void AChunk::CreateQuadThree(FMask Mask, FIntVector AxisMask, FIntVector V1, FIn
     FColor BlockColor = GetColorFromBlock(BlockMaterial, V1);
 
 
+    AxisThreeVertexData.Add(FVector(V1) * 100);
+    AxisThreeVertexData.Add(FVector(V2) * 100);
+    AxisThreeVertexData.Add(FVector(V3) * 100);
+    AxisThreeVertexData.Add(FVector(V4) * 100);
+
+    AxisThreeVertexColors.Add(BlockColor);
+    AxisThreeVertexColors.Add(BlockColor);
+    AxisThreeVertexColors.Add(BlockColor);
+    AxisThreeVertexColors.Add(BlockColor);
+
+    AxisThreeTriangleData.Add(AxisThreeVertexCount);
+    AxisThreeTriangleData.Add(AxisThreeVertexCount + 2 + Mask.Normal);
+    AxisThreeTriangleData.Add(AxisThreeVertexCount + 2 - Mask.Normal);
+    AxisThreeTriangleData.Add(AxisThreeVertexCount + 3);
+    AxisThreeTriangleData.Add(AxisThreeVertexCount + 1 - Mask.Normal);
+    AxisThreeTriangleData.Add(AxisThreeVertexCount + 1 + Mask.Normal);
+
+    AxisThreeUVData.Add(FVector2D(V1.X / Size, V1.Y / Size));
+    AxisThreeUVData.Add(FVector2D(V2.X / Size, V2.Y / Size));
+    AxisThreeUVData.Add(FVector2D(V3.X / Size, V3.Y / Size));
+    AxisThreeUVData.Add(FVector2D(V4.X / Size, V4.Y / Size));
+
+    AxisThreeNormalData.Add(Normal);
+    AxisThreeNormalData.Add(Normal);
+    AxisThreeNormalData.Add(Normal);
+    AxisThreeNormalData.Add(Normal);
+
     VertexData.Add(FVector(V1) * 100);
     VertexData.Add(FVector(V2) * 100);
     VertexData.Add(FVector(V3) * 100);
     VertexData.Add(FVector(V4) * 100);
+
+
 
     VertexColors.Add(BlockColor);
     VertexColors.Add(BlockColor);
@@ -942,9 +1112,8 @@ void AChunk::CreateQuadThree(FMask Mask, FIntVector AxisMask, FIntVector V1, FIn
     NormalData.Add(Normal);
     NormalData.Add(Normal);
 
-
-
     VertexCount += 4;
+    AxisThreeVertexCount += 4;
     Lock.Unlock();
 
 }

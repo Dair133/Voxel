@@ -1,5 +1,6 @@
 /I "."
 /I "E:\UE5Projects\Voxel\VoxelProject\Intermediate\Build\Win64\UnrealEditor\Inc\VoxelProject\UHT"
+/I "E:\GithubRepoes\FastNoise2\include"
 /I "E:\UE5Projects\Voxel\VoxelProject\Source"
 /I "Runtime\Core\Public"
 /I "Runtime\Core\Internal"
@@ -260,6 +261,8 @@
 /I "Developer\WidgetRegistration\Public"
 /I "..\Plugins\Runtime\ProceduralMeshComponent\Intermediate\Build\Win64\UnrealEditor\Inc\ProceduralMeshComponent\UHT"
 /I "..\Plugins\Runtime\ProceduralMeshComponent\Source\ProceduralMeshComponent\Public"
+/I "..\Plugins\Runtime\GeometryProcessing\Source\DynamicMesh\Public"
+/I "..\Plugins\Runtime\GeometryProcessing\Source\GeometryAlgorithms\Public"
 /external:W0
 /external:I "ThirdParty\mimalloc\include"
 /external:I "ThirdParty\LibTiff\Source\Win64"

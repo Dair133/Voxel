@@ -270,7 +270,7 @@ void AVoxelGameModeBase::ProcessChunkQueue()
             //float WorldTime = GetWorld()->GetTimeSeconds();
             //FString DebugMessage = FString::Printf(TEXT("World Time: %f"), WorldTime);
             //GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, DebugMessage);
-            GetWorld()->GetTimerManager().SetTimer(SpawnTimerHandle, this, &AVoxelGameModeBase::ProcessChunkQueue, 0.01f, false);
+            GetWorld()->GetTimerManager().SetTimer(SpawnTimerHandle, this, &AVoxelGameModeBase::ProcessChunkQueue, 0.001f, false);
         }
     }
 }
