@@ -26,6 +26,9 @@
 #include <cmath>
 #include <iostream>
 #include <Tickable.h>
+#include <DynamicMesh/DynamicBoneAttribute.h>
+#include <DynamicMesh/MeshAttributeUtil.h>
+#include <DynamicMesh/DynamicMeshOverlay.h>
 #include <DynamicMesh/DynamicMesh3.h>
 #include <DynamicMesh/DynamicAttribute.h>
 #include <DynamicMesh/DynamicVertexAttribute.h>
@@ -96,39 +99,67 @@ void AChunk::ApplyMesh()
     DynamicMeshOne.EnableVertexColors(FVector3f::Zero());
     DynamicMeshOne.Attributes()->EnablePrimaryColors();
     DynamicMeshOne.EnableVertexNormals(FVector3f::Zero());
+    // Create an array to store the color attribute indices
+    TArray<int32> ColorAttributeIndices;
+    ColorAttributeIndices.SetNum(VertexColors.Num());
     for (int32 i = 0; i < VertexData.Num(); ++i) {
         DynamicMeshOne.AppendVertex(FVector3d(VertexData[i]));
     }
+
     for (int32 i = 0; i < TriangleData.Num(); i += 3) {
         DynamicMeshOne.AppendTriangle(UE::Geometry::FIndex3i::FIndex3i(TriangleData[i], TriangleData[i + 1], TriangleData[i + 2]));
     }
 
-       DynamicMeshOne.Attributes()->SetNumUVLayers(1);
-       for (int32 i = 0; i < UVData.Num(); ++i) {
-           // UV data is an array of FVector2D
-           DynamicMeshOne.SetVertexUV(i, FVector2f(UVData[i]));
-       }
-       DynamicMeshOne.Attributes()->SetNumNormalLayers(1);
-       for (int32 i = 0; i < NormalData.Num(); ++i) {
-           // Normal data is an array of FVectors
-           DynamicMeshOne.SetVertexNormal(i, FVector3f(NormalData[i]));
-       }
-       for (int32 i = 0; i < DynamicMeshOne.VertexCount(); ++i) {
-           FColor Color = VertexColors[i];
-           FVector3f ColorVector(Color.R / 255.0f, Color.G / 255.0f, Color.B / 255.0f);
-           DynamicMeshOne.SetVertexColor(i, ColorVector);
-           //DynamicMeshOne.SetVertexColor(i, FVector3f(1, 0, 0)); // Set all vertices to red
-       }
-       auto colorBuffer= DynamicMeshOne.GetColorsBuffer();
-    // Normal data and uvs are being applied correctly but the vertex colors are not being applied
-    UE::Geometry::CopyVertexNormalsToOverlay(DynamicMeshOne, *DynamicMeshOne.Attributes()->PrimaryNormals());     
+    DynamicMeshOne.Attributes()->SetNumUVLayers(1);
+    for (int32 i = 0; i < UVData.Num(); ++i) {
+        DynamicMeshOne.SetVertexUV(i, FVector2f(UVData[i]));
+    }
+
+    DynamicMeshOne.Attributes()->SetNumNormalLayers(1);
+    for (int32 i = 0; i < NormalData.Num(); ++i) {
+        DynamicMeshOne.SetVertexNormal(i, FVector3f(NormalData[i]));
+    }
+    // Append color elements to the color overlay and store the returned indices
+    for (int32 i = 0; i < VertexColors.Num(); ++i) {
+        FColor Color = VertexColors[i];
+        FVector4f ColorVector(Color.R / 255.0f, Color.G / 255.0f, Color.B / 255.0f, 1.0f);
+        ColorAttributeIndices[i] = DynamicMeshOne.Attributes()->PrimaryColors()->AppendElement(ColorVector);
+    }
+
+    // Get the color overlay
+    UE::Geometry::FDynamicMeshColorOverlay* ColorOverlay = DynamicMeshOne.Attributes()->PrimaryColors();
+
+    // Iterate over the base mesh triangles and set the color attribute indices for each triangle
+    for (int32 TriangleIndex = 0; TriangleIndex < DynamicMeshOne.TriangleCount(); ++TriangleIndex) {
+        // Get the vertex indices of the current triangle
+        UE::Geometry::FIndex3i TriangleVertexIndices = DynamicMeshOne.GetTriangle(TriangleIndex);
+
+        // Map the triangle vertex indices to the color attribute indices
+        UE::Geometry::FIndex3i ColorAttributeTriangleIndices(
+            ColorAttributeIndices[TriangleVertexIndices.A],
+            ColorAttributeIndices[TriangleVertexIndices.B],
+            ColorAttributeIndices[TriangleVertexIndices.C]
+        );
+
+        // Set the color attribute indices for the current triangle
+        ColorOverlay->SetTriangle(TriangleIndex, ColorAttributeTriangleIndices);
+    }
+
+    // Copy the color overlay to the primary colors attribute
+    DynamicMeshOne.Attributes()->PrimaryColors()->Copy(*ColorOverlay);
+ 
+    
+    UE::Geometry::CopyVertexNormalsToOverlay(DynamicMeshOne, *DynamicMeshOne.Attributes()->PrimaryNormals());
     UE::Geometry::CopyVertexUVsToOverlay(DynamicMeshOne, *DynamicMeshOne.Attributes()->PrimaryUV());
-    // 'CopyVertexColorsToOverlay' is not a function in the Geometry namespace
-    //UE::Geometry::CopyVertexColorsToOverlay(DynamicMeshOne, *DynamicMeshOne.Attributes()->PrimaryColors());
+
     MeshOne->GetDynamicMesh()->SetMesh(DynamicMeshOne);
     MeshOne->SetMaterial(0, BaseMaterial);
+
+    MeshOne->SetVertexColorSpaceTransformMode(EDynamicMeshVertexColorTransformMode::NoTransform);
+
     MeshOne->SetCollisionEnabled(ECollisionEnabled::QueryAndProbe);
     MeshOne->EnableComplexAsSimpleCollision();
+   
 }
 void AChunk::RemoveDegenerateTriangles(TArray<int32>& TriangleDataRemove)
 {
