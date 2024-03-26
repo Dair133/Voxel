@@ -103,7 +103,7 @@ protected:
     virtual void BeginPlay() override;
 
 private:
-  
+    bool overlayAssigned = false;
 
     UStaticMesh* StaticMeshOne;
     UStaticMesh* StaticMeshTwo;
@@ -112,6 +112,15 @@ private:
     UDynamicMeshComponent* MeshOne;
     UDynamicMeshComponent* MeshTwo;
     UDynamicMeshComponent* MeshThree;
+
+    FDynamicMesh3 DynamicMeshAxisCombined;
+    //UE::Geometry::FDynamicMeshUVOverlay* UVOverlay = DynamicMeshAxisCombined.Attributes()->PrimaryUV();
+    UE::Geometry::FDynamicMeshUVOverlay* UVOverlay;
+    UE::Geometry::FDynamicMeshNormalOverlay* NormalOverlay;
+
+    FDynamicMesh3 DynamicMeshAxisOne;
+    FDynamicMesh3 DynamicMeshAxisTwo;
+    FDynamicMesh3 DynamicMeshAxisThree;
 
     FastNoiseLite* HillyPlains;
     FastNoiseLite* ColorNoise;
