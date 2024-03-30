@@ -83,10 +83,10 @@ AChunk::AChunk()
     Blocks.SetNum(Size * Size * VerticalHeight);
 
     // Mesh Settings
-    CombinedAxisMesh->SetCastShadow(false);
-    AxisOneMesh->SetCastShadow(false);
-    AxisTwoMesh->SetCastShadow(false);
-    AxisThreeMesh->SetCastShadow(false);
+    //CombinedAxisMesh->SetCastShadow(false);
+    //AxisOneMesh->SetCastShadow(false);
+    //AxisTwoMesh->SetCastShadow(false);
+    //AxisThreeMesh->SetCastShadow(false);
 
     static ConstructorHelpers::FObjectFinder<UMaterialInterface> Material(TEXT("Material'/Game/Cubedeps/Basecube.Basecube'"));
     if (Material.Succeeded())
@@ -151,8 +151,7 @@ void AChunk::ApplyAxisOne()
                 DynamicMeshAxisOne.SetVertexColor(i, FVector3f(AxisOneVertexColors[i]));
             }
            // Dont know what the 'CopyVertex' functions do but they seem work
-            UE::Geometry::CopyVertexNormalsToOverlay(DynamicMeshAxisOne, *DynamicMeshAxisOne.Attributes()->PrimaryNormals());
-            UE::Geometry::CopyVertexUVsToOverlay(DynamicMeshAxisOne, *DynamicMeshAxisOne.Attributes()->PrimaryUV());
+     
             // Somehow add color here?
             AxisOneMesh->GetDynamicMesh()->SetMesh(MoveTemp(DynamicMeshAxisOne));
             AxisOneMesh->SetCollisionEnabled(ECollisionEnabled::QueryAndProbe);
@@ -213,8 +212,7 @@ void AChunk::ApplyAxisTwo()
         DynamicMeshAxisTwo.SetVertexColor(i, FVector3f(AxisTwoVertexColors[i]));
     }
     // Dont know what the 'CopyVertex' functions do but they seem work
-    UE::Geometry::CopyVertexNormalsToOverlay(DynamicMeshAxisTwo, *DynamicMeshAxisTwo.Attributes()->PrimaryNormals());
-    UE::Geometry::CopyVertexUVsToOverlay(DynamicMeshAxisTwo, *DynamicMeshAxisTwo.Attributes()->PrimaryUV());
+ 
     // Somehow add color here?
     AxisTwoMesh->GetDynamicMesh()->SetMesh(MoveTemp(DynamicMeshAxisTwo));
     AxisTwoMesh->SetCollisionEnabled(ECollisionEnabled::QueryAndProbe);
@@ -274,13 +272,12 @@ void AChunk::ApplyAxisThree()
         DynamicMeshAxisThree.SetVertexColor(i, FVector3f(AxisThreeVertexColors[i]));
     }
     // Dont know what the 'CopyVertex' functions do but they seem work
-    UE::Geometry::CopyVertexNormalsToOverlay(DynamicMeshAxisThree, *DynamicMeshAxisThree.Attributes()->PrimaryNormals());
-    UE::Geometry::CopyVertexUVsToOverlay(DynamicMeshAxisThree, *DynamicMeshAxisThree.Attributes()->PrimaryUV());
+
     // Somehow add color here?
+    AxisThreeMesh->SetMaterial(0, BaseMaterial);
     AxisThreeMesh->GetDynamicMesh()->SetMesh(MoveTemp(DynamicMeshAxisThree));
     AxisThreeMesh->SetCollisionEnabled(ECollisionEnabled::QueryAndProbe);
     AxisThreeMesh->EnableComplexAsSimpleCollision();
-    AxisThreeMesh->SetMaterial(0, BaseMaterial);
     collisionActive = false;
 }
 
@@ -858,7 +855,6 @@ void AChunk::GenerateMesh()
 
     DynamicMeshAxisOne.EnableAttributes();
     DynamicMeshAxisOne.EnableVertexUVs(FVector2f::Zero());
-    DynamicMeshAxisOne.EnableVertexColors(FVector3f::Zero());
     DynamicMeshAxisOne.Attributes()->EnablePrimaryColors();
     DynamicMeshAxisOne.EnableVertexNormals(FVector3f::Zero());
     AxisOneUVOverlay = DynamicMeshAxisOne.Attributes()->PrimaryUV();
@@ -866,7 +862,6 @@ void AChunk::GenerateMesh()
 
     DynamicMeshAxisTwo.EnableAttributes();
     DynamicMeshAxisTwo.EnableVertexUVs(FVector2f::Zero());
-    DynamicMeshAxisTwo.EnableVertexColors(FVector3f::Zero());
     DynamicMeshAxisTwo.Attributes()->EnablePrimaryColors();
     DynamicMeshAxisTwo.EnableVertexNormals(FVector3f::Zero());
     AxisTwoUVOverlay = DynamicMeshAxisTwo.Attributes()->PrimaryUV();
@@ -875,7 +870,6 @@ void AChunk::GenerateMesh()
 
     DynamicMeshAxisThree.EnableAttributes();
     DynamicMeshAxisThree.EnableVertexUVs(FVector2f::Zero());
-    DynamicMeshAxisThree.EnableVertexColors(FVector3f::Zero());
     DynamicMeshAxisThree.Attributes()->EnablePrimaryColors();
     DynamicMeshAxisThree.EnableVertexNormals(FVector3f::Zero());
     AxisThreeUVOverlay = DynamicMeshAxisThree.Attributes()->PrimaryUV();
@@ -1141,10 +1135,7 @@ void AChunk::CreateQuadOne(FMask Mask, FIntVector AxisMask, FIntVector V1, FIntV
     FColor BlockColor = GetColorFromBlock(BlockMaterial, V1);
     //DynamicMeshOne.AppendVertex(FVector3d(AxisOneVertexData[i]));
 
-    //AxisOneVertexData.Add(FVector(V1) * 100);
-    //AxisOneVertexData.Add(FVector(V2) * 100);
-    //AxisOneVertexData.Add(FVector(V3) * 100);
-    //AxisOneVertexData.Add(FVector(V4) * 100);
+ 
     DynamicMeshAxisOne.AppendVertex(FVector3d(FVector(V1) * 100));
     DynamicMeshAxisOne.AppendVertex(FVector3d(FVector(V2) * 100));
     DynamicMeshAxisOne.AppendVertex(FVector3d(FVector(V3) * 100));
@@ -1155,73 +1146,50 @@ void AChunk::CreateQuadOne(FMask Mask, FIntVector AxisMask, FIntVector V1, FIntV
     AxisOneVertexColors.Add(BlockColor);
     AxisOneVertexColors.Add(BlockColor);
 
- /*   AxisOneTriangleData.Add(AxisOneVertexCount);
-    AxisOneTriangleData.Add(AxisOneVertexCount + 2 + Mask.Normal);
-    AxisOneTriangleData.Add(AxisOneVertexCount + 2 - Mask.Normal);
-    AxisOneTriangleData.Add(AxisOneVertexCount + 3);
-    AxisOneTriangleData.Add(AxisOneVertexCount + 1 - Mask.Normal);
-    AxisOneTriangleData.Add(AxisOneVertexCount + 1 + Mask.Normal);*/
     DynamicMeshAxisOne.AppendTriangle(UE::Geometry::FIndex3i(AxisOneVertexCount, AxisOneVertexCount + 2 + Mask.Normal, AxisOneVertexCount + 2 - Mask.Normal));
     DynamicMeshAxisOne.AppendTriangle(UE::Geometry::FIndex3i(AxisOneVertexCount + 3, AxisOneVertexCount + 1 - Mask.Normal, AxisOneVertexCount + 1 + Mask.Normal));
 
- /*   AxisOneUVData.Add(FVector2D(V1.X / Size, V1.Y / Size));
-    AxisOneUVData.Add(FVector2D(V2.X / Size, V2.Y / Size));
-    AxisOneUVData.Add(FVector2D(V3.X / Size, V3.Y / Size));
-    AxisOneUVData.Add(FVector2D(V4.X / Size, V4.Y / Size));*/
+
     AxisOneUVOverlay->AppendElement(FVector2f(FVector2D(V1.X / Size, V1.Y / Size)));
     AxisOneUVOverlay->AppendElement(FVector2f(FVector2D(V2.X / Size, V2.Y / Size)));
     AxisOneUVOverlay->AppendElement(FVector2f(FVector2D(V3.X / Size, V3.Y / Size)));
     AxisOneUVOverlay->AppendElement(FVector2f(FVector2D(V4.X / Size, V4.Y / Size)));
 
-    //AxisOneNormalData.Add(Normal);
-    //AxisOneNormalData.Add(Normal);
-    //AxisOneNormalData.Add(Normal);
-    //AxisOneNormalData.Add(Normal);
+
     AxisOneNormalOverlay->AppendElement(FVector3f(Normal));
     AxisOneNormalOverlay->AppendElement(FVector3f(Normal));
     AxisOneNormalOverlay->AppendElement(FVector3f(Normal));
     AxisOneNormalOverlay->AppendElement(FVector3f(Normal));
 
-    DynamicMeshAxisCombined.AppendVertex(FVector3d(FVector(V1) * 100));
-    DynamicMeshAxisCombined.AppendVertex(FVector3d(FVector(V2) * 100));
-    DynamicMeshAxisCombined.AppendVertex(FVector3d(FVector(V3) * 100));
-    DynamicMeshAxisCombined.AppendVertex(FVector3d(FVector(V4) * 100));
-    //VertexData.Add(FVector(V1) * 100);
-    //VertexData.Add(FVector(V2) * 100);
-    //VertexData.Add(FVector(V3) * 100);
-    //VertexData.Add(FVector(V4) * 100);
+    //DynamicMeshAxisCombined.AppendVertex(FVector3d(FVector(V1) * 100));
+    //DynamicMeshAxisCombined.AppendVertex(FVector3d(FVector(V2) * 100));
+    //DynamicMeshAxisCombined.AppendVertex(FVector3d(FVector(V3) * 100));
+    //DynamicMeshAxisCombined.AppendVertex(FVector3d(FVector(V4) * 100));
+ 
 
 
 
-    VertexColors.Add(BlockColor);
-    VertexColors.Add(BlockColor);
-    VertexColors.Add(BlockColor);
-    VertexColors.Add(BlockColor);
-
-    //TriangleData.Add(VertexCount);
-    //TriangleData.Add(VertexCount + 2 + Mask.Normal);
-    //TriangleData.Add(VertexCount + 2 - Mask.Normal);
-    //TriangleData.Add(VertexCount + 3);
-    //TriangleData.Add(VertexCount + 1 - Mask.Normal);
-    //TriangleData.Add(VertexCount + 1 + Mask.Normal);
-    DynamicMeshAxisCombined.AppendTriangle(UE::Geometry::FIndex3i(VertexCount, VertexCount + 2 + Mask.Normal, VertexCount + 2 - Mask.Normal));
-    DynamicMeshAxisCombined.AppendTriangle(UE::Geometry::FIndex3i(VertexCount + 3, VertexCount + 1 - Mask.Normal, VertexCount + 1 + Mask.Normal));
+    //VertexColors.Add(BlockColor);
+    //VertexColors.Add(BlockColor);
+    //VertexColors.Add(BlockColor);
+    //VertexColors.Add(BlockColor);
 
 
-    //UVData.Add(FVector2D(V1.X / Size, V1.Y / Size));
-    //UVData.Add(FVector2D(V2.X / Size, V2.Y / Size));
-    //UVData.Add(FVector2D(V3.X / Size, V3.Y / Size));
-    //UVData.Add(FVector2D(V4.X / Size, V4.Y / Size));
-    UVOverlay->AppendElement(FVector2f(FVector2D(V1.X / Size, V1.Y / Size)));
-    UVOverlay->AppendElement(FVector2f(FVector2D(V2.X / Size, V2.Y / Size)));
-    UVOverlay->AppendElement(FVector2f(FVector2D(V3.X / Size, V3.Y / Size)));
-    UVOverlay->AppendElement(FVector2f(FVector2D(V4.X / Size, V4.Y / Size)));
+    //DynamicMeshAxisCombined.AppendTriangle(UE::Geometry::FIndex3i(VertexCount, VertexCount + 2 + Mask.Normal, VertexCount + 2 - Mask.Normal));
+    //DynamicMeshAxisCombined.AppendTriangle(UE::Geometry::FIndex3i(VertexCount + 3, VertexCount + 1 - Mask.Normal, VertexCount + 1 + Mask.Normal));
 
 
-    NormalOverlay->AppendElement(FVector3f(Normal));
-    NormalOverlay->AppendElement(FVector3f(Normal));
-    NormalOverlay->AppendElement(FVector3f(Normal));
-    NormalOverlay->AppendElement(FVector3f(Normal));
+
+    //UVOverlay->AppendElement(FVector2f(FVector2D(V1.X / Size, V1.Y / Size)));
+    //UVOverlay->AppendElement(FVector2f(FVector2D(V2.X / Size, V2.Y / Size)));
+    //UVOverlay->AppendElement(FVector2f(FVector2D(V3.X / Size, V3.Y / Size)));
+    //UVOverlay->AppendElement(FVector2f(FVector2D(V4.X / Size, V4.Y / Size)));
+
+
+    //NormalOverlay->AppendElement(FVector3f(Normal));
+    //NormalOverlay->AppendElement(FVector3f(Normal));
+    //NormalOverlay->AppendElement(FVector3f(Normal));
+    //NormalOverlay->AppendElement(FVector3f(Normal));
 
     VertexCount += 4;
     AxisOneVertexCount += 4;
@@ -1238,10 +1206,7 @@ void AChunk::CreateQuadTwo(FMask Mask, FIntVector AxisMask, FIntVector V1, FIntV
     EBlock BlockMaterial = Mask.Block;
     FColor BlockColor = GetColorFromBlock(BlockMaterial, V1);
 
-    //AxisTwoVertexData.Add(FVector(V1) * 100);
-    //AxisTwoVertexData.Add(FVector(V2) * 100);
-    //AxisTwoVertexData.Add(FVector(V3) * 100);
-    //AxisTwoVertexData.Add(FVector(V4) * 100);
+  
     DynamicMeshAxisTwo.AppendVertex(FVector3d(FVector(V1) * 100));
     DynamicMeshAxisTwo.AppendVertex(FVector3d(FVector(V2) * 100));
     DynamicMeshAxisTwo.AppendVertex(FVector3d(FVector(V3) * 100));
@@ -1253,77 +1218,52 @@ void AChunk::CreateQuadTwo(FMask Mask, FIntVector AxisMask, FIntVector V1, FIntV
     AxisTwoVertexColors.Add(BlockColor);
     AxisTwoVertexColors.Add(BlockColor);
 
-  /*  AxisTwoTriangleData.Add(AxisTwoVertexCount);
-    AxisTwoTriangleData.Add(AxisTwoVertexCount);
-    AxisTwoTriangleData.Add(AxisTwoVertexCount + 2 - Mask.Normal);
-    AxisTwoTriangleData.Add(AxisTwoVertexCount + 3);
-    AxisTwoTriangleData.Add(AxisTwoVertexCount + 1 - Mask.Normal);
-    AxisTwoTriangleData.Add(AxisTwoVertexCount + 1 + Mask.Normal);*/
+  
     DynamicMeshAxisTwo.AppendTriangle(UE::Geometry::FIndex3i(AxisTwoVertexCount, AxisTwoVertexCount + 2 + Mask.Normal, AxisTwoVertexCount + 2 - Mask.Normal));
     DynamicMeshAxisTwo.AppendTriangle(UE::Geometry::FIndex3i(AxisTwoVertexCount + 3, AxisTwoVertexCount + 1 - Mask.Normal, AxisTwoVertexCount + 1 + Mask.Normal));
 
-  /*  AxisTwoUVData.Add(FVector2D(V1.X / Size, V1.Y / Size));
-    AxisTwoUVData.Add(FVector2D(V2.X / Size, V2.Y / Size));
-    AxisTwoUVData.Add(FVector2D(V3.X / Size, V3.Y / Size));
-    AxisTwoUVData.Add(FVector2D(V4.X / Size, V4.Y / Size));*/
+
     AxisTwoUVOverlay->AppendElement(FVector2f(FVector2D(V1.X / Size, V1.Y / Size)));
     AxisTwoUVOverlay->AppendElement(FVector2f(FVector2D(V2.X / Size, V2.Y / Size)));
     AxisTwoUVOverlay->AppendElement(FVector2f(FVector2D(V3.X / Size, V3.Y / Size)));
     AxisTwoUVOverlay->AppendElement(FVector2f(FVector2D(V4.X / Size, V4.Y / Size)));
 
-    //AxisTwoNormalData.Add(Normal);
-    //AxisTwoNormalData.Add(Normal);
-    //AxisTwoNormalData.Add(Normal);
-    //AxisTwoNormalData.Add(Normal);
+
     AxisTwoNormalOverlay->AppendElement(FVector3f(Normal));
     AxisTwoNormalOverlay->AppendElement(FVector3f(Normal));
     AxisTwoNormalOverlay->AppendElement(FVector3f(Normal));
     AxisTwoNormalOverlay->AppendElement(FVector3f(Normal));
 
 
-    DynamicMeshAxisCombined.AppendVertex(FVector3d(FVector(V1) * 100));
-    DynamicMeshAxisCombined.AppendVertex(FVector3d(FVector(V2) * 100));
-    DynamicMeshAxisCombined.AppendVertex(FVector3d(FVector(V3) * 100));
-    DynamicMeshAxisCombined.AppendVertex(FVector3d(FVector(V4) * 100));
- /*   VertexData.Add(FVector(V1) * 100);
-    VertexData.Add(FVector(V2) * 100);
-    VertexData.Add(FVector(V3) * 100);
-    VertexData.Add(FVector(V4) * 100);*/
+    //DynamicMeshAxisCombined.AppendVertex(FVector3d(FVector(V1) * 100));
+    //DynamicMeshAxisCombined.AppendVertex(FVector3d(FVector(V2) * 100));
+    //DynamicMeshAxisCombined.AppendVertex(FVector3d(FVector(V3) * 100));
+    //DynamicMeshAxisCombined.AppendVertex(FVector3d(FVector(V4) * 100));
 
 
 
-    VertexColors.Add(BlockColor);
-    VertexColors.Add(BlockColor);
-    VertexColors.Add(BlockColor);
-    VertexColors.Add(BlockColor);
 
-    //TriangleData.Add(VertexCount);
-    //TriangleData.Add(VertexCount + 2 + Mask.Normal);
-    //TriangleData.Add(VertexCount + 2 - Mask.Normal);
-    //TriangleData.Add(VertexCount + 3);
-    //TriangleData.Add(VertexCount + 1 - Mask.Normal);
-    //TriangleData.Add(VertexCount + 1 + Mask.Normal);
-    DynamicMeshAxisCombined.AppendTriangle(UE::Geometry::FIndex3i(VertexCount, VertexCount + 2 + Mask.Normal, VertexCount + 2 - Mask.Normal));
-    DynamicMeshAxisCombined.AppendTriangle(UE::Geometry::FIndex3i(VertexCount + 3, VertexCount + 1 - Mask.Normal, VertexCount + 1 + Mask.Normal));
+    //VertexColors.Add(BlockColor);
+    //VertexColors.Add(BlockColor);
+    //VertexColors.Add(BlockColor);
+    //VertexColors.Add(BlockColor);
 
 
-    //UVData.Add(FVector2D(V1.X / Size, V1.Y / Size));
-    //UVData.Add(FVector2D(V2.X / Size, V2.Y / Size));
-    //UVData.Add(FVector2D(V3.X / Size, V3.Y / Size));
-    //UVData.Add(FVector2D(V4.X / Size, V4.Y / Size));
-    UVOverlay->AppendElement(FVector2f(FVector2D(V1.X / Size, V1.Y / Size)));
-    UVOverlay->AppendElement(FVector2f(FVector2D(V2.X / Size, V2.Y / Size)));
-    UVOverlay->AppendElement(FVector2f(FVector2D(V3.X / Size, V3.Y / Size)));
-    UVOverlay->AppendElement(FVector2f(FVector2D(V4.X / Size, V4.Y / Size)));
+    //DynamicMeshAxisCombined.AppendTriangle(UE::Geometry::FIndex3i(VertexCount, VertexCount + 2 + Mask.Normal, VertexCount + 2 - Mask.Normal));
+    //DynamicMeshAxisCombined.AppendTriangle(UE::Geometry::FIndex3i(VertexCount + 3, VertexCount + 1 - Mask.Normal, VertexCount + 1 + Mask.Normal));
 
- /*   NormalData.Add(Normal);
-    NormalData.Add(Normal);
-    NormalData.Add(Normal);
-    NormalData.Add(Normal);*/
-    NormalOverlay->AppendElement(FVector3f(Normal));
-    NormalOverlay->AppendElement(FVector3f(Normal));
-    NormalOverlay->AppendElement(FVector3f(Normal));
-    NormalOverlay->AppendElement(FVector3f(Normal));
+
+
+    //UVOverlay->AppendElement(FVector2f(FVector2D(V1.X / Size, V1.Y / Size)));
+    //UVOverlay->AppendElement(FVector2f(FVector2D(V2.X / Size, V2.Y / Size)));
+    //UVOverlay->AppendElement(FVector2f(FVector2D(V3.X / Size, V3.Y / Size)));
+    //UVOverlay->AppendElement(FVector2f(FVector2D(V4.X / Size, V4.Y / Size)));
+
+
+    //NormalOverlay->AppendElement(FVector3f(Normal));
+    //NormalOverlay->AppendElement(FVector3f(Normal));
+    //NormalOverlay->AppendElement(FVector3f(Normal));
+    //NormalOverlay->AppendElement(FVector3f(Normal));
 
     AxisTwoVertexCount += 4;
     VertexCount += 4;
@@ -1340,10 +1280,7 @@ void AChunk::CreateQuadThree(FMask Mask, FIntVector AxisMask, FIntVector V1, FIn
     FColor BlockColor = GetColorFromBlock(BlockMaterial, V1);
 
 
-    //AxisThreeVertexData.Add(FVector(V1) * 100);
-    //AxisThreeVertexData.Add(FVector(V2) * 100);
-    //AxisThreeVertexData.Add(FVector(V3) * 100);
-    //AxisThreeVertexData.Add(FVector(V4) * 100);
+ 
     DynamicMeshAxisThree.AppendVertex(FVector3d(FVector(V1) * 100));
     DynamicMeshAxisThree.AppendVertex(FVector3d(FVector(V2) * 100));
     DynamicMeshAxisThree.AppendVertex(FVector3d(FVector(V3) * 100));
@@ -1354,42 +1291,27 @@ void AChunk::CreateQuadThree(FMask Mask, FIntVector AxisMask, FIntVector V1, FIn
     AxisThreeVertexColors.Add(BlockColor);
     AxisThreeVertexColors.Add(BlockColor);
 
-    //AxisThreeTriangleData.Add(AxisThreeVertexCount);
-    //AxisThreeTriangleData.Add(AxisThreeVertexCount + 2 + Mask.Normal);
-    //AxisThreeTriangleData.Add(AxisThreeVertexCount + 2 - Mask.Normal);
-    //AxisThreeTriangleData.Add(AxisThreeVertexCount + 3);
-    //AxisThreeTriangleData.Add(AxisThreeVertexCount + 1 - Mask.Normal);
-    //AxisThreeTriangleData.Add(AxisThreeVertexCount + 1 + Mask.Normal);
+
     DynamicMeshAxisThree.AppendTriangle(UE::Geometry::FIndex3i(AxisThreeVertexCount, AxisThreeVertexCount + 2 + Mask.Normal, AxisThreeVertexCount + 2 - Mask.Normal));
     DynamicMeshAxisThree.AppendTriangle(UE::Geometry::FIndex3i(AxisThreeVertexCount + 3, AxisThreeVertexCount + 1 - Mask.Normal, AxisThreeVertexCount + 1 + Mask.Normal));
 
- /*   AxisThreeUVData.Add(FVector2D(V1.X / Size, V1.Y / Size));
-    AxisThreeUVData.Add(FVector2D(V2.X / Size, V2.Y / Size));
-    AxisThreeUVData.Add(FVector2D(V3.X / Size, V3.Y / Size));
-    AxisThreeUVData.Add(FVector2D(V4.X / Size, V4.Y / Size));*/
     AxisThreeUVOverlay->AppendElement(FVector2f(FVector2D(V1.X / Size, V1.Y / Size)));
     AxisThreeUVOverlay->AppendElement(FVector2f(FVector2D(V2.X / Size, V2.Y / Size)));
     AxisThreeUVOverlay->AppendElement(FVector2f(FVector2D(V3.X / Size, V3.Y / Size)));
     AxisThreeUVOverlay->AppendElement(FVector2f(FVector2D(V4.X / Size, V4.Y / Size)));
 
-    //AxisThreeNormalData.Add(Normal);
-    //AxisThreeNormalData.Add(Normal);
-    //AxisThreeNormalData.Add(Normal);
-    //AxisThreeNormalData.Add(Normal);
+
     AxisThreeNormalOverlay->AppendElement(FVector3f(Normal));
     AxisThreeNormalOverlay->AppendElement(FVector3f(Normal));
     AxisThreeNormalOverlay->AppendElement(FVector3f(Normal));
     AxisThreeNormalOverlay->AppendElement(FVector3f(Normal));
 
 
-    DynamicMeshAxisCombined.AppendVertex(FVector3d(FVector(V1) * 100));
+  /*  DynamicMeshAxisCombined.AppendVertex(FVector3d(FVector(V1) * 100));
     DynamicMeshAxisCombined.AppendVertex(FVector3d(FVector(V2) * 100));
     DynamicMeshAxisCombined.AppendVertex(FVector3d(FVector(V3) * 100));
     DynamicMeshAxisCombined.AppendVertex(FVector3d(FVector(V4) * 100));
-    //VertexData.Add(FVector(V1) * 100);
-    //VertexData.Add(FVector(V2) * 100);
-    //VertexData.Add(FVector(V3) * 100);
-    //VertexData.Add(FVector(V4) * 100);
+
 
 
 
@@ -1398,32 +1320,21 @@ void AChunk::CreateQuadThree(FMask Mask, FIntVector AxisMask, FIntVector V1, FIn
     VertexColors.Add(BlockColor);
     VertexColors.Add(BlockColor);
 
-    //TriangleData.Add(VertexCount);
-    //TriangleData.Add(VertexCount + 2 + Mask.Normal);
-    //TriangleData.Add(VertexCount + 2 - Mask.Normal);
-    //TriangleData.Add(VertexCount + 3);
-    //TriangleData.Add(VertexCount + 1 - Mask.Normal);
-    //TriangleData.Add(VertexCount + 1 + Mask.Normal);
+
     DynamicMeshAxisCombined.AppendTriangle(UE::Geometry::FIndex3i(VertexCount, VertexCount + 2 + Mask.Normal, VertexCount + 2 - Mask.Normal));
     DynamicMeshAxisCombined.AppendTriangle(UE::Geometry::FIndex3i(VertexCount + 3, VertexCount + 1 - Mask.Normal, VertexCount + 1 + Mask.Normal));
 
-    //UVData.Add(FVector2D(V1.X / Size, V1.Y / Size));
-    //UVData.Add(FVector2D(V2.X / Size, V2.Y / Size));
-    //UVData.Add(FVector2D(V3.X / Size, V3.Y / Size));
-    //UVData.Add(FVector2D(V4.X / Size, V4.Y / Size));
+
     UVOverlay->AppendElement(FVector2f(FVector2D(V1.X / Size, V1.Y / Size)));
     UVOverlay->AppendElement(FVector2f(FVector2D(V2.X / Size, V2.Y / Size)));
     UVOverlay->AppendElement(FVector2f(FVector2D(V3.X / Size, V3.Y / Size)));
     UVOverlay->AppendElement(FVector2f(FVector2D(V4.X / Size, V4.Y / Size)));
 
-    //NormalData.Add(Normal);
-    //NormalData.Add(Normal);
-    //NormalData.Add(Normal);
-    //NormalData.Add(Normal);
+
     NormalOverlay->AppendElement(FVector3f(Normal));
     NormalOverlay->AppendElement(FVector3f(Normal));
     NormalOverlay->AppendElement(FVector3f(Normal));
-    NormalOverlay->AppendElement(FVector3f(Normal));
+    NormalOverlay->AppendElement(FVector3f(Normal));*/
 
     VertexCount += 4;
     AxisThreeVertexCount += 4;
