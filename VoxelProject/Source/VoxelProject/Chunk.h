@@ -105,13 +105,18 @@ protected:
 private:
     bool overlayAssigned = false;
 
+    bool collisionActive;
+    APawn* PlayerPawn;
+
+  
     UStaticMesh* StaticMeshOne;
     UStaticMesh* StaticMeshTwo;
     UStaticMesh* StaticMeshThree;
 
-    UDynamicMeshComponent* MeshOne;
-    UDynamicMeshComponent* MeshTwo;
-    UDynamicMeshComponent* MeshThree;
+    UDynamicMeshComponent* CombinedAxisMesh;
+    UDynamicMeshComponent* AxisOneMesh;
+    UDynamicMeshComponent* AxisTwoMesh;
+    UDynamicMeshComponent* AxisThreeMesh;
 
     FDynamicMesh3 DynamicMeshAxisCombined;
     //UE::Geometry::FDynamicMeshUVOverlay* UVOverlay = DynamicMeshAxisCombined.Attributes()->PrimaryUV();
@@ -119,8 +124,19 @@ private:
     UE::Geometry::FDynamicMeshNormalOverlay* NormalOverlay;
 
     FDynamicMesh3 DynamicMeshAxisOne;
+    UE::Geometry::FDynamicMeshUVOverlay* AxisOneUVOverlay;
+    UE::Geometry::FDynamicMeshNormalOverlay* AxisOneNormalOverlay;
+
+
     FDynamicMesh3 DynamicMeshAxisTwo;
+    UE::Geometry::FDynamicMeshUVOverlay* AxisTwoUVOverlay;
+    UE::Geometry::FDynamicMeshNormalOverlay* AxisTwoNormalOverlay;
+
+
+
     FDynamicMesh3 DynamicMeshAxisThree;
+    UE::Geometry::FDynamicMeshUVOverlay* AxisThreeUVOverlay;
+    UE::Geometry::FDynamicMeshNormalOverlay* AxisThreeNormalOverlay;
 
     FastNoiseLite* HillyPlains;
     FastNoiseLite* ColorNoise;
@@ -225,6 +241,11 @@ private:
     //    void GenerateTreeMap(const FVector& PlayerPosition);
     //    void SpawnTrees(const FVector& PlayerPosition);
     //    TArray<FVector2D> TreeMap;
+
+    void ApplyCombinedAxis();
+    void ApplyAxisOne();
+    void ApplyAxisTwo();
+    void ApplyAxisThree();
 
 public:
     // Called every frame

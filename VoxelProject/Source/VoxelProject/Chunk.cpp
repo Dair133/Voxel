@@ -35,6 +35,8 @@
 #include <DynamicMesh/DynamicMeshAttributeSet.h>
 #include <DynamicMesh/MeshAttributeUtil.h>
 #include <DynamicMesh/Operations/SplitAttributeWelder.h>
+#include <Engine.h>
+#include "MyPawn.h"
 
 
 //#include "Octree/CubeRange.h"
@@ -66,85 +68,292 @@ AChunk::AChunk()
     RootComponent = CreateDefaultSubobject<USceneComponent>(TEXT("RootComponent"));
 
 
-    MeshOne = CreateDefaultSubobject<UDynamicMeshComponent>("MeshOne");
-    MeshTwo = CreateDefaultSubobject<UDynamicMeshComponent>("MeshTwo");
-    MeshThree = CreateDefaultSubobject<UDynamicMeshComponent>("MeshThree");
+    CombinedAxisMesh = CreateDefaultSubobject<UDynamicMeshComponent>("MeshOne");
+    AxisOneMesh = CreateDefaultSubobject<UDynamicMeshComponent>("MeshTwo");
+    AxisTwoMesh = CreateDefaultSubobject<UDynamicMeshComponent>("MeshThree");
+    AxisThreeMesh = CreateDefaultSubobject<UDynamicMeshComponent>("MeshFour");
 
     // Attach the mesh components to the root component
-    MeshOne->SetupAttachment(RootComponent);
-    MeshTwo->SetupAttachment(RootComponent);
-    MeshThree->SetupAttachment(RootComponent);
+    CombinedAxisMesh->SetupAttachment(RootComponent);
+    AxisOneMesh->SetupAttachment(RootComponent);
+    AxisTwoMesh->SetupAttachment(RootComponent);
+    AxisThreeMesh ->SetupAttachment(RootComponent);
 
     // Initialize Blocks
     Blocks.SetNum(Size * Size * VerticalHeight);
 
     // Mesh Settings
-    MeshOne->SetCastShadow(false);
-    MeshTwo->SetCastShadow(false);
-    MeshThree->SetCastShadow(false);
+    CombinedAxisMesh->SetCastShadow(false);
+    AxisOneMesh->SetCastShadow(false);
+    AxisTwoMesh->SetCastShadow(false);
+    AxisThreeMesh->SetCastShadow(false);
 
     static ConstructorHelpers::FObjectFinder<UMaterialInterface> Material(TEXT("Material'/Game/Cubedeps/Basecube.Basecube'"));
     if (Material.Succeeded())
     {
         BaseMaterial = Material.Object;
     }
+
+
+   
+}
+
+void AChunk::ApplyAxisOne() 
+{
+    
+
+    TArray<int32> ColorAttributeIndices;
+    ColorAttributeIndices.SetNum(AxisOneVertexColors.Num());
+
+    // Append vertices to the dynamic mesh
+
+    // Append color elements to the color overlay and store the returned indices
+    for (int32 i = 0; i < AxisOneVertexColors.Num(); ++i) {
+        FColor Color = AxisOneVertexColors[i];
+        FVector4f ColorVector(Color.R / 255.0f, Color.G / 255.0f, Color.B / 255.0f, 1.0f);
+        ColorAttributeIndices[i] = DynamicMeshAxisOne.Attributes()->PrimaryColors()->AppendElement(ColorVector);
+    }
+
+    // Get the color overlay
+    UE::Geometry::FDynamicMeshColorOverlay* ColorOverlay = DynamicMeshAxisOne.Attributes()->PrimaryColors();
+
+    // Iterate over the base mesh triangles and set the color attribute indices for each triangle
+    for (int32 TriangleIndex = 0; TriangleIndex < DynamicMeshAxisOne.TriangleCount(); ++TriangleIndex) {
+        // Get the vertex indices of the current triangle
+        UE::Geometry::FIndex3i TriangleVertexIndices = DynamicMeshAxisOne.GetTriangle(TriangleIndex);
+
+        // Map the triangle vertex indices to the color attribute indices
+        UE::Geometry::FIndex3i ColorAttributeTriangleIndices(
+            ColorAttributeIndices[TriangleVertexIndices.A],
+            ColorAttributeIndices[TriangleVertexIndices.B],
+            ColorAttributeIndices[TriangleVertexIndices.C]
+        );
+
+        // Set the color attribute indices for the current triangle
+        ColorOverlay->SetTriangle(TriangleIndex, ColorAttributeTriangleIndices);
+    }
+
+    // Copy the color overlay to the primary colors attribute
+    DynamicMeshAxisOne.Attributes()->PrimaryColors()->Copy(*ColorOverlay);
+      
+
+            for (int32 TriangleIndex = 0; TriangleIndex < DynamicMeshAxisOne.TriangleCount(); ++TriangleIndex) {
+                UE::Geometry::FIndex3i TriangleVertexIndices = DynamicMeshAxisOne.GetTriangle(TriangleIndex);
+                AxisOneUVOverlay->SetTriangle(TriangleIndex, TriangleVertexIndices);
+            }
+
+
+            for (int32 TriangleIndex = 0; TriangleIndex < DynamicMeshAxisOne.TriangleCount(); ++TriangleIndex) {
+                UE::Geometry::FIndex3i TriangleVertexIndices = DynamicMeshAxisOne.GetTriangle(TriangleIndex);
+                AxisOneNormalOverlay->SetTriangle(TriangleIndex, TriangleVertexIndices);
+            }
+            for (int32 i = 0; i < AxisOneVertexColors.Num(); ++i) {
+                DynamicMeshAxisOne.SetVertexColor(i, FVector3f(AxisOneVertexColors[i]));
+            }
+           // Dont know what the 'CopyVertex' functions do but they seem work
+            UE::Geometry::CopyVertexNormalsToOverlay(DynamicMeshAxisOne, *DynamicMeshAxisOne.Attributes()->PrimaryNormals());
+            UE::Geometry::CopyVertexUVsToOverlay(DynamicMeshAxisOne, *DynamicMeshAxisOne.Attributes()->PrimaryUV());
+            // Somehow add color here?
+            AxisOneMesh->GetDynamicMesh()->SetMesh(MoveTemp(DynamicMeshAxisOne));
+            AxisOneMesh->SetCollisionEnabled(ECollisionEnabled::QueryAndProbe);
+            AxisOneMesh->EnableComplexAsSimpleCollision();
+            AxisOneMesh->SetMaterial(0, BaseMaterial);
+            collisionActive = false;
+}
+
+void AChunk::ApplyAxisTwo()
+{
+
+    TArray<int32> ColorAttributeIndices;
+    ColorAttributeIndices.SetNum(AxisTwoVertexColors.Num());
+
+    // Append vertices to the dynamic mesh
+
+    // Append color elements to the color overlay and store the returned indices
+    for (int32 i = 0; i < AxisTwoVertexColors.Num(); ++i) {
+        FColor Color = AxisTwoVertexColors[i];
+        FVector4f ColorVector(Color.R / 255.0f, Color.G / 255.0f, Color.B / 255.0f, 1.0f);
+        ColorAttributeIndices[i] = DynamicMeshAxisTwo.Attributes()->PrimaryColors()->AppendElement(ColorVector);
+    }
+
+    // Get the color overlay
+    UE::Geometry::FDynamicMeshColorOverlay* ColorOverlay = DynamicMeshAxisTwo.Attributes()->PrimaryColors();
+
+    // Iterate over the base mesh triangles and set the color attribute indices for each triangle
+    for (int32 TriangleIndex = 0; TriangleIndex < DynamicMeshAxisTwo.TriangleCount(); ++TriangleIndex) {
+        // Get the vertex indices of the current triangle
+        UE::Geometry::FIndex3i TriangleVertexIndices = DynamicMeshAxisTwo.GetTriangle(TriangleIndex);
+
+        // Map the triangle vertex indices to the color attribute indices
+        UE::Geometry::FIndex3i ColorAttributeTriangleIndices(
+            ColorAttributeIndices[TriangleVertexIndices.A],
+            ColorAttributeIndices[TriangleVertexIndices.B],
+            ColorAttributeIndices[TriangleVertexIndices.C]
+        );
+
+        // Set the color attribute indices for the current triangle
+        ColorOverlay->SetTriangle(TriangleIndex, ColorAttributeTriangleIndices);
+    }
+
+    // Copy the color overlay to the primary colors attribute
+    DynamicMeshAxisTwo.Attributes()->PrimaryColors()->Copy(*ColorOverlay);
+
+
+    for (int32 TriangleIndex = 0; TriangleIndex < DynamicMeshAxisTwo.TriangleCount(); ++TriangleIndex) {
+        UE::Geometry::FIndex3i TriangleVertexIndices = DynamicMeshAxisTwo.GetTriangle(TriangleIndex);
+        AxisTwoUVOverlay->SetTriangle(TriangleIndex, TriangleVertexIndices);
+    }
+
+
+    for (int32 TriangleIndex = 0; TriangleIndex < DynamicMeshAxisTwo.TriangleCount(); ++TriangleIndex) {
+        UE::Geometry::FIndex3i TriangleVertexIndices = DynamicMeshAxisTwo.GetTriangle(TriangleIndex);
+        AxisTwoNormalOverlay->SetTriangle(TriangleIndex, TriangleVertexIndices);
+    }
+    for (int32 i = 0; i < AxisTwoVertexColors.Num(); ++i) {
+        DynamicMeshAxisTwo.SetVertexColor(i, FVector3f(AxisTwoVertexColors[i]));
+    }
+    // Dont know what the 'CopyVertex' functions do but they seem work
+    UE::Geometry::CopyVertexNormalsToOverlay(DynamicMeshAxisTwo, *DynamicMeshAxisTwo.Attributes()->PrimaryNormals());
+    UE::Geometry::CopyVertexUVsToOverlay(DynamicMeshAxisTwo, *DynamicMeshAxisTwo.Attributes()->PrimaryUV());
+    // Somehow add color here?
+    AxisTwoMesh->GetDynamicMesh()->SetMesh(MoveTemp(DynamicMeshAxisTwo));
+    AxisTwoMesh->SetCollisionEnabled(ECollisionEnabled::QueryAndProbe);
+    AxisTwoMesh->EnableComplexAsSimpleCollision();
+    AxisTwoMesh->SetMaterial(0, BaseMaterial);
+    collisionActive = false;
+
+}
+void AChunk::ApplyAxisThree()
+{
+
+	TArray<int32> ColorAttributeIndices;
+	ColorAttributeIndices.SetNum(AxisThreeVertexColors.Num());
+
+	// Append vertices to the dynamic mesh
+
+	// Append color elements to the color overlay and store the returned indices
+    for (int32 i = 0; i < AxisThreeVertexColors.Num(); ++i) {
+		FColor Color = AxisThreeVertexColors[i];
+		FVector4f ColorVector(Color.R / 255.0f, Color.G / 255.0f, Color.B / 255.0f, 1.0f);
+		ColorAttributeIndices[i] = DynamicMeshAxisThree.Attributes()->PrimaryColors()->AppendElement(ColorVector);
+	}
+
+	// Get the color overlay
+	UE::Geometry::FDynamicMeshColorOverlay* ColorOverlay = DynamicMeshAxisThree.Attributes()->PrimaryColors();
+
+	// Iterate over the base mesh triangles and set the color attribute indices for each triangle
+    for (int32 TriangleIndex = 0; TriangleIndex < DynamicMeshAxisThree.TriangleCount(); ++TriangleIndex) {
+		// Get the vertex indices of the current triangle
+		UE::Geometry::FIndex3i TriangleVertexIndices = DynamicMeshAxisThree.GetTriangle(TriangleIndex);
+
+		// Map the triangle vertex indices to the color attribute indices
+        UE::Geometry::FIndex3i ColorAttributeTriangleIndices(
+			ColorAttributeIndices[TriangleVertexIndices.A],
+			ColorAttributeIndices[TriangleVertexIndices.B],
+			ColorAttributeIndices[TriangleVertexIndices.C]
+		);
+
+		// Set the color attribute indices for the current triangle
+		ColorOverlay->SetTriangle(TriangleIndex, ColorAttributeTriangleIndices);
+	}
+
+	// Copy the color overlay to the primary colors attribute
+	DynamicMeshAxisThree.Attributes()->PrimaryColors()->Copy(*ColorOverlay);
+
+    for (int32 TriangleIndex = 0; TriangleIndex < DynamicMeshAxisThree.TriangleCount(); ++TriangleIndex) {
+        UE::Geometry::FIndex3i TriangleVertexIndices = DynamicMeshAxisThree.GetTriangle(TriangleIndex);
+        AxisThreeUVOverlay->SetTriangle(TriangleIndex, TriangleVertexIndices);
+    }
+
+
+    for (int32 TriangleIndex = 0; TriangleIndex < DynamicMeshAxisThree.TriangleCount(); ++TriangleIndex) {
+        UE::Geometry::FIndex3i TriangleVertexIndices = DynamicMeshAxisThree.GetTriangle(TriangleIndex);
+        AxisThreeNormalOverlay->SetTriangle(TriangleIndex, TriangleVertexIndices);
+    }
+    for (int32 i = 0; i < AxisThreeVertexColors.Num(); ++i) {
+        DynamicMeshAxisThree.SetVertexColor(i, FVector3f(AxisThreeVertexColors[i]));
+    }
+    // Dont know what the 'CopyVertex' functions do but they seem work
+    UE::Geometry::CopyVertexNormalsToOverlay(DynamicMeshAxisThree, *DynamicMeshAxisThree.Attributes()->PrimaryNormals());
+    UE::Geometry::CopyVertexUVsToOverlay(DynamicMeshAxisThree, *DynamicMeshAxisThree.Attributes()->PrimaryUV());
+    // Somehow add color here?
+    AxisThreeMesh->GetDynamicMesh()->SetMesh(MoveTemp(DynamicMeshAxisThree));
+    AxisThreeMesh->SetCollisionEnabled(ECollisionEnabled::QueryAndProbe);
+    AxisThreeMesh->EnableComplexAsSimpleCollision();
+    AxisThreeMesh->SetMaterial(0, BaseMaterial);
+    collisionActive = false;
+}
+
+
+void AChunk::ApplyCombinedAxis()
+{
+
+    TArray<int32> ColorAttributeIndices;
+    ColorAttributeIndices.SetNum(VertexColors.Num());
+
+    // Append vertices to the dynamic mesh
+
+    // Append color elements to the color overlay and store the returned indices
+    for (int32 i = 0; i < VertexColors.Num(); ++i) {
+        FColor Color = VertexColors[i];
+        FVector4f ColorVector(Color.R / 255.0f, Color.G / 255.0f, Color.B / 255.0f, 1.0f);
+        ColorAttributeIndices[i] = DynamicMeshAxisCombined.Attributes()->PrimaryColors()->AppendElement(ColorVector);
+    }
+
+    // Get the color overlay
+    UE::Geometry::FDynamicMeshColorOverlay* ColorOverlay = DynamicMeshAxisCombined.Attributes()->PrimaryColors();
+
+    // Iterate over the base mesh triangles and set the color attribute indices for each triangle
+    for (int32 TriangleIndex = 0; TriangleIndex < DynamicMeshAxisCombined.TriangleCount(); ++TriangleIndex) {
+        // Get the vertex indices of the current triangle
+        UE::Geometry::FIndex3i TriangleVertexIndices = DynamicMeshAxisCombined.GetTriangle(TriangleIndex);
+
+        // Map the triangle vertex indices to the color attribute indices
+        UE::Geometry::FIndex3i ColorAttributeTriangleIndices(
+            ColorAttributeIndices[TriangleVertexIndices.A],
+            ColorAttributeIndices[TriangleVertexIndices.B],
+            ColorAttributeIndices[TriangleVertexIndices.C]
+        );
+
+        // Set the color attribute indices for the current triangle
+        ColorOverlay->SetTriangle(TriangleIndex, ColorAttributeTriangleIndices);
+    }
+
+    // Copy the color overlay to the primary colors attribute
+    DynamicMeshAxisCombined.Attributes()->PrimaryColors()->Copy(*ColorOverlay);
+
+    for (int32 TriangleIndex = 0; TriangleIndex < DynamicMeshAxisCombined.TriangleCount(); ++TriangleIndex) {
+        UE::Geometry::FIndex3i TriangleVertexIndices = DynamicMeshAxisCombined.GetTriangle(TriangleIndex);
+        UVOverlay->SetTriangle(TriangleIndex, TriangleVertexIndices);
+    }
+
+
+    for (int32 TriangleIndex = 0; TriangleIndex < DynamicMeshAxisCombined.TriangleCount(); ++TriangleIndex) {
+        UE::Geometry::FIndex3i TriangleVertexIndices = DynamicMeshAxisCombined.GetTriangle(TriangleIndex);
+        NormalOverlay->SetTriangle(TriangleIndex, TriangleVertexIndices);
+    }
+
+    CombinedAxisMesh->SetMaterial(0, BaseMaterial);
+    CombinedAxisMesh->SetVertexColorSpaceTransformMode(EDynamicMeshVertexColorTransformMode::NoTransform);
+    CombinedAxisMesh->SetCollisionEnabled(ECollisionEnabled::ProbeOnly);
+    CombinedAxisMesh->EnableComplexAsSimpleCollision();
+    CombinedAxisMesh->GetDynamicMesh()->SetMesh(DynamicMeshAxisCombined);
+    collisionActive = false;
+
 }
 
 void AChunk::ApplyMesh()
 {
    
-    
-    TArray<int32> ColorAttributeIndices;
-    ColorAttributeIndices.SetNum(VertexColors.Num());
+    //ApplyCombinedAxis();
 
-            // Append vertices to the dynamic mesh
-    
-            // Append color elements to the color overlay and store the returned indices
-            for (int32 i = 0; i < VertexColors.Num(); ++i) {
-                FColor Color = VertexColors[i];
-                FVector4f ColorVector(Color.R / 255.0f, Color.G / 255.0f, Color.B / 255.0f, 1.0f);
-                ColorAttributeIndices[i] = DynamicMeshAxisCombined.Attributes()->PrimaryColors()->AppendElement(ColorVector);
-            }
+    ApplyAxisOne();
+    ApplyAxisTwo();
+    ApplyAxisThree();
 
-            // Get the color overlay
-            UE::Geometry::FDynamicMeshColorOverlay* ColorOverlay = DynamicMeshAxisCombined.Attributes()->PrimaryColors();
 
-            // Iterate over the base mesh triangles and set the color attribute indices for each triangle
-            for (int32 TriangleIndex = 0; TriangleIndex < DynamicMeshAxisCombined.TriangleCount(); ++TriangleIndex) {
-                // Get the vertex indices of the current triangle
-                UE::Geometry::FIndex3i TriangleVertexIndices = DynamicMeshAxisCombined.GetTriangle(TriangleIndex);
-
-                // Map the triangle vertex indices to the color attribute indices
-                UE::Geometry::FIndex3i ColorAttributeTriangleIndices(
-                    ColorAttributeIndices[TriangleVertexIndices.A],
-                    ColorAttributeIndices[TriangleVertexIndices.B],
-                    ColorAttributeIndices[TriangleVertexIndices.C]
-                );
-
-                // Set the color attribute indices for the current triangle
-                ColorOverlay->SetTriangle(TriangleIndex, ColorAttributeTriangleIndices);
-            }
-
-            // Copy the color overlay to the primary colors attribute
-            DynamicMeshAxisCombined.Attributes()->PrimaryColors()->Copy(*ColorOverlay);
-        
-    for (int32 TriangleIndex = 0; TriangleIndex < DynamicMeshAxisCombined.TriangleCount(); ++TriangleIndex) {
-        UE::Geometry::FIndex3i TriangleVertexIndices = DynamicMeshAxisCombined.GetTriangle(TriangleIndex);
-        UVOverlay->SetTriangle(TriangleIndex, TriangleVertexIndices);
-    }
-        
-
-     for (int32 TriangleIndex = 0; TriangleIndex < DynamicMeshAxisCombined.TriangleCount(); ++TriangleIndex) {
-         UE::Geometry::FIndex3i TriangleVertexIndices = DynamicMeshAxisCombined.GetTriangle(TriangleIndex);
-         NormalOverlay->SetTriangle(TriangleIndex, TriangleVertexIndices);
-     }
 
   
-    MeshOne->SetMaterial(0, BaseMaterial);
-    MeshOne->SetVertexColorSpaceTransformMode(EDynamicMeshVertexColorTransformMode::NoTransform);
-    MeshOne->SetCollisionEnabled(ECollisionEnabled::QueryAndPhysics);
-    MeshOne->EnableComplexAsSimpleCollision();
-    MeshOne->GetDynamicMesh()->SetMesh(DynamicMeshAxisCombined);
 }
 
 void AChunk::ModifyVoxel(const FIntVector Position, const EBlock Block)
@@ -189,11 +398,13 @@ TArray<FVector2D>().Swap(UVData);
 // Called when the game starts or when spawned
 void AChunk::BeginPlay()
 {
-
-   
-
-
     Super::BeginPlay();
+
+    // Assuming you're interested in the pawn of player 0 (the first player)
+     PlayerPawn = UGameplayStatics::GetPlayerPawn(this, 0);
+
+    // Cast to your third-person character class if needed
+    //AMyPawn* MyCharacter = Cast<AMyPawn>(PlayerPawn);
 
 }
 
@@ -222,6 +433,31 @@ void AChunk::Tick(float DeltaTime)
         }
     }
 
+    if (PlayerPawn)
+    {
+        // Calculate the distance between this actor and the player
+        float DistanceToPlayer = FVector::Dist(PlayerPawn->GetActorLocation(), GetActorLocation());
+
+        // Check if the player is within 5,000 units
+        if (DistanceToPlayer <= 20000.0f && !collisionActive)
+        {
+            // The player is within 20,000 units, perform your action here
+            // For example, print a message to the screen
+            //GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Green, TEXT("Player is within 10000 units!"));
+            CombinedAxisMesh->SetCollisionEnabled(ECollisionEnabled::QueryAndPhysics);
+            CombinedAxisMesh->EnableComplexAsSimpleCollision();
+            collisionActive = true;
+        }
+        //else if(DistanceToPlayer > 20000.0f && collisionActive)
+        //{
+        //    GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Green, TEXT("Disabling Collision"));
+        //    collisionActive = false;
+        //    MeshOne->SetCollisionEnabled(ECollisionEnabled::ProbeOnly);
+        //    MeshOne->EnableComplexAsSimpleCollision();
+        //    // The player is more than 5,000 units away, do nothing or perform some other action
+        //}
+    }
+
     //if (finishedCreateQuad) {
     //    if (!resetQuadFrameTimer) {
     //        frameCounter = 0;
@@ -229,38 +465,7 @@ void AChunk::Tick(float DeltaTime)
     //    }
     //   
     //    if (frameCounter == 1) {
-    //        FDynamicMesh3 DynamicMeshOne;
-    //        DynamicMeshOne.EnableAttributes();
-    //        DynamicMeshOne.EnableVertexUVs(FVector2f::Zero());
-    //        DynamicMeshOne.EnableVertexColors(FVector3f::Zero());
-    //        DynamicMeshOne.EnableVertexNormals(FVector3f::Zero());
-
-
-    //        for (int32 i = 0; i < AxisOneVertexData.Num(); ++i) {
-    //            DynamicMeshOne.AppendVertex(FVector3d(AxisOneVertexData[i]));
-    //        }
-    //        for (int32 i = 0; i < AxisOneTriangleData.Num(); i += 3) {
-    //            DynamicMeshOne.AppendTriangle(UE::Geometry::FIndex3i::FIndex3i(AxisOneTriangleData[i], AxisOneTriangleData[i + 1], AxisOneTriangleData[i + 2]));
-    //        }
-
-    //        for (int32 i = 0; i < AxisOneUVData.Num(); ++i) {
-    //           // DynamicMeshOne.Attributes()->SetUV(0, i, FVector2f(placeholderUVData[i]));
-    //            DynamicMeshOne.SetVertexUV(i,FVector2f(AxisOneUVData[i]));
-    //        }
-    //        for (int32 i = 0; i < AxisOneNormalData.Num(); ++i) {
-    //            DynamicMeshOne.SetVertexNormal(i,FVector3f(AxisOneNormalData[i]));
-    //        }
-    //        for (int32 i = 0; i < AxisOneVertexColors.Num(); ++i) {
-    //            DynamicMeshOne.SetVertexColor(i, FVector3f(AxisOneVertexColors[i]));
-    //        }
-    //       // Dont know what the 'CopyVertex' functions do but they seem work
-    //        UE::Geometry::CopyVertexNormalsToOverlay(DynamicMeshOne, *DynamicMeshOne.Attributes()->PrimaryNormals());
-    //        UE::Geometry::CopyVertexUVsToOverlay(DynamicMeshOne, *DynamicMeshOne.Attributes()->PrimaryUV());
-    //        // Somehow add color here?
-    //        MeshOne->GetDynamicMesh()->SetMesh(MoveTemp(DynamicMeshOne)); 
-    //        MeshOne->SetCollisionEnabled(ECollisionEnabled::QueryAndProbe);
-    //        MeshOne->EnableComplexAsSimpleCollision();
-    //        MeshOne->SetMaterial(0, BaseMaterial);
+    //     
     //    }
 
     //    if (frameCounter == 40) {
@@ -327,15 +532,6 @@ void AChunk::Tick(float DeltaTime)
     //    }
     }
  
-        
-
-
-
-
-
-
-
-
 
 void AChunk::PerformBusyWait(int32 NumberOfIterations)
 {
@@ -659,6 +855,33 @@ void AChunk::GenerateMesh()
     DynamicMeshAxisCombined.EnableVertexNormals(FVector3f::Zero());
     UVOverlay = DynamicMeshAxisCombined.Attributes()->PrimaryUV();
     NormalOverlay = DynamicMeshAxisCombined.Attributes()->PrimaryNormals();
+
+    DynamicMeshAxisOne.EnableAttributes();
+    DynamicMeshAxisOne.EnableVertexUVs(FVector2f::Zero());
+    DynamicMeshAxisOne.EnableVertexColors(FVector3f::Zero());
+    DynamicMeshAxisOne.Attributes()->EnablePrimaryColors();
+    DynamicMeshAxisOne.EnableVertexNormals(FVector3f::Zero());
+    AxisOneUVOverlay = DynamicMeshAxisOne.Attributes()->PrimaryUV();
+    AxisOneNormalOverlay = DynamicMeshAxisOne.Attributes()->PrimaryNormals();
+
+    DynamicMeshAxisTwo.EnableAttributes();
+    DynamicMeshAxisTwo.EnableVertexUVs(FVector2f::Zero());
+    DynamicMeshAxisTwo.EnableVertexColors(FVector3f::Zero());
+    DynamicMeshAxisTwo.Attributes()->EnablePrimaryColors();
+    DynamicMeshAxisTwo.EnableVertexNormals(FVector3f::Zero());
+    AxisTwoUVOverlay = DynamicMeshAxisTwo.Attributes()->PrimaryUV();
+    AxisTwoNormalOverlay = DynamicMeshAxisTwo.Attributes()->PrimaryNormals();
+
+
+    DynamicMeshAxisThree.EnableAttributes();
+    DynamicMeshAxisThree.EnableVertexUVs(FVector2f::Zero());
+    DynamicMeshAxisThree.EnableVertexColors(FVector3f::Zero());
+    DynamicMeshAxisThree.Attributes()->EnablePrimaryColors();
+    DynamicMeshAxisThree.EnableVertexNormals(FVector3f::Zero());
+    AxisThreeUVOverlay = DynamicMeshAxisThree.Attributes()->PrimaryUV();
+    AxisThreeNormalOverlay = DynamicMeshAxisThree.Attributes()->PrimaryNormals();
+
+
     int iterationCount = 0;
     iterationCount++;
     ParallelFor(3, [&](int32 Axis)
@@ -916,34 +1139,48 @@ void AChunk::CreateQuadOne(FMask Mask, FIntVector AxisMask, FIntVector V1, FIntV
 
     EBlock BlockMaterial = Mask.Block;
     FColor BlockColor = GetColorFromBlock(BlockMaterial, V1);
+    //DynamicMeshOne.AppendVertex(FVector3d(AxisOneVertexData[i]));
 
-
-    AxisOneVertexData.Add(FVector(V1) * 100);
-    AxisOneVertexData.Add(FVector(V2) * 100);
-    AxisOneVertexData.Add(FVector(V3) * 100);
-    AxisOneVertexData.Add(FVector(V4) * 100);
+    //AxisOneVertexData.Add(FVector(V1) * 100);
+    //AxisOneVertexData.Add(FVector(V2) * 100);
+    //AxisOneVertexData.Add(FVector(V3) * 100);
+    //AxisOneVertexData.Add(FVector(V4) * 100);
+    DynamicMeshAxisOne.AppendVertex(FVector3d(FVector(V1) * 100));
+    DynamicMeshAxisOne.AppendVertex(FVector3d(FVector(V2) * 100));
+    DynamicMeshAxisOne.AppendVertex(FVector3d(FVector(V3) * 100));
+    DynamicMeshAxisOne.AppendVertex(FVector3d(FVector(V4) * 100));
 
     AxisOneVertexColors.Add(BlockColor);
     AxisOneVertexColors.Add(BlockColor);
     AxisOneVertexColors.Add(BlockColor);
     AxisOneVertexColors.Add(BlockColor);
 
-    AxisOneTriangleData.Add(AxisOneVertexCount);
+ /*   AxisOneTriangleData.Add(AxisOneVertexCount);
     AxisOneTriangleData.Add(AxisOneVertexCount + 2 + Mask.Normal);
     AxisOneTriangleData.Add(AxisOneVertexCount + 2 - Mask.Normal);
     AxisOneTriangleData.Add(AxisOneVertexCount + 3);
     AxisOneTriangleData.Add(AxisOneVertexCount + 1 - Mask.Normal);
-    AxisOneTriangleData.Add(AxisOneVertexCount + 1 + Mask.Normal);
+    AxisOneTriangleData.Add(AxisOneVertexCount + 1 + Mask.Normal);*/
+    DynamicMeshAxisOne.AppendTriangle(UE::Geometry::FIndex3i(AxisOneVertexCount, AxisOneVertexCount + 2 + Mask.Normal, AxisOneVertexCount + 2 - Mask.Normal));
+    DynamicMeshAxisOne.AppendTriangle(UE::Geometry::FIndex3i(AxisOneVertexCount + 3, AxisOneVertexCount + 1 - Mask.Normal, AxisOneVertexCount + 1 + Mask.Normal));
 
-    AxisOneUVData.Add(FVector2D(V1.X / Size, V1.Y / Size));
+ /*   AxisOneUVData.Add(FVector2D(V1.X / Size, V1.Y / Size));
     AxisOneUVData.Add(FVector2D(V2.X / Size, V2.Y / Size));
     AxisOneUVData.Add(FVector2D(V3.X / Size, V3.Y / Size));
-    AxisOneUVData.Add(FVector2D(V4.X / Size, V4.Y / Size));
+    AxisOneUVData.Add(FVector2D(V4.X / Size, V4.Y / Size));*/
+    AxisOneUVOverlay->AppendElement(FVector2f(FVector2D(V1.X / Size, V1.Y / Size)));
+    AxisOneUVOverlay->AppendElement(FVector2f(FVector2D(V2.X / Size, V2.Y / Size)));
+    AxisOneUVOverlay->AppendElement(FVector2f(FVector2D(V3.X / Size, V3.Y / Size)));
+    AxisOneUVOverlay->AppendElement(FVector2f(FVector2D(V4.X / Size, V4.Y / Size)));
 
-    AxisOneNormalData.Add(Normal);
-    AxisOneNormalData.Add(Normal);
-    AxisOneNormalData.Add(Normal);
-    AxisOneNormalData.Add(Normal);
+    //AxisOneNormalData.Add(Normal);
+    //AxisOneNormalData.Add(Normal);
+    //AxisOneNormalData.Add(Normal);
+    //AxisOneNormalData.Add(Normal);
+    AxisOneNormalOverlay->AppendElement(FVector3f(Normal));
+    AxisOneNormalOverlay->AppendElement(FVector3f(Normal));
+    AxisOneNormalOverlay->AppendElement(FVector3f(Normal));
+    AxisOneNormalOverlay->AppendElement(FVector3f(Normal));
 
     DynamicMeshAxisCombined.AppendVertex(FVector3d(FVector(V1) * 100));
     DynamicMeshAxisCombined.AppendVertex(FVector3d(FVector(V2) * 100));
@@ -1001,33 +1238,48 @@ void AChunk::CreateQuadTwo(FMask Mask, FIntVector AxisMask, FIntVector V1, FIntV
     EBlock BlockMaterial = Mask.Block;
     FColor BlockColor = GetColorFromBlock(BlockMaterial, V1);
 
-    AxisTwoVertexData.Add(FVector(V1) * 100);
-    AxisTwoVertexData.Add(FVector(V2) * 100);
-    AxisTwoVertexData.Add(FVector(V3) * 100);
-    AxisTwoVertexData.Add(FVector(V4) * 100);
+    //AxisTwoVertexData.Add(FVector(V1) * 100);
+    //AxisTwoVertexData.Add(FVector(V2) * 100);
+    //AxisTwoVertexData.Add(FVector(V3) * 100);
+    //AxisTwoVertexData.Add(FVector(V4) * 100);
+    DynamicMeshAxisTwo.AppendVertex(FVector3d(FVector(V1) * 100));
+    DynamicMeshAxisTwo.AppendVertex(FVector3d(FVector(V2) * 100));
+    DynamicMeshAxisTwo.AppendVertex(FVector3d(FVector(V3) * 100));
+    DynamicMeshAxisTwo.AppendVertex(FVector3d(FVector(V4) * 100));
+
 
     AxisTwoVertexColors.Add(BlockColor);
     AxisTwoVertexColors.Add(BlockColor);
     AxisTwoVertexColors.Add(BlockColor);
     AxisTwoVertexColors.Add(BlockColor);
 
-    AxisTwoTriangleData.Add(AxisTwoVertexCount);
+  /*  AxisTwoTriangleData.Add(AxisTwoVertexCount);
     AxisTwoTriangleData.Add(AxisTwoVertexCount);
     AxisTwoTriangleData.Add(AxisTwoVertexCount + 2 - Mask.Normal);
     AxisTwoTriangleData.Add(AxisTwoVertexCount + 3);
     AxisTwoTriangleData.Add(AxisTwoVertexCount + 1 - Mask.Normal);
-    AxisTwoTriangleData.Add(AxisTwoVertexCount + 1 + Mask.Normal);
+    AxisTwoTriangleData.Add(AxisTwoVertexCount + 1 + Mask.Normal);*/
+    DynamicMeshAxisTwo.AppendTriangle(UE::Geometry::FIndex3i(AxisTwoVertexCount, AxisTwoVertexCount + 2 + Mask.Normal, AxisTwoVertexCount + 2 - Mask.Normal));
+    DynamicMeshAxisTwo.AppendTriangle(UE::Geometry::FIndex3i(AxisTwoVertexCount + 3, AxisTwoVertexCount + 1 - Mask.Normal, AxisTwoVertexCount + 1 + Mask.Normal));
 
-
-    AxisTwoUVData.Add(FVector2D(V1.X / Size, V1.Y / Size));
+  /*  AxisTwoUVData.Add(FVector2D(V1.X / Size, V1.Y / Size));
     AxisTwoUVData.Add(FVector2D(V2.X / Size, V2.Y / Size));
     AxisTwoUVData.Add(FVector2D(V3.X / Size, V3.Y / Size));
-    AxisTwoUVData.Add(FVector2D(V4.X / Size, V4.Y / Size));
+    AxisTwoUVData.Add(FVector2D(V4.X / Size, V4.Y / Size));*/
+    AxisTwoUVOverlay->AppendElement(FVector2f(FVector2D(V1.X / Size, V1.Y / Size)));
+    AxisTwoUVOverlay->AppendElement(FVector2f(FVector2D(V2.X / Size, V2.Y / Size)));
+    AxisTwoUVOverlay->AppendElement(FVector2f(FVector2D(V3.X / Size, V3.Y / Size)));
+    AxisTwoUVOverlay->AppendElement(FVector2f(FVector2D(V4.X / Size, V4.Y / Size)));
 
-    AxisTwoNormalData.Add(Normal);
-    AxisTwoNormalData.Add(Normal);
-    AxisTwoNormalData.Add(Normal);
-    AxisTwoNormalData.Add(Normal);
+    //AxisTwoNormalData.Add(Normal);
+    //AxisTwoNormalData.Add(Normal);
+    //AxisTwoNormalData.Add(Normal);
+    //AxisTwoNormalData.Add(Normal);
+    AxisTwoNormalOverlay->AppendElement(FVector3f(Normal));
+    AxisTwoNormalOverlay->AppendElement(FVector3f(Normal));
+    AxisTwoNormalOverlay->AppendElement(FVector3f(Normal));
+    AxisTwoNormalOverlay->AppendElement(FVector3f(Normal));
+
 
     DynamicMeshAxisCombined.AppendVertex(FVector3d(FVector(V1) * 100));
     DynamicMeshAxisCombined.AppendVertex(FVector3d(FVector(V2) * 100));
@@ -1088,32 +1340,46 @@ void AChunk::CreateQuadThree(FMask Mask, FIntVector AxisMask, FIntVector V1, FIn
     FColor BlockColor = GetColorFromBlock(BlockMaterial, V1);
 
 
-    AxisThreeVertexData.Add(FVector(V1) * 100);
-    AxisThreeVertexData.Add(FVector(V2) * 100);
-    AxisThreeVertexData.Add(FVector(V3) * 100);
-    AxisThreeVertexData.Add(FVector(V4) * 100);
+    //AxisThreeVertexData.Add(FVector(V1) * 100);
+    //AxisThreeVertexData.Add(FVector(V2) * 100);
+    //AxisThreeVertexData.Add(FVector(V3) * 100);
+    //AxisThreeVertexData.Add(FVector(V4) * 100);
+    DynamicMeshAxisThree.AppendVertex(FVector3d(FVector(V1) * 100));
+    DynamicMeshAxisThree.AppendVertex(FVector3d(FVector(V2) * 100));
+    DynamicMeshAxisThree.AppendVertex(FVector3d(FVector(V3) * 100));
+    DynamicMeshAxisThree.AppendVertex(FVector3d(FVector(V4) * 100));
 
     AxisThreeVertexColors.Add(BlockColor);
     AxisThreeVertexColors.Add(BlockColor);
     AxisThreeVertexColors.Add(BlockColor);
     AxisThreeVertexColors.Add(BlockColor);
 
-    AxisThreeTriangleData.Add(AxisThreeVertexCount);
-    AxisThreeTriangleData.Add(AxisThreeVertexCount + 2 + Mask.Normal);
-    AxisThreeTriangleData.Add(AxisThreeVertexCount + 2 - Mask.Normal);
-    AxisThreeTriangleData.Add(AxisThreeVertexCount + 3);
-    AxisThreeTriangleData.Add(AxisThreeVertexCount + 1 - Mask.Normal);
-    AxisThreeTriangleData.Add(AxisThreeVertexCount + 1 + Mask.Normal);
+    //AxisThreeTriangleData.Add(AxisThreeVertexCount);
+    //AxisThreeTriangleData.Add(AxisThreeVertexCount + 2 + Mask.Normal);
+    //AxisThreeTriangleData.Add(AxisThreeVertexCount + 2 - Mask.Normal);
+    //AxisThreeTriangleData.Add(AxisThreeVertexCount + 3);
+    //AxisThreeTriangleData.Add(AxisThreeVertexCount + 1 - Mask.Normal);
+    //AxisThreeTriangleData.Add(AxisThreeVertexCount + 1 + Mask.Normal);
+    DynamicMeshAxisThree.AppendTriangle(UE::Geometry::FIndex3i(AxisThreeVertexCount, AxisThreeVertexCount + 2 + Mask.Normal, AxisThreeVertexCount + 2 - Mask.Normal));
+    DynamicMeshAxisThree.AppendTriangle(UE::Geometry::FIndex3i(AxisThreeVertexCount + 3, AxisThreeVertexCount + 1 - Mask.Normal, AxisThreeVertexCount + 1 + Mask.Normal));
 
-    AxisThreeUVData.Add(FVector2D(V1.X / Size, V1.Y / Size));
+ /*   AxisThreeUVData.Add(FVector2D(V1.X / Size, V1.Y / Size));
     AxisThreeUVData.Add(FVector2D(V2.X / Size, V2.Y / Size));
     AxisThreeUVData.Add(FVector2D(V3.X / Size, V3.Y / Size));
-    AxisThreeUVData.Add(FVector2D(V4.X / Size, V4.Y / Size));
+    AxisThreeUVData.Add(FVector2D(V4.X / Size, V4.Y / Size));*/
+    AxisThreeUVOverlay->AppendElement(FVector2f(FVector2D(V1.X / Size, V1.Y / Size)));
+    AxisThreeUVOverlay->AppendElement(FVector2f(FVector2D(V2.X / Size, V2.Y / Size)));
+    AxisThreeUVOverlay->AppendElement(FVector2f(FVector2D(V3.X / Size, V3.Y / Size)));
+    AxisThreeUVOverlay->AppendElement(FVector2f(FVector2D(V4.X / Size, V4.Y / Size)));
 
-    AxisThreeNormalData.Add(Normal);
-    AxisThreeNormalData.Add(Normal);
-    AxisThreeNormalData.Add(Normal);
-    AxisThreeNormalData.Add(Normal);
+    //AxisThreeNormalData.Add(Normal);
+    //AxisThreeNormalData.Add(Normal);
+    //AxisThreeNormalData.Add(Normal);
+    //AxisThreeNormalData.Add(Normal);
+    AxisThreeNormalOverlay->AppendElement(FVector3f(Normal));
+    AxisThreeNormalOverlay->AppendElement(FVector3f(Normal));
+    AxisThreeNormalOverlay->AppendElement(FVector3f(Normal));
+    AxisThreeNormalOverlay->AppendElement(FVector3f(Normal));
 
 
     DynamicMeshAxisCombined.AppendVertex(FVector3d(FVector(V1) * 100));
