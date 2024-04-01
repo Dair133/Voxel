@@ -683,7 +683,7 @@ void AChunk::GenerateBlocks()
     ParallelFor(NoiseMapOperations.Num(), [&](int32 Index)
         {
             NoiseMapOperations[Index]();
-        }, EParallelForFlags::BackgroundPriority);
+        }, EParallelForFlags::Unbalanced);
 
 
     //float combinedNoise;
@@ -988,7 +988,7 @@ void AChunk::GenerateMesh()
                         }
                         // Merge local results into global Mask here
                         // Ensure this is done in a thread-safe manner
-                    }, EParallelForFlags::BackgroundPriority); // Adjust flags as needed
+                    }, EParallelForFlags::None); // Adjust flags as needed
 
 
                 ++ChunkItr[Axis];
@@ -1093,7 +1093,7 @@ void AChunk::GenerateMesh()
                 }
             }
 
-        }, EParallelForFlags::BackgroundPriority);
+        }, EParallelForFlags::Unbalanced);
     //Now process the chunk queues in parallel
 
 
