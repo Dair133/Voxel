@@ -241,7 +241,7 @@ void AVoxelGameModeBase::ProcessChunkQueue()
     // Set a timer to call this function again after 1.0 second, if there are more chunks in the queue.
     if (!ChunkQueue.IsEmpty())
     {//130
-        if (GetWorld()->GetTimeSeconds() > 60)
+        if (GetWorld()->GetTimeSeconds() > 120)
         {
           
             if (!GetWorld()->GetTimerManager().IsTimerActive(SpawnTimerHandle))
@@ -258,7 +258,7 @@ void AVoxelGameModeBase::ProcessChunkQueue()
                 float WorldTime = GetWorld()->GetTimeSeconds();
                 FString DebugMessage = FString::Printf(TEXT("World Time SECTION TWO: %f"), WorldTime);
                 GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, DebugMessage);
-                GetWorld()->GetTimerManager().SetTimer(SpawnTimerHandle, this, &AVoxelGameModeBase::ProcessChunkQueue, 0.35f+(randomFloat/2), false);
+                GetWorld()->GetTimerManager().SetTimer(SpawnTimerHandle, this, &AVoxelGameModeBase::ProcessChunkQueue, 0.02f+(randomFloat/10), false);
             }
             //0.55 is a good value
             //0.42 is a good value(main value used for testing over previous days)
@@ -392,7 +392,8 @@ AActor* AVoxelGameModeBase::spawnChunk(FVector Loc)
         return nullptr;
     }
     AActor* SpawnedActorRef = GetWorld()->SpawnActor<AActor>(ChunkToSpawn, Loc, FRotator(0.f, 0.f, 0.f), SpawnParams);
-
+    AChunk* myChunk = Cast<AChunk>(SpawnedActorRef);
+    AxisOneQueue.Enqueue(myChunk);
     return SpawnedActorRef;
 }
 

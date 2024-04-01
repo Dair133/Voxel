@@ -43,6 +43,7 @@ void EmptyLinkFunctionForGeneratedCodeEnums() {}
 		{ "EBlock::Sand", (int64)EBlock::Sand },
 		{ "EBlock::Water", (int64)EBlock::Water },
 		{ "EBlock::SnowGrass", (int64)EBlock::SnowGrass },
+		{ "EBlock::OutOfBounds", (int64)EBlock::OutOfBounds },
 	};
 #if WITH_METADATA
 	const UECodeGen_Private::FMetaDataPairParam Z_Construct_UEnum_VoxelProject_EBlock_Statics::Enum_MetaDataParams[] = {
@@ -52,6 +53,7 @@ void EmptyLinkFunctionForGeneratedCodeEnums() {}
 		{ "Grass.Name", "EBlock::Grass" },
 		{ "ModuleRelativePath", "Enums.h" },
 		{ "Null.Name", "EBlock::Null" },
+		{ "OutOfBounds.Name", "EBlock::OutOfBounds" },
 		{ "Sand.Name", "EBlock::Sand" },
 		{ "SnowGrass.Name", "EBlock::SnowGrass" },
 		{ "Stone.Name", "EBlock::Stone" },
@@ -138,10 +140,10 @@ void EmptyLinkFunctionForGeneratedCodeEnums() {}
 		static const FEnumRegisterCompiledInInfo EnumInfo[];
 	};
 	const FEnumRegisterCompiledInInfo Z_CompiledInDeferFile_FID_UE5Projects_Voxel_VoxelProject_Source_VoxelProject_Enums_h_Statics::EnumInfo[] = {
-		{ EBlock_StaticEnum, TEXT("EBlock"), &Z_Registration_Info_UEnum_EBlock, CONSTRUCT_RELOAD_VERSION_INFO(FEnumReloadVersionInfo, 2020427865U) },
+		{ EBlock_StaticEnum, TEXT("EBlock"), &Z_Registration_Info_UEnum_EBlock, CONSTRUCT_RELOAD_VERSION_INFO(FEnumReloadVersionInfo, 3447369902U) },
 		{ EGenerationType_StaticEnum, TEXT("EGenerationType"), &Z_Registration_Info_UEnum_EGenerationType, CONSTRUCT_RELOAD_VERSION_INFO(FEnumReloadVersionInfo, 2046249519U) },
 	};
-	static FRegisterCompiledInInfo Z_CompiledInDeferFile_FID_UE5Projects_Voxel_VoxelProject_Source_VoxelProject_Enums_h_4143129650(TEXT("/Script/VoxelProject"),
+	static FRegisterCompiledInInfo Z_CompiledInDeferFile_FID_UE5Projects_Voxel_VoxelProject_Source_VoxelProject_Enums_h_3110315647(TEXT("/Script/VoxelProject"),
 		nullptr, 0,
 		nullptr, 0,
 		Z_CompiledInDeferFile_FID_UE5Projects_Voxel_VoxelProject_Source_VoxelProject_Enums_h_Statics::EnumInfo, UE_ARRAY_COUNT(Z_CompiledInDeferFile_FID_UE5Projects_Voxel_VoxelProject_Source_VoxelProject_Enums_h_Statics::EnumInfo));

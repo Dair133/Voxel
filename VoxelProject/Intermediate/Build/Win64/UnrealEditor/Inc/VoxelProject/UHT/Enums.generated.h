@@ -27,7 +27,8 @@ PRAGMA_DISABLE_DEPRECATION_WARNINGS
 	op(EBlock::Grass) \
 	op(EBlock::Sand) \
 	op(EBlock::Water) \
-	op(EBlock::SnowGrass) 
+	op(EBlock::SnowGrass) \
+	op(EBlock::OutOfBounds) 
 
 enum class EBlock : uint8;
 template<> struct TIsUEnumClass<EBlock> { enum { Value = true }; };

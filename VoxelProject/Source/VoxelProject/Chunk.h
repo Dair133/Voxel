@@ -51,8 +51,12 @@ public:
     TQueue<FQuadData> QuadDataQueueTwo;
     TQueue<FQuadData> QuadDataQueueThree;
 
+    TArray<FQuadData> QuadDataArrayOne;
+    TArray<FQuadData> QuadDataArrayTwo;
+    TArray<FQuadData> QuadDataArrayThree;
 
 
+    bool outOfBounds = false;
 
     TArray<FGraphEventRef> TaskDependencies;
 
@@ -77,7 +81,7 @@ public:
     UPROPERTY()
     UStaticMesh* MyTreeMesh;
 
-    int VerticalHeight = 450;
+    int VerticalHeight = 500;
     UClass* MyTreeBPClass;
     UClass* MyGrassBPClass;
     // UFUNCTION(BlueprintCallable, Category = "Chunk")
@@ -86,7 +90,7 @@ public:
     UPROPERTY(EditAnywhere, Category = "Chunk")
     int AmtBlocksVertically = 1;
 
-   
+    int meshCounter = 0;
     int frameCounter = 0;
     int CurrentX, CurrentY;
     int MaxX, MaxY;
@@ -103,9 +107,7 @@ protected:
     virtual void BeginPlay() override;
 
 private:
-    bool overlayAssigned = false;
-
-    bool collisionActive;
+    void AddingOverlay();
     APawn* PlayerPawn;
 
   
@@ -139,10 +141,11 @@ private:
     UE::Geometry::FDynamicMeshNormalOverlay* AxisThreeNormalOverlay;
 
     FastNoiseLite* HillyPlains;
+    FastNoiseLite* PlainsNoise;
     FastNoiseLite* ColorNoise;
     FastNoiseLite* SecondaryNoise;
     bool tree = false;
-
+    bool optionalMeshApplies = false;
     // Primcary block storage array
     TArray<EBlock> Blocks;
     TArray<int> NoiseNumbers;
@@ -175,7 +178,9 @@ private:
     TArray<FVector> EmptyArray;
 
     TArray<FVector2D> placeholderUVData;
-    FCriticalSection CriticalSection;
+    FCriticalSection CreateQuadLockOne;
+    FCriticalSection CreateQuadLockTwo;
+    FCriticalSection CreateQuadLockThree;
     FCriticalSection VertexCriticalSection;
     FCriticalSection GenerateBlocksLock;
     int VertexCount = 0;
@@ -223,12 +228,24 @@ private:
 
     void ApplyMesh();
 
+
+
+    void CreateQuadOnePartOne(FMask Mask, FIntVector AxisMask, FIntVector V1, FIntVector V2, FIntVector V3, FIntVector V4, EBlock Block);
+    //void CreateQuadTwo(FMask Mask, FIntVector AxisMask, FIntVector V1, FIntVector V2, FIntVector V3, FIntVector V4, EBlock Block);
+    //void CreateQuadThree(FMask Mask, FIntVector AxisMask, FIntVector V1, FIntVector V2, FIntVector V3, FIntVector V4, EBlock Block);
+
+
     void CreateQuadOne(FMask Mask, FIntVector AxisMask, FIntVector V1, FIntVector V2, FIntVector V3, FIntVector V4, EBlock Block);
     void CreateQuadTwo(FMask Mask, FIntVector AxisMask, FIntVector V1, FIntVector V2, FIntVector V3, FIntVector V4, EBlock Block);
-       void CreateQuadThree(FMask Mask, FIntVector AxisMask, FIntVector V1, FIntVector V2, FIntVector V3, FIntVector V4, EBlock Block);
+    void CreateQuadThree(FMask Mask, FIntVector AxisMask, FIntVector V1, FIntVector V2, FIntVector V3, FIntVector V4, EBlock Block);
+
+
+
+
+
     int GetBlockIndex(int x, int y, int z) const;
 
-    EBlock GetBlock(FIntVector Index) const;
+    EBlock GetBlock(FIntVector Index);
 
     bool CompareMask(FMask M1, FMask M2) const;
 
@@ -242,14 +259,20 @@ private:
     //    void SpawnTrees(const FVector& PlayerPosition);
     //    TArray<FVector2D> TreeMap;
 
-    void ApplyCombinedAxis();
-    void ApplyAxisOne();
-    void ApplyAxisTwo();
-    void ApplyAxisThree();
+  
 
 public:
     // Called every frame
     virtual void Tick(float DeltaTime) override;
+    void ApplyCombinedAxis();
+    void ApplyAxisOne();
+    void ApplyAxisTwo();
+    void ApplyAxisThree();
+    bool isApplyingMeshReady = false;
+    bool axisOneGenerated = false;
+    bool axisTwoGenerated = false;
+    bool axisThreeGenerated = false;
+    bool collisionActive;
 
 
 

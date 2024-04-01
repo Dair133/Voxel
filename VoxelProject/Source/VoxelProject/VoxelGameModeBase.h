@@ -1,6 +1,7 @@
 
 #pragma once
 #include "CoreMinimal.h"
+#include "Chunk.h"
 #include <VoxelProject/BoxTwo.h>
 #include <VoxelProject/Vector2.h>
 #include <VoxelProject/Enums.h>
@@ -51,6 +52,7 @@ class  AVoxelGameModeBase : public AGameModeBase
     //void AVoxelGameGameModeBase::SpawnNextChunk();
     void ProcessChunkQueue();
     FTimerHandle SpawnTimerHandle;
+    FTimerHandle GenerateAxisHandle;
     bool loaded;
     void HideOutOfRangeChunks();
 
@@ -74,17 +76,19 @@ class  AVoxelGameModeBase : public AGameModeBase
     int chunksVisibleInViewDst;
 
 
-
     bool UpdateChunk(AActor* chunk);
 
     AVoxelGameModeBase();
-
+    void  GenerateAxisOne();
     AActor* spawnChunk(FVector Loc);
 
     TMap<FVector2D, AActor*> terrainChunkMap;
     TMap<FVector, AActor*> terrainChunkMap2;
     TArray<AActor*> visibleTerrainChunks;
-   
+
+    TQueue<AChunk*> AxisOneQueue;
+    TQueue<AChunk*> AxisTwoQueue;
+    TQueue<AChunk*> AxisThreeQueue;
 
     //pooling stuff
     //TUniquePtr<ChunkPool> ChunkPoolPtr;

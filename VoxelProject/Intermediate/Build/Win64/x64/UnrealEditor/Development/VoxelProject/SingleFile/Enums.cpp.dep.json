@@ -1,0 +1,13 @@
+{
+    "Version": "1.2",
+    "Data": {
+        "Source": "e:\\ue5projects\\voxel\\voxelproject\\source\\voxelproject\\enums.cpp",
+        "ProvidedModule": "",
+        "Includes": [
+            "e:\\ue5projects\\voxel\\voxelproject\\intermediate\\build\\win64\\x64\\unrealeditor\\development\\voxelproject\\definitions.voxelproject.h",
+            "e:\\ue5projects\\voxel\\voxelproject\\intermediate\\build\\win64\\x64\\voxelprojecteditor\\development\\engine\\shareddefinitions.engine.cpp17.inclorderunreal5_0.h"
+        ],
+        "ImportedModules": [],
+        "ImportedHeaderUnits": []
+    }
+}

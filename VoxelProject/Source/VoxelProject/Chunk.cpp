@@ -7,6 +7,8 @@
 
           //        Code executed in the worker thread is complete
           //   }, TStatId(), nullptr, ENamedThreads::GameThread);
+
+//    UE_LOG(LogTemp, Display, TEXT("CLEARING MESH"));
 #include "Chunk.h"
 #include <system_error>
 #include <FastNoise/FastNoise.h>
@@ -86,7 +88,7 @@ AChunk::AChunk()
     //CombinedAxisMesh->SetCastShadow(false);
     //AxisOneMesh->SetCastShadow(false);
     //AxisTwoMesh->SetCastShadow(false);
-    //AxisThreeMesh->SetCastShadow(false);
+    AxisThreeMesh->SetCastShadow(false);
 
     static ConstructorHelpers::FObjectFinder<UMaterialInterface> Material(TEXT("Material'/Game/Cubedeps/Basecube.Basecube'"));
     if (Material.Succeeded())
@@ -137,11 +139,7 @@ void AChunk::ApplyAxisOne()
     DynamicMeshAxisOne.Attributes()->PrimaryColors()->Copy(*ColorOverlay);
       
 
-            for (int32 TriangleIndex = 0; TriangleIndex < DynamicMeshAxisOne.TriangleCount(); ++TriangleIndex) {
-                UE::Geometry::FIndex3i TriangleVertexIndices = DynamicMeshAxisOne.GetTriangle(TriangleIndex);
-                AxisOneUVOverlay->SetTriangle(TriangleIndex, TriangleVertexIndices);
-            }
-
+   
 
             for (int32 TriangleIndex = 0; TriangleIndex < DynamicMeshAxisOne.TriangleCount(); ++TriangleIndex) {
                 UE::Geometry::FIndex3i TriangleVertexIndices = DynamicMeshAxisOne.GetTriangle(TriangleIndex);
@@ -154,7 +152,8 @@ void AChunk::ApplyAxisOne()
      
             // Somehow add color here?
             AxisOneMesh->GetDynamicMesh()->SetMesh(MoveTemp(DynamicMeshAxisOne));
-            AxisOneMesh->SetCollisionEnabled(ECollisionEnabled::QueryAndProbe);
+            AxisOneMesh->bEnableAutoLODGeneration = true;
+            AxisOneMesh->SetCollisionEnabled(ECollisionEnabled::NoCollision);
             AxisOneMesh->EnableComplexAsSimpleCollision();
             AxisOneMesh->SetMaterial(0, BaseMaterial);
             collisionActive = false;
@@ -198,10 +197,7 @@ void AChunk::ApplyAxisTwo()
     DynamicMeshAxisTwo.Attributes()->PrimaryColors()->Copy(*ColorOverlay);
 
 
-    for (int32 TriangleIndex = 0; TriangleIndex < DynamicMeshAxisTwo.TriangleCount(); ++TriangleIndex) {
-        UE::Geometry::FIndex3i TriangleVertexIndices = DynamicMeshAxisTwo.GetTriangle(TriangleIndex);
-        AxisTwoUVOverlay->SetTriangle(TriangleIndex, TriangleVertexIndices);
-    }
+
 
 
     for (int32 TriangleIndex = 0; TriangleIndex < DynamicMeshAxisTwo.TriangleCount(); ++TriangleIndex) {
@@ -215,7 +211,7 @@ void AChunk::ApplyAxisTwo()
  
     // Somehow add color here?
     AxisTwoMesh->GetDynamicMesh()->SetMesh(MoveTemp(DynamicMeshAxisTwo));
-    AxisTwoMesh->SetCollisionEnabled(ECollisionEnabled::QueryAndProbe);
+    AxisTwoMesh->SetCollisionEnabled(ECollisionEnabled::NoCollision);
     AxisTwoMesh->EnableComplexAsSimpleCollision();
     AxisTwoMesh->SetMaterial(0, BaseMaterial);
     collisionActive = false;
@@ -258,10 +254,7 @@ void AChunk::ApplyAxisThree()
 	// Copy the color overlay to the primary colors attribute
 	DynamicMeshAxisThree.Attributes()->PrimaryColors()->Copy(*ColorOverlay);
 
-    for (int32 TriangleIndex = 0; TriangleIndex < DynamicMeshAxisThree.TriangleCount(); ++TriangleIndex) {
-        UE::Geometry::FIndex3i TriangleVertexIndices = DynamicMeshAxisThree.GetTriangle(TriangleIndex);
-        AxisThreeUVOverlay->SetTriangle(TriangleIndex, TriangleVertexIndices);
-    }
+ 
 
 
     for (int32 TriangleIndex = 0; TriangleIndex < DynamicMeshAxisThree.TriangleCount(); ++TriangleIndex) {
@@ -276,7 +269,7 @@ void AChunk::ApplyAxisThree()
     // Somehow add color here?
     AxisThreeMesh->SetMaterial(0, BaseMaterial);
     AxisThreeMesh->GetDynamicMesh()->SetMesh(MoveTemp(DynamicMeshAxisThree));
-    AxisThreeMesh->SetCollisionEnabled(ECollisionEnabled::QueryAndProbe);
+    AxisThreeMesh->SetCollisionEnabled(ECollisionEnabled::NoCollision);
     AxisThreeMesh->EnableComplexAsSimpleCollision();
     collisionActive = false;
 }
@@ -341,16 +334,27 @@ void AChunk::ApplyCombinedAxis()
 
 void AChunk::ApplyMesh()
 {
-   
-    //ApplyCombinedAxis();
-
-    ApplyAxisOne();
-    ApplyAxisTwo();
-    ApplyAxisThree();
-
-
-
-  
+   isApplyingMeshReady = true;
+  //  //ApplyCombinedAxis();
+  //  int meshApplicationDelay = 0;
+  //  while (!finishedApplyingMesh) {
+  //      meshApplicationDelay++;
+  //      if (meshApplicationDelay == 1) {
+  //          UE_LOG(LogTemp, Display, TEXT("applying mesh one %d"),meshApplicationDelay);
+  //          ApplyAxisOne();
+		//}
+  //      else if (meshApplicationDelay == 5000) {
+  //          UE_LOG(LogTemp, Display, TEXT("applying mesh two %d"),meshApplicationDelay);
+		//	ApplyAxisTwo();
+		//}
+  //      else if (meshApplicationDelay == 10000) {
+  //          UE_LOG(LogTemp, Display, TEXT("applying mesh three %d"),meshApplicationDelay);
+		//	ApplyAxisThree();
+		//}
+  //      else if(meshApplicationDelay > 10000) {
+		//	finishedApplyingMesh = true;
+  //      }
+  //  }  
 }
 
 void AChunk::ModifyVoxel(const FIntVector Position, const EBlock Block)
@@ -409,11 +413,10 @@ void AChunk::BeginPlay()
 
 void AChunk::Tick(float DeltaTime)
 {
-
+    // Calculate the distance between this actor and the player
+    float DistanceToPlayer = FVector::Dist(PlayerPawn->GetActorLocation(), GetActorLocation());
     // Increment your frame counter
     frameCounter++;
-
-
     if (frameCounter < 500) {
         // Perform a portion of your logic here
         if (frameCounter == 2) {
@@ -429,11 +432,29 @@ void AChunk::Tick(float DeltaTime)
            // PrimaryActorTick.bCanEverTick = false;
         }
     }
+    if (isApplyingMeshReady) 
+    {
+        meshCounter++;
+		  // Perform a portion of your logic here
+        if (meshCounter == 2) {
+            ApplyAxisOne();
+        }
+        if (meshCounter == 80) {
+            ApplyAxisTwo();
+            optionalMeshApplies = true;
+        }
+        else if (meshCounter == 170) {
+            ApplyAxisThree();
+        }
+        else {
+           // PrimaryActorTick.bCanEverTick = false;
+        }
+	}
+
 
     if (PlayerPawn)
     {
-        // Calculate the distance between this actor and the player
-        float DistanceToPlayer = FVector::Dist(PlayerPawn->GetActorLocation(), GetActorLocation());
+      
 
         // Check if the player is within 5,000 units
         if (DistanceToPlayer <= 20000.0f && !collisionActive)
@@ -441,92 +462,19 @@ void AChunk::Tick(float DeltaTime)
             // The player is within 20,000 units, perform your action here
             // For example, print a message to the screen
             //GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Green, TEXT("Player is within 10000 units!"));
-            CombinedAxisMesh->SetCollisionEnabled(ECollisionEnabled::QueryAndPhysics);
-            CombinedAxisMesh->EnableComplexAsSimpleCollision();
+            AxisOneMesh->SetCollisionEnabled(ECollisionEnabled::QueryAndPhysics);
+            AxisOneMesh->EnableComplexAsSimpleCollision();
+
+            AxisTwoMesh->SetCollisionEnabled(ECollisionEnabled::QueryAndPhysics);
+            AxisTwoMesh->EnableComplexAsSimpleCollision();
+
+            AxisThreeMesh->SetCollisionEnabled(ECollisionEnabled::QueryAndPhysics);
+            AxisThreeMesh->EnableComplexAsSimpleCollision();
             collisionActive = true;
         }
-        //else if(DistanceToPlayer > 20000.0f && collisionActive)
-        //{
-        //    GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Green, TEXT("Disabling Collision"));
-        //    collisionActive = false;
-        //    MeshOne->SetCollisionEnabled(ECollisionEnabled::ProbeOnly);
-        //    MeshOne->EnableComplexAsSimpleCollision();
-        //    // The player is more than 5,000 units away, do nothing or perform some other action
-        //}
     }
 
-    //if (finishedCreateQuad) {
-    //    if (!resetQuadFrameTimer) {
-    //        frameCounter = 0;
-    //        resetQuadFrameTimer = true;
-    //    }
-    //   
-    //    if (frameCounter == 1) {
-    //     
-    //    }
-
-    //    if (frameCounter == 40) {
-    //        FDynamicMesh3 DynamicMeshTwo;
-    //        for (int32 i = 0; i < AxisTwoVertexData.Num(); ++i) {
-    //            DynamicMeshTwo.AppendVertex(FVector3d(AxisTwoVertexData[i]));
-    //        }
-    //        for (int32 i = 0; i < AxisTwoTriangleData.Num(); i += 3) {
-    //            DynamicMeshTwo.AppendTriangle(UE::Geometry::FIndex3i::FIndex3i(AxisTwoTriangleData[i], AxisTwoTriangleData[i + 1], AxisTwoTriangleData[i + 2]));
-    //        }
-    //        DynamicMeshTwo.EnableAttributes();
-
-    //        DynamicMeshTwo.Attributes()->SetNumUVLayers(1);
-    //        for (int32 i = 0; i < AxisTwoUVData.Num(); ++i) {
-    //            // DynamicMeshOne.Attributes()->SetUV(0, i, FVector2f(placeholderUVData[i]));
-    //            DynamicMeshTwo.SetVertexUV(i, FVector2f(AxisTwoUVData[i]));
-    //        }
-    //        DynamicMeshTwo.Attributes()->SetNumNormalLayers(1);
-    //        for (int32 i = 0; i < AxisTwoNormalData.Num(); ++i) {
-    //            DynamicMeshTwo.SetVertexNormal(i, FVector3f(AxisTwoNormalData[i]));
-    //        }
-    //        DynamicMeshTwo.EnableVertexColors(FVector3f::Zero());
-    //        DynamicMeshTwo.Attributes()->EnablePrimaryColors();
-    //        for (int32 i = 0; i < AxisTwoVertexColors.Num(); ++i) {
-    //            DynamicMeshTwo.SetVertexColor(i, FVector3f(AxisTwoVertexColors[i]));
-    //        }
-    //        UE::Geometry::CopyVertexNormalsToOverlay(DynamicMeshTwo, *DynamicMeshTwo.Attributes()->PrimaryNormals());
-    //        UE::Geometry::CopyVertexUVsToOverlay(DynamicMeshTwo, *DynamicMeshTwo.Attributes()->PrimaryUV());
-    //        MeshTwo->GetDynamicMesh()->SetMesh(MoveTemp(DynamicMeshTwo));
-    //        MeshTwo->SetCollisionEnabled(ECollisionEnabled::QueryAndProbe);
-    //        MeshTwo->EnableComplexAsSimpleCollision();
-    //        MeshTwo->SetMaterial(0, BaseMaterial);
-    //    }
-
-    //    if (frameCounter == 80) {
-    //        FDynamicMesh3 DynamicMeshThree;
-    //        for (int32 i = 0; i < AxisThreeVertexData.Num(); ++i) {
-    //            DynamicMeshThree.AppendVertex(FVector3d(AxisThreeVertexData[i]));
-    //        }
-    //        for (int32 i = 0; i < AxisThreeTriangleData.Num(); i += 3) {
-    //            DynamicMeshThree.AppendTriangle(UE::Geometry::FIndex3i::FIndex3i(AxisThreeTriangleData[i], AxisThreeTriangleData[i + 1], AxisThreeTriangleData[i + 2]));
-    //        }
-    //        DynamicMeshThree.EnableAttributes();
-    //        DynamicMeshThree.Attributes()->SetNumUVLayers(1);
-    //        for (int32 i = 0; i < AxisThreeUVData.Num(); ++i) {
-    //            // DynamicMeshOne.Attributes()->SetUV(0, i, FVector2f(placeholderUVData[i]));
-    //            DynamicMeshThree.SetVertexUV(i, FVector2f(AxisThreeUVData[i]));
-    //        }
-    //        DynamicMeshThree.Attributes()->SetNumNormalLayers(1);
-    //        for (int32 i = 0; i < AxisThreeNormalData.Num(); ++i) {
-    //            DynamicMeshThree.SetVertexNormal(i, FVector3f(AxisThreeNormalData[i]));
-    //        }
-    //        DynamicMeshThree.EnableVertexColors(FVector3f::Zero());
-    //        DynamicMeshThree.Attributes()->EnablePrimaryColors();
-    //        for (int32 i = 0; i < AxisThreeVertexColors.Num(); ++i) {
-    //            DynamicMeshThree.SetVertexColor(i, FVector3f(AxisThreeVertexColors[i]));
-    //        }
-    //        UE::Geometry::CopyVertexNormalsToOverlay(DynamicMeshThree, *DynamicMeshThree.Attributes()->PrimaryNormals());
-    //        UE::Geometry::CopyVertexUVsToOverlay(DynamicMeshThree, *DynamicMeshThree.Attributes()->PrimaryUV());
-    //        MeshThree->GetDynamicMesh()->SetMesh(MoveTemp(DynamicMeshThree));
-    //        MeshThree->SetCollisionEnabled(ECollisionEnabled::QueryAndProbe);
-    //        MeshThree->EnableComplexAsSimpleCollision();
-    //        MeshThree->SetMaterial(0, BaseMaterial);
-    //    }
+  
     }
  
 
@@ -620,13 +568,13 @@ void AChunk::GenerateBlocks()
     HillyPlains->SetFractalGain(1);
     HillyPlains->SetFractalType(FastNoiseLite::FractalType_FBm);
 
-    auto River = new FastNoiseLite();
-    River->SetNoiseType(FastNoiseLite::NoiseType_Perlin); // Perlin noise for smooth gradients
-    River->SetFrequency(0.006f); // Lower frequency for smoother, broader features
-    River->SetFractalOctaves(1.2f); // Use more octaves for smoother transitions
-    River->SetFractalLacunarity(0.10f); // Higher lacunarity for more variation between octaves
-    River->SetFractalGain(1); // Lower gain to reduce the amplitude of higher octaves
-    River->SetFractalType(FastNoiseLite::FractalType_FBm); // FBm for natural-looking features
+    PlainsNoise = new FastNoiseLite();
+    PlainsNoise->SetNoiseType(FastNoiseLite::NoiseType_Perlin);
+    PlainsNoise->SetFractalOctaves(1);// Seems to have no effect with a
+    PlainsNoise->SetFrequency(0.002f);// Higher values seems to make mountains more jagged and extremely laggy
+    PlainsNoise->SetFractalLacunarity(0.5f);
+    PlainsNoise->SetFractalGain(1);
+    PlainsNoise->SetFractalType(FastNoiseLite::FractalType_FBm);
 
     float baseMultiplier = VerticalHeight * 4;
 
@@ -652,48 +600,84 @@ void AChunk::GenerateBlocks()
       // Ensure NoiseMap has been initialized to the right dimensions before this
     // Assuming biomeNoiseMap is correctly initialized and configured
     TArray<TFunction<void()>> NoiseMapOperations;
-
-    // ParallelFor(Size, [&](int32 x) {
+    // Biome transition parameters
+    float biomeTransitionFrequency = 0.003f; // adjust for larger or smaller biomes
+    float biomeTransitionScale = Size * 0.5f; // Scale of the biome transition in world units
 
     for (int x = 0; x < Size; x++)
     {
         NoiseMapOperations.Add([=, &NoiseMap]()
             {
-        for (int y = 0; y < Size; y++)
-        {
-            // By passing &NoiseMap we are passing a reference to each labmda function, not a unique copy thus improving memoery overhead.
-           
-                    float Xpos = (x * 100 + Location.X) / 100;
-                    float Ypos = (y * 100 + Location.Y) / 100;
-                    float biomeNoise = biomeNoiseMap->GetNoise(Xpos, Ypos);
-                    float normalizedBiomeNoise = (biomeNoise + 1) / 2.0f;
+                for (int y = 0; y < Size; y++)
+                {
+                    float worldXpos = (x * 100 + Location.X) / 100;
+                    float worldYpos = (y * 100 + Location.Y) / 100;
+
+                    // Calculate biome transition factor using sine wave
+                    float biomeFactor = sin(worldXpos * biomeTransitionFrequency) * sin(worldYpos * biomeTransitionFrequency);
+
+                    // Use a sine wave function to determine biome based on world position, creating smooth transitions
+                    //float biomeTransition = sin(worldXpos * biomeTransitionScale) + sin(worldYpos * biomeTransitionScale);
 
                     for (int z = 0; z < VerticalHeight; z++)
                     {
-                        float Zpos = (z * 100 + Location.Z) / 100;
+                        float worldZpos = (z * 100 + Location.Z) / 100;
                         float combinedNoise;
                         int biomeNumber;
+                        float actualHeight;
 
-                        if (normalizedBiomeNoise <= 0.77)
+                        // Determine biome based on biomeFactor
+                        if (biomeFactor > 0.2f)
                         {
-                            float hillyNoise = HillyPlains->GetNoise(Xpos, Ypos, Zpos);
-                            combinedNoise = hillyNoise;
+                            // Hilly biome
+                            combinedNoise = HillyPlains->GetNoise(worldXpos, worldYpos, worldZpos);
                             biomeNumber = 0;
+                            actualHeight = VerticalHeight;
+
+
+                            float normalizedNoise = (combinedNoise + 1) / 2.0f;
+                            float curvedNoise = FMath::Pow(normalizedNoise, 2);
+                            int index = x + y * Size + z * Size * Size;
+                            NoiseMap[index] = curvedNoise * actualHeight;
+                        }
+                        else if (biomeFactor >= -0.2f && biomeFactor <= 0.2f)
+                        {
+                            // Transition biome
+                            // Interpolate between hilly and plains based on biomeFactor
+                            float transitionFactor = (biomeFactor + 0.2f) / 0.4f; // Normalize to 0-1 range
+                            float hillyNoise = HillyPlains->GetNoise(worldXpos, worldYpos, worldZpos);
+                            float plainsNoise = PlainsNoise->GetNoise(worldXpos, worldYpos, worldZpos);
+                            combinedNoise = FMath::Lerp(plainsNoise, hillyNoise, transitionFactor);
+                            biomeNumber = 2; // Transition biome number
+
+                            // Interpolate actualHeight for a smooth transition
+                            float hillyHeight = VerticalHeight;
+                            float plainsHeight = VerticalHeight / 4;
+                            float smoothTransitionFactor = FMath::SmoothStep(0.0f, 1.0f, transitionFactor);
+                            actualHeight = FMath::Lerp(plainsHeight, hillyHeight, smoothTransitionFactor);
+
+
+                            float normalizedNoise = (combinedNoise + 1) / 2.0f;
+                            float curvedNoise = FMath::Pow(normalizedNoise, 2);
+                            int index = x + y * Size + z * Size * Size;
+                            NoiseMap[index] = curvedNoise * actualHeight;
                         }
                         else
                         {
-                            float riverNoise = River->GetNoise(Xpos, Ypos, Zpos);
-                            combinedNoise = riverNoise;
+                            // Plains biome
+                            combinedNoise = PlainsNoise->GetNoise(worldXpos, worldYpos, worldZpos);
                             biomeNumber = 1;
+                            actualHeight = VerticalHeight / 4;
+
+
+                            float normalizedNoise = (combinedNoise + 1) / 2.0f;
+                            float curvedNoise = FMath::Pow(normalizedNoise, 2);
+                            int index = x + y * Size + z * Size * Size;
+                            NoiseMap[index] = curvedNoise * actualHeight;
                         }
 
-                        float normalizedNoise = (combinedNoise + 1) / 2.0f;
-                        float curvedNoise = FMath::Pow(normalizedNoise, 2);
-                        int index = x + y * Size + z * Size * Size;
-                        NoiseMap[index] = curvedNoise * VerticalHeight;
                     }
-           
-        }
+                }
             });
     }
     ParallelFor(NoiseMapOperations.Num(), [&](int32 Index)
@@ -714,13 +698,24 @@ void AChunk::GenerateBlocks()
             for (int z = 0; z < VerticalHeight; z++) {
                 int Index = x + y * Size + z * Size * Size;
                 int Height = static_cast<int>(NoiseMap[Index]);
+        
                 EBlock BlockType = EBlock::Air;
 
                 if (z < Height - 1) {
                     BlockType = biomeNumber == 0 ? EBlock::Stone : EBlock::Dirt;
                 }
                 else if (z == Height || z == Height - 1) {
-                    BlockType = biomeNumber == 0 ? EBlock::Grass : EBlock::Dirt;
+
+                    if (biomeNumber == 0) {
+						BlockType = EBlock::Grass;
+					}
+                    else if (biomeNumber == 1) {
+						BlockType = EBlock::SnowGrass;
+					}
+                    else if (biomeNumber == 2) {//transition
+						BlockType = EBlock::Sand;
+					}
+
                 }
 
                 Blocks[GetBlockIndex(x, y, z)] = BlockType;
@@ -736,7 +731,6 @@ void AChunk::GenerateBlocks()
                 BlockOperations[Index]();
              }, EParallelForFlags::BackgroundPriority);
     delete HillyPlains;
-    delete River;
     delete biomeNoiseMap;
 }
 
@@ -779,10 +773,12 @@ int AChunk::GetBlockIndex(int x, int y, int z) const
     return z * Size * Size + y * Size + x;
 }
 
-EBlock AChunk::GetBlock(FIntVector Index) const
+EBlock AChunk::GetBlock(FIntVector Index) 
 {
     if (Index.X >= Size || Index.Y >= Size || Index.Z >= VerticalHeight || Index.X < 0 || Index.Y < 0 || Index.Z < 0)
     {
+        //if out of bounds just set to same block as the last block??
+        outOfBounds = true;
         return EBlock::Air;
     }
 
@@ -880,6 +876,7 @@ void AChunk::GenerateMesh()
     iterationCount++;
     ParallelFor(3, [&](int32 Axis)
         {
+            bool doubleAir = false;
 
             const int Axis1 = (Axis + 1) % 3;
             const int Axis2 = (Axis + 2) % 3;
@@ -893,7 +890,14 @@ void AChunk::GenerateMesh()
 
             auto ChunkItr = FIntVector::ZeroValue;
             auto AxisMask = FIntVector::ZeroValue;
+            auto XOneVector = FIntVector(1, 0, 0);
+            auto YOneVector = FIntVector(0, 1, 0);
+            auto ZOneVector = FIntVector(0, 0, 1);
 
+            auto NegativeXOneVector = FIntVector(-1, 0, 0);
+            auto NegativeYOneVector = FIntVector(0, -1, 0);
+            auto NegativeZOneVector = FIntVector(0, 0, -1);
+            TArray<FIntVector> checkVectors = { XOneVector, NegativeXOneVector, YOneVector, NegativeYOneVector, ZOneVector, NegativeZOneVector };
             AxisMask[Axis] = 1;
 
             TArray<FMask> Mask;
@@ -905,11 +909,36 @@ void AChunk::GenerateMesh()
 
             for (ChunkItr[Axis] = -1; ChunkItr[Axis] < MainAxisLimit; )
             {
+             
+                bool skipBlock = true;
+                for (const auto& checkVector : checkVectors)
+                {
+                    const auto& CurrentBlock = GetBlock(ChunkItr + checkVector);
+                    const auto& CompareBlock = GetBlock(ChunkItr + checkVector + AxisMask);
+                    if (outOfBounds) {
+						skipBlock = false;
+                        outOfBounds = false;
+						break;
+					}
+                    if (!(CurrentBlock == EBlock::Air && CompareBlock == EBlock::Air))
+                    {
+
+                        skipBlock = false;
+                        break; // Exit early if any surrounding block is not air
+                    }
+                }
+                if (skipBlock)
+                {
+                   //UE_LOG(LogTemp, Warning, TEXT("Skipping block"));
+                    ChunkItr[Axis]++; // Increment here to ensure the loop progresses
+                    continue; // Skip further processing for this iteration
+                }
 
                 int N = 0;
 
                 ParallelFor(Axis2Limit, [&](int32 Axis2Index)
                     {
+                        FMask Result;
                         TArray<FMask> LocalMask;
                         LocalMask.SetNumUninitialized(Axis1Limit);
 
@@ -919,14 +948,22 @@ void AChunk::GenerateMesh()
                         for (int Axis1Index = 0; Axis1Index < Axis1Limit; ++Axis1Index)
                         {
                             LocalChunkItr[Axis1] = Axis1Index;
+                            // Add something here which checks out of bounds, to prevent the 'ground faces' from generatnig, may improve perforamce?
+                             auto CurrentBlock = GetBlock(LocalChunkItr);
+                             auto CompareBlock = GetBlock(LocalChunkItr + AxisMask);
 
-                            const auto& CurrentBlock = GetBlock(LocalChunkItr);
-                            const auto& CompareBlock = GetBlock(LocalChunkItr + AxisMask);
+                  
+                             if (outOfBounds && CurrentBlock == EBlock::Stone)
+                             {
+                                 CompareBlock = EBlock::Stone;
+                          
+                                 outOfBounds = false;
+                             }
 
                             const bool CurrentBlockOpaque = CurrentBlock != EBlock::Air;
                             const bool CompareBlockOpaque = CompareBlock != EBlock::Air;
+                   
 
-                            FMask Result;
                             if (CurrentBlockOpaque == CompareBlockOpaque)
                             {
                                 Result = FMask{ EBlock::Null, 0 };
@@ -1011,14 +1048,17 @@ void AChunk::GenerateMesh()
                             QuadData.Block = CurrentMask.Block;
                             if (Axis == 0) {
                                 QuadDataQueueOne.Enqueue(QuadData);
+                                QuadDataArrayOne.Add(QuadData);
                                 quadOneSize++;
                             }
                             else if (Axis == 1) {
                                 QuadDataQueueTwo.Enqueue(QuadData);
+                                QuadDataArrayTwo.Add(QuadData);
                                 quadTwoSize++;
                             }
                             else if (Axis == 2) {
                                 QuadDataQueueThree.Enqueue(QuadData);
+                                QuadDataArrayThree.Add(QuadData);
                                 quadThreeSize++;
                             }
 
@@ -1062,6 +1102,9 @@ void AChunk::GenerateMesh()
     TArray<FGraphEventRef> Tasks;
 
 
+    // 2 threads per aixs? one thread does one half of arrays one thread does the other half, so one thread for axis one would ot trianbles and color
+    // and other thread could do normal uv something like that? would have to  makre sure everythgin was applied in correct order
+
     FGraphEventRef TaskOne = FFunctionGraphTask::CreateAndDispatchWhenReady([&]()
        {
             FQuadData QuadData;
@@ -1077,11 +1120,18 @@ void AChunk::GenerateMesh()
 
 
 
-
        }, TStatId(), nullptr, ENamedThreads::BackgroundThreadPriority);
    
 
-  
+ /*   ParallelFor(QuadDataArrayOne.Num(), [&](int32 Index)
+        {
+			CreateQuadOne(QuadDataArrayOne[Index].CurrentMask, QuadDataArrayOne[Index].AxisMask,
+            				QuadDataArrayOne[Index].ChunkItr,
+                            QuadDataArrayOne[Index].ChunkItr + QuadDataArrayOne[Index].DeltaAxis1,
+                            QuadDataArrayOne[Index].ChunkItr + QuadDataArrayOne[Index].DeltaAxis2,
+                            QuadDataArrayOne[Index].ChunkItr + QuadDataArrayOne[Index].DeltaAxis1 + QuadDataArrayOne[Index].DeltaAxis2,
+                            QuadDataArrayOne[Index].Block);
+		}, EParallelForFlags::BackgroundPriority);*/
 
 
             
@@ -1126,7 +1176,7 @@ void AChunk::GenerateMesh()
 void AChunk::CreateQuadOne(FMask Mask, FIntVector AxisMask, FIntVector V1, FIntVector V2, FIntVector V3, FIntVector V4, EBlock Block)
 {
 
-    FScopeLock Lock(&CriticalSection);
+    FScopeLock Lock(&CreateQuadLockOne);
     const auto Normal = FVector(AxisMask * Mask.Normal);
 
 
@@ -1140,7 +1190,7 @@ void AChunk::CreateQuadOne(FMask Mask, FIntVector AxisMask, FIntVector V1, FIntV
     DynamicMeshAxisOne.AppendVertex(FVector3d(FVector(V2) * 100));
     DynamicMeshAxisOne.AppendVertex(FVector3d(FVector(V3) * 100));
     DynamicMeshAxisOne.AppendVertex(FVector3d(FVector(V4) * 100));
-
+   
     AxisOneVertexColors.Add(BlockColor);
     AxisOneVertexColors.Add(BlockColor);
     AxisOneVertexColors.Add(BlockColor);
@@ -1150,10 +1200,10 @@ void AChunk::CreateQuadOne(FMask Mask, FIntVector AxisMask, FIntVector V1, FIntV
     DynamicMeshAxisOne.AppendTriangle(UE::Geometry::FIndex3i(AxisOneVertexCount + 3, AxisOneVertexCount + 1 - Mask.Normal, AxisOneVertexCount + 1 + Mask.Normal));
 
 
-    AxisOneUVOverlay->AppendElement(FVector2f(FVector2D(V1.X / Size, V1.Y / Size)));
+   /* AxisOneUVOverlay->AppendElement(FVector2f(FVector2D(V1.X / Size, V1.Y / Size)));
     AxisOneUVOverlay->AppendElement(FVector2f(FVector2D(V2.X / Size, V2.Y / Size)));
     AxisOneUVOverlay->AppendElement(FVector2f(FVector2D(V3.X / Size, V3.Y / Size)));
-    AxisOneUVOverlay->AppendElement(FVector2f(FVector2D(V4.X / Size, V4.Y / Size)));
+    AxisOneUVOverlay->AppendElement(FVector2f(FVector2D(V4.X / Size, V4.Y / Size)));*/
 
 
     AxisOneNormalOverlay->AppendElement(FVector3f(Normal));
@@ -1199,7 +1249,7 @@ void AChunk::CreateQuadOne(FMask Mask, FIntVector AxisMask, FIntVector V1, FIntV
 void AChunk::CreateQuadTwo(FMask Mask, FIntVector AxisMask, FIntVector V1, FIntVector V2, FIntVector V3, FIntVector V4, EBlock Block)
 {
 
-    FScopeLock Lock(&CriticalSection);
+    FScopeLock Lock(&CreateQuadLockTwo);
     const auto Normal = FVector(AxisMask * Mask.Normal);
 
 
@@ -1212,7 +1262,7 @@ void AChunk::CreateQuadTwo(FMask Mask, FIntVector AxisMask, FIntVector V1, FIntV
     DynamicMeshAxisTwo.AppendVertex(FVector3d(FVector(V3) * 100));
     DynamicMeshAxisTwo.AppendVertex(FVector3d(FVector(V4) * 100));
 
-
+   
     AxisTwoVertexColors.Add(BlockColor);
     AxisTwoVertexColors.Add(BlockColor);
     AxisTwoVertexColors.Add(BlockColor);
@@ -1223,10 +1273,10 @@ void AChunk::CreateQuadTwo(FMask Mask, FIntVector AxisMask, FIntVector V1, FIntV
     DynamicMeshAxisTwo.AppendTriangle(UE::Geometry::FIndex3i(AxisTwoVertexCount + 3, AxisTwoVertexCount + 1 - Mask.Normal, AxisTwoVertexCount + 1 + Mask.Normal));
 
 
-    AxisTwoUVOverlay->AppendElement(FVector2f(FVector2D(V1.X / Size, V1.Y / Size)));
-    AxisTwoUVOverlay->AppendElement(FVector2f(FVector2D(V2.X / Size, V2.Y / Size)));
-    AxisTwoUVOverlay->AppendElement(FVector2f(FVector2D(V3.X / Size, V3.Y / Size)));
-    AxisTwoUVOverlay->AppendElement(FVector2f(FVector2D(V4.X / Size, V4.Y / Size)));
+    //AxisTwoUVOverlay->AppendElement(FVector2f(FVector2D(V1.X / Size, V1.Y / Size)));
+    //AxisTwoUVOverlay->AppendElement(FVector2f(FVector2D(V2.X / Size, V2.Y / Size)));
+    //AxisTwoUVOverlay->AppendElement(FVector2f(FVector2D(V3.X / Size, V3.Y / Size)));
+    //AxisTwoUVOverlay->AppendElement(FVector2f(FVector2D(V4.X / Size, V4.Y / Size)));
 
 
     AxisTwoNormalOverlay->AppendElement(FVector3f(Normal));
@@ -1273,7 +1323,7 @@ void AChunk::CreateQuadTwo(FMask Mask, FIntVector AxisMask, FIntVector V1, FIntV
 void AChunk::CreateQuadThree(FMask Mask, FIntVector AxisMask, FIntVector V1, FIntVector V2, FIntVector V3, FIntVector V4, EBlock Block)
 {
 
-    FScopeLock Lock(&CriticalSection);
+    FScopeLock Lock(&CreateQuadLockThree);
     const auto Normal = FVector(AxisMask * Mask.Normal);
 
     EBlock BlockMaterial = Mask.Block;
@@ -1295,10 +1345,10 @@ void AChunk::CreateQuadThree(FMask Mask, FIntVector AxisMask, FIntVector V1, FIn
     DynamicMeshAxisThree.AppendTriangle(UE::Geometry::FIndex3i(AxisThreeVertexCount, AxisThreeVertexCount + 2 + Mask.Normal, AxisThreeVertexCount + 2 - Mask.Normal));
     DynamicMeshAxisThree.AppendTriangle(UE::Geometry::FIndex3i(AxisThreeVertexCount + 3, AxisThreeVertexCount + 1 - Mask.Normal, AxisThreeVertexCount + 1 + Mask.Normal));
 
-    AxisThreeUVOverlay->AppendElement(FVector2f(FVector2D(V1.X / Size, V1.Y / Size)));
-    AxisThreeUVOverlay->AppendElement(FVector2f(FVector2D(V2.X / Size, V2.Y / Size)));
-    AxisThreeUVOverlay->AppendElement(FVector2f(FVector2D(V3.X / Size, V3.Y / Size)));
-    AxisThreeUVOverlay->AppendElement(FVector2f(FVector2D(V4.X / Size, V4.Y / Size)));
+    //AxisThreeUVOverlay->AppendElement(FVector2f(FVector2D(V1.X / Size, V1.Y / Size)));
+    //AxisThreeUVOverlay->AppendElement(FVector2f(FVector2D(V2.X / Size, V2.Y / Size)));
+    //AxisThreeUVOverlay->AppendElement(FVector2f(FVector2D(V3.X / Size, V3.Y / Size)));
+    //AxisThreeUVOverlay->AppendElement(FVector2f(FVector2D(V4.X / Size, V4.Y / Size)));
 
 
     AxisThreeNormalOverlay->AppendElement(FVector3f(Normal));
