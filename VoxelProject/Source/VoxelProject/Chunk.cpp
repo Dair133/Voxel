@@ -420,17 +420,22 @@ void AChunk::Tick(float DeltaTime)
     if (frameCounter < 500) {
         // Perform a portion of your logic here
         if (frameCounter == 2) {
+            float TimeToDisplay1 = 5.0f; // Display the message for 5 seconds.
+            FColor DisplayColor1 = FColor::Red; // Display the message in red.
+            float WorldTime = GetWorld()->GetTimeSeconds();
+            FString DebugMessage = FString::Printf(TEXT("blocks"));
             GenerateBlocks();
         }
         else if (frameCounter == 50) {
+          
             GenerateMesh();
         }
         else if (frameCounter == 100) {
             ApplyMesh();
         }
         else {
-           // PrimaryActorTick.bCanEverTick = false;
-        }
+			// PrimaryActorTick.bCanEverTick = false;
+		}   
     }
     if (isApplyingMeshReady) 
     {
@@ -445,6 +450,7 @@ void AChunk::Tick(float DeltaTime)
         }
         else if (meshCounter == 170) {
             ApplyAxisThree();
+           
         }
         else {
            // PrimaryActorTick.bCanEverTick = false;
@@ -683,7 +689,7 @@ void AChunk::GenerateBlocks()
     ParallelFor(NoiseMapOperations.Num(), [&](int32 Index)
         {
             NoiseMapOperations[Index]();
-        }, EParallelForFlags::Unbalanced);
+        }, EParallelForFlags::None);
 
 
     //float combinedNoise;
@@ -992,105 +998,90 @@ void AChunk::GenerateMesh()
 
 
                 ++ChunkItr[Axis];
-                N = 0;
-
+               // FGraphEventRef Taskx = FFunctionGraphTask::CreateAndDispatchWhenReady([&,Axis1Limit,Axis2Limit]()
+        //  {// try changing below N to localN?
                 // Generate mesh from mask
-                for (int j = 0; j < Axis2Limit; ++j)
-                {
-                    for (int i = 0; i < Axis1Limit; )
-                    {
-                        if (Mask[N].Normal != 0)
+               // ParallelFor(Axis2Limit, [&](int32 j)
+                  //  {
+                //add a thread here and divide loop into two seperate loops for 2 threads?
+
+       
+              //  ParallelFor(Axis2Limit, [&](int32 j)
+                //    {
+                        for(int j =0; j< Axis2Limit; j++)
+                            {
+
+                        for (int i = 0; i < Axis1Limit; )
                         {
-                            const auto CurrentMask = Mask[N];
-                            ChunkItr[Axis1] = i;
-                            ChunkItr[Axis2] = j;
 
-
-                            /*     if (i % 10 == 0) {
-                                     PerformBusyWait(10);
-                                 }*/
-
-
-                            int width = 1;
-
-                            //   for (width = 1; i + width < Axis1Limit && CompareMask(Mask[N + width], CurrentMask); ++width)
-                            //   {
-                            //
-                            //   }
-
-                            int height;
-                            bool done = false;
-
-
-
-                            for (height = 1; j + height < Axis2Limit; ++height)
+                            //need to test localN with a normal loop to see if calculation is correct but multiyhreading is causing issues
+                            int localN = j * Axis1Limit + i;
+                            if (Mask[localN].Normal != 0)
                             {
-                                for (int k = 0; k < width; ++k)
-                                {
-                                    if (CompareMask(Mask[N + k + height * Axis1Limit], CurrentMask)) continue;
+                                const auto CurrentMask = Mask[localN];
+                                ChunkItr[Axis1] = i;
+                                ChunkItr[Axis2] = j;
 
-                                    done = true;
-                                    break;
+                                int width = 1;
+                                int height;
+                                bool done = false;
+                                for (height = 1; j + height < Axis2Limit; ++height)
+                                {
+                                    for (int k = 0; k < width; ++k)
+                                    {
+                                        int index = (j + height) * Axis1Limit + (i + k);
+                                        if (CompareMask(Mask[index], CurrentMask)) continue;
+                                        done = true;
+                                        break;
+                                    }
+                                    if (done) break;
                                 }
 
-                                if (done) break;
-                            }
-                            //  FScopeLock Lock(&CriticalSection);
-                            DeltaAxis1[Axis1] = width;
-                            DeltaAxis2[Axis2] = height;
-
-                            FQuadData QuadData;
-                            QuadData.CurrentMask = CurrentMask;
-                            QuadData.AxisMask = AxisMask;
-                            QuadData.ChunkItr = ChunkItr;
-                            QuadData.DeltaAxis1 = DeltaAxis1;
-                            QuadData.DeltaAxis2 = DeltaAxis2;
-                            QuadData.Block = CurrentMask.Block;
-                            if (Axis == 0) {
-                                QuadDataQueueOne.Enqueue(QuadData);
-                                QuadDataArrayOne.Add(QuadData);
-                                quadOneSize++;
-                            }
-                            else if (Axis == 1) {
-                                QuadDataQueueTwo.Enqueue(QuadData);
-                                QuadDataArrayTwo.Add(QuadData);
-                                quadTwoSize++;
-                            }
-                            else if (Axis == 2) {
-                                QuadDataQueueThree.Enqueue(QuadData);
-                                QuadDataArrayThree.Add(QuadData);
-                                quadThreeSize++;
-                            }
-
-
-
-
-
-                            //AnyThreadNormalTask works
-                            DeltaAxis1 = FIntVector::ZeroValue;
-                            DeltaAxis2 = FIntVector::ZeroValue;
-
-
-
-                            for (int l = 0; l < height; ++l)
-                            {
-                                for (int k = 0; k < width; ++k)
+                                DeltaAxis1[Axis1] = width;
+                                DeltaAxis2[Axis2] = height;
+                                FQuadData QuadData;
+                                QuadData.CurrentMask = CurrentMask;
+                                QuadData.AxisMask = AxisMask;
+                                QuadData.ChunkItr = ChunkItr;
+                                QuadData.DeltaAxis1 = DeltaAxis1;
+                                QuadData.DeltaAxis2 = DeltaAxis2;
+                                QuadData.Block = CurrentMask.Block;
+                                if (Axis == 0)
                                 {
-                                    Mask[N + k + l * Axis1Limit] = FMask{ EBlock::Null, 0 };
+                                    QuadDataQueueOne.Enqueue(QuadData);
+                                    quadOneSize++;
                                 }
+                                else if (Axis == 1)
+                                {
+                                    QuadDataQueueTwo.Enqueue(QuadData);
+                                    quadTwoSize++;
+                                }
+                                else if (Axis == 2)
+                                {
+                                    QuadDataQueueThree.Enqueue(QuadData);
+                                    quadThreeSize++;
+                                }
+
+                                DeltaAxis1 = FIntVector::ZeroValue;
+                                DeltaAxis2 = FIntVector::ZeroValue;
+                                for (int l = 0; l < height; ++l)
+                                {
+                                    for (int k = 0; k < width; ++k)
+                                    {
+                                        int index = (j + l) * Axis1Limit + (i + k);
+                                        Mask[index] = FMask{ EBlock::Null, 0 };
+                                    }
+                                }
+
+                                i += width;
                             }
-
-                            //Lock2.Unlock();
-                            i += width;
-                            N += width;
-
+                            else
+                            {
+                                i++;
+                            }
                         }
-                        else {
-                            i++;
-                            N++;
-                        }
-                    }
-                }
+                    }//, EParallelForFlags::None);
+                  // }, TStatId(), nullptr, ENamedThreads::AnyThread);
             }
 
         }, EParallelForFlags::Unbalanced);

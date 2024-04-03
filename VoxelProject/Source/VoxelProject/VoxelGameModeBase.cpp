@@ -64,6 +64,7 @@ AVoxelGameModeBase::AVoxelGameModeBase()
 
 void AVoxelGameModeBase::OnCheckUpdateChunks()
 {
+    UE_LOG(LogTemp, Warning, TEXT("Spawning a chunk?"));
     UpdateVisibleChunksAroundPlayers();
 }
 
@@ -78,7 +79,14 @@ void AVoxelGameModeBase::BeginPlay()
 
     if (this->HasAuthority())
     {
-        GetWorld()->GetTimerManager().SetTimer(chunkUpdateTimerHandle, this, &AVoxelGameModeBase::OnCheckUpdateChunks, chunkUpdateTickSpeed, true);
+        
+           
+             GetWorld()->GetTimerManager().SetTimer(chunkUpdateTimerHandle, this, &AVoxelGameModeBase::OnCheckUpdateChunks, 0.15f, true);
+       
+
+         
+
+
     }
 
     //UpdateVisibleChunksAroundPlayers();
@@ -241,24 +249,20 @@ void AVoxelGameModeBase::ProcessChunkQueue()
     // Set a timer to call this function again after 1.0 second, if there are more chunks in the queue.
     if (!ChunkQueue.IsEmpty())
     {//130
-        if (GetWorld()->GetTimeSeconds() > 60)
+        if (GetWorld()->GetTimeSeconds() > 12)
         {
           
             if (!GetWorld()->GetTimerManager().IsTimerActive(SpawnTimerHandle))
             {
-                std::random_device rd;
-                std::mt19937 gen(rd());
-                std::uniform_real_distribution<> distrib(0.0, 0.003); // Range from 0.0 to 1.0
+                //std::random_device rd;
+                //std::mt19937 gen(rd());
+                //std::uniform_real_distribution<> distrib(0.0, 0.003); // Range from 0.0 to 1.0
 
-                double randomFloat = distrib(gen); // Generates a random double between 0.0 and 1.0
+                //double randomFloat = distrib(gen); // Generates a random double between 0.0 and 1.0
 
 
-                float TimeToDisplay1 = 5.0f; // Display the message for 5 seconds.
-                FColor DisplayColor1 = FColor::Red; // Display the message in red.
-                float WorldTime = GetWorld()->GetTimeSeconds();
-                FString DebugMessage = FString::Printf(TEXT("World Time SECTION TWO: %f randomFloat %f"), WorldTime, randomFloat);
-                GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, DebugMessage);
-                GetWorld()->GetTimerManager().SetTimer(SpawnTimerHandle, this, &AVoxelGameModeBase::ProcessChunkQueue, 0.001f+(randomFloat), false);
+         
+                //GetWorld()->GetTimerManager().SetTimer(SpawnTimerHandle, this, &AVoxelGameModeBase::OnCheckUpdateChunks, 0.32f+(randomFloat), false);
             }
             //0.55 is a good value
             //0.42 is a good value(main value used for testing over previous days)
@@ -270,7 +274,7 @@ void AVoxelGameModeBase::ProcessChunkQueue()
             //float WorldTime = GetWorld()->GetTimeSeconds();
             //FString DebugMessage = FString::Printf(TEXT("World Time: %f"), WorldTime);
             //GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, DebugMessage);
-            GetWorld()->GetTimerManager().SetTimer(SpawnTimerHandle, this, &AVoxelGameModeBase::ProcessChunkQueue, 0.001f, false);
+           //GetWorld()->GetTimerManager().SetTimer(SpawnTimerHandle, this, &AVoxelGameModeBase::OnCheckUpdateChunks, 0.001f, false);
         }
     }
 }
@@ -385,6 +389,8 @@ float AVoxelGameModeBase::GetClosestPlayersDistance(FVector Goal)
 
 AActor* AVoxelGameModeBase::spawnChunk(FVector Loc)
 {
+    chunksCounter++;
+    UE_LOG(LogTemp, Warning, TEXT("Inside spawn chun %d"),chunksCounter);
     FActorSpawnParameters SpawnParams;
     if (ChunkToSpawn == nullptr)
     {

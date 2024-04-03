@@ -25,7 +25,7 @@ class  AVoxelGameModeBase : public AGameModeBase
 
     // UProperties
     UPROPERTY(EditDefaultsOnly, Category = "Performance")
-    float maxViewDst = 10;
+    float maxViewDst = 14;
 
     UPROPERTY(EditDefaultsOnly, Category = "Performance")
     int ChunkSize = 16;
@@ -65,7 +65,8 @@ class  AVoxelGameModeBase : public AGameModeBase
 
 
     UClass* MyBlueprintCharacterClass;
-
+    int chunksCounter = 0;
+    int chunkcCounterTwo = 0;
     int numTimers;
     void UpdateVisibleChunks(FVector2D viewerPosition);
     void UpdateVisibleChunksAroundPlayers();
