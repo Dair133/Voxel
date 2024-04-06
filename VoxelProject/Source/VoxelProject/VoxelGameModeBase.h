@@ -75,7 +75,7 @@ class  AVoxelGameModeBase : public AGameModeBase
 
     float ChunkSizeInMeters = 32.0;
     int chunksVisibleInViewDst;
-
+    bool addChunkTimerStarted = false;
 
     bool UpdateChunk(AActor* chunk);
 

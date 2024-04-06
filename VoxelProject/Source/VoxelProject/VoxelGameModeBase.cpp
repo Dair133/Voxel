@@ -64,13 +64,37 @@ AVoxelGameModeBase::AVoxelGameModeBase()
 
 void AVoxelGameModeBase::OnCheckUpdateChunks()
 {
-    UE_LOG(LogTemp, Warning, TEXT("Spawning a chunk?"));
+         
     UpdateVisibleChunksAroundPlayers();
+
+
+    if (GetWorld()->GetTimeSeconds() > 80 && !addChunkTimerStarted)
+    {
+        GetWorld()->GetTimerManager().ClearTimer(chunkUpdateTimerHandle);
+        int32 Key1 = -1;
+        float TimeToDisplay1 = 5.0f; // Display the message for 5 seconds.
+        FColor DisplayColor1 = FColor::Red; // Display the message in red.
+        float WorldTime = GetWorld()->GetTimeSeconds();
+        FString DebugMessage = FString::Printf(TEXT("World Time Section 2(Standard): %f"), WorldTime);
+        GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, DebugMessage);
+        GetWorld()->GetTimerManager().SetTimer(chunkUpdateTimerHandle, this, &AVoxelGameModeBase::OnCheckUpdateChunks, 1.2f, true);
+        addChunkTimerStarted = true;
+    }
+    else if(!addChunkTimerStarted) {
+        int32 Key1 = -1;
+        float TimeToDisplay1 = 5.0f; // Display the message for 5 seconds.
+        FColor DisplayColor1 = FColor::Red; // Display the message in red.
+        float WorldTime = GetWorld()->GetTimeSeconds();
+        FString DebugMessage = FString::Printf(TEXT("World Time Section 1(Loading): %f"), WorldTime);
+        GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, DebugMessage);
+    }
+ 
+
 }
 
 void AVoxelGameModeBase::BeginPlay()
 {
-  
+    Super::BeginPlay();
 
     //200 height was the multiple 12.5
     ChunkSizeInMeters = ChunkSize * BlockSize * 4;
@@ -80,8 +104,14 @@ void AVoxelGameModeBase::BeginPlay()
     if (this->HasAuthority())
     {
         
-           
-             GetWorld()->GetTimerManager().SetTimer(chunkUpdateTimerHandle, this, &AVoxelGameModeBase::OnCheckUpdateChunks, 0.15f, true);
+           // below sets up infinite recursion basically
+        int32 Key1 = -1;
+        float TimeToDisplay1 = 5.0f; // Display the message for 5 seconds.
+        FColor DisplayColor1 = FColor::Red; // Display the message in red.
+        float WorldTime = GetWorld()->GetTimeSeconds();
+        FString DebugMessage = FString::Printf(TEXT("Setting up 0.01 timer: %f"), WorldTime);
+        GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, DebugMessage);
+             GetWorld()->GetTimerManager().SetTimer(chunkUpdateTimerHandle, this, &AVoxelGameModeBase::OnCheckUpdateChunks, 0.1f, true);
        
 
          
@@ -94,7 +124,7 @@ void AVoxelGameModeBase::BeginPlay()
 
     
 
-    Super::BeginPlay();
+
 }
 
 void AVoxelGameModeBase::PostLogin(APlayerController* NewPlayer)
@@ -212,6 +242,7 @@ void AVoxelGameModeBase::UpdateVisibleChunks(FVector2D viewerPosition)
             }
         }
     }
+    // Insread of doing this here we start a timer which simply checks the queueu x times per second and spawns a chunk if something in queue
     ProcessChunkQueue();
    
 }
