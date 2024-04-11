@@ -10,6 +10,7 @@ PRAGMA_DISABLE_DEPRECATION_WARNINGS
 void EmptyLinkFunctionForGeneratedCodeEnums() {}
 // Cross Module References
 	UPackage* Z_Construct_UPackage__Script_VoxelProject();
+	VOXELPROJECT_API UEnum* Z_Construct_UEnum_VoxelProject_EBiome();
 	VOXELPROJECT_API UEnum* Z_Construct_UEnum_VoxelProject_EBlock();
 	VOXELPROJECT_API UEnum* Z_Construct_UEnum_VoxelProject_EGenerationType();
 // End Cross Module References
@@ -80,6 +81,61 @@ void EmptyLinkFunctionForGeneratedCodeEnums() {}
 		}
 		return Z_Registration_Info_UEnum_EBlock.InnerSingleton;
 	}
+	static FEnumRegistrationInfo Z_Registration_Info_UEnum_EBiome;
+	static UEnum* EBiome_StaticEnum()
+	{
+		if (!Z_Registration_Info_UEnum_EBiome.OuterSingleton)
+		{
+			Z_Registration_Info_UEnum_EBiome.OuterSingleton = GetStaticEnum(Z_Construct_UEnum_VoxelProject_EBiome, (UObject*)Z_Construct_UPackage__Script_VoxelProject(), TEXT("EBiome"));
+		}
+		return Z_Registration_Info_UEnum_EBiome.OuterSingleton;
+	}
+	template<> VOXELPROJECT_API UEnum* StaticEnum<EBiome>()
+	{
+		return EBiome_StaticEnum();
+	}
+	struct Z_Construct_UEnum_VoxelProject_EBiome_Statics
+	{
+		static const UECodeGen_Private::FEnumeratorParam Enumerators[];
+#if WITH_METADATA
+		static const UECodeGen_Private::FMetaDataPairParam Enum_MetaDataParams[];
+#endif
+		static const UECodeGen_Private::FEnumParams EnumParams;
+	};
+	const UECodeGen_Private::FEnumeratorParam Z_Construct_UEnum_VoxelProject_EBiome_Statics::Enumerators[] = {
+		{ "EBiome::Mountain", (int64)EBiome::Mountain },
+		{ "EBiome::Plains", (int64)EBiome::Plains },
+		{ "EBiome::Mountain_Plains", (int64)EBiome::Mountain_Plains },
+	};
+#if WITH_METADATA
+	const UECodeGen_Private::FMetaDataPairParam Z_Construct_UEnum_VoxelProject_EBiome_Statics::Enum_MetaDataParams[] = {
+		{ "BlueprintType", "true" },
+		{ "ModuleRelativePath", "Enums.h" },
+		{ "Mountain.Name", "EBiome::Mountain" },
+		{ "Mountain_Plains.Name", "EBiome::Mountain_Plains" },
+		{ "Plains.Name", "EBiome::Plains" },
+	};
+#endif
+	const UECodeGen_Private::FEnumParams Z_Construct_UEnum_VoxelProject_EBiome_Statics::EnumParams = {
+		(UObject*(*)())Z_Construct_UPackage__Script_VoxelProject,
+		nullptr,
+		"EBiome",
+		"EBiome",
+		Z_Construct_UEnum_VoxelProject_EBiome_Statics::Enumerators,
+		RF_Public|RF_Transient|RF_MarkAsNative,
+		UE_ARRAY_COUNT(Z_Construct_UEnum_VoxelProject_EBiome_Statics::Enumerators),
+		EEnumFlags::None,
+		(uint8)UEnum::ECppForm::EnumClass,
+		METADATA_PARAMS(UE_ARRAY_COUNT(Z_Construct_UEnum_VoxelProject_EBiome_Statics::Enum_MetaDataParams), Z_Construct_UEnum_VoxelProject_EBiome_Statics::Enum_MetaDataParams)
+	};
+	UEnum* Z_Construct_UEnum_VoxelProject_EBiome()
+	{
+		if (!Z_Registration_Info_UEnum_EBiome.InnerSingleton)
+		{
+			UECodeGen_Private::ConstructUEnum(Z_Registration_Info_UEnum_EBiome.InnerSingleton, Z_Construct_UEnum_VoxelProject_EBiome_Statics::EnumParams);
+		}
+		return Z_Registration_Info_UEnum_EBiome.InnerSingleton;
+	}
 	static FEnumRegistrationInfo Z_Registration_Info_UEnum_EGenerationType;
 	static UEnum* EGenerationType_StaticEnum()
 	{
@@ -108,11 +164,17 @@ void EmptyLinkFunctionForGeneratedCodeEnums() {}
 #if WITH_METADATA
 	const UECodeGen_Private::FMetaDataPairParam Z_Construct_UEnum_VoxelProject_EGenerationType_Statics::Enum_MetaDataParams[] = {
 		{ "BlueprintType", "true" },
+#if !UE_BUILD_SHIPPING
+		{ "Comment", "// Biome = Axis which are generated for this biome\n// i.e. Plains biome below has all 3 axis generated for it\n// Plains biome = 1,2,3\n// Mountain = 1,2\n" },
+#endif
 		{ "GT_2D.DisplayName", "2D" },
 		{ "GT_2D.Name", "EGenerationType::GT_2D" },
 		{ "GT_3D.DisplayName", "3D" },
 		{ "GT_3D.Name", "EGenerationType::GT_3D" },
 		{ "ModuleRelativePath", "Enums.h" },
+#if !UE_BUILD_SHIPPING
+		{ "ToolTip", "Biome = Axis which are generated for this biome\ni.e. Plains biome below has all 3 axis generated for it\nPlains biome = 1,2,3\nMountain = 1,2" },
+#endif
 	};
 #endif
 	const UECodeGen_Private::FEnumParams Z_Construct_UEnum_VoxelProject_EGenerationType_Statics::EnumParams = {
@@ -141,9 +203,10 @@ void EmptyLinkFunctionForGeneratedCodeEnums() {}
 	};
 	const FEnumRegisterCompiledInInfo Z_CompiledInDeferFile_FID_UE5Projects_Voxel_VoxelProject_Source_VoxelProject_Enums_h_Statics::EnumInfo[] = {
 		{ EBlock_StaticEnum, TEXT("EBlock"), &Z_Registration_Info_UEnum_EBlock, CONSTRUCT_RELOAD_VERSION_INFO(FEnumReloadVersionInfo, 3447369902U) },
-		{ EGenerationType_StaticEnum, TEXT("EGenerationType"), &Z_Registration_Info_UEnum_EGenerationType, CONSTRUCT_RELOAD_VERSION_INFO(FEnumReloadVersionInfo, 2046249519U) },
+		{ EBiome_StaticEnum, TEXT("EBiome"), &Z_Registration_Info_UEnum_EBiome, CONSTRUCT_RELOAD_VERSION_INFO(FEnumReloadVersionInfo, 3560856830U) },
+		{ EGenerationType_StaticEnum, TEXT("EGenerationType"), &Z_Registration_Info_UEnum_EGenerationType, CONSTRUCT_RELOAD_VERSION_INFO(FEnumReloadVersionInfo, 2628036741U) },
 	};
-	static FRegisterCompiledInInfo Z_CompiledInDeferFile_FID_UE5Projects_Voxel_VoxelProject_Source_VoxelProject_Enums_h_3110315647(TEXT("/Script/VoxelProject"),
+	static FRegisterCompiledInInfo Z_CompiledInDeferFile_FID_UE5Projects_Voxel_VoxelProject_Source_VoxelProject_Enums_h_2780905475(TEXT("/Script/VoxelProject"),
 		nullptr, 0,
 		nullptr, 0,
 		Z_CompiledInDeferFile_FID_UE5Projects_Voxel_VoxelProject_Source_VoxelProject_Enums_h_Statics::EnumInfo, UE_ARRAY_COUNT(Z_CompiledInDeferFile_FID_UE5Projects_Voxel_VoxelProject_Source_VoxelProject_Enums_h_Statics::EnumInfo));

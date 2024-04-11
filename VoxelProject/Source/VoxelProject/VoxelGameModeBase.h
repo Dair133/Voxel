@@ -25,10 +25,10 @@ class  AVoxelGameModeBase : public AGameModeBase
 
     // UProperties
     UPROPERTY(EditDefaultsOnly, Category = "Performance")
-    float maxViewDst = 14;
+    float maxViewDst = 28;
 
     UPROPERTY(EditDefaultsOnly, Category = "Performance")
-    int ChunkSize = 16;
+    int ChunkSize = 32;
 
     UPROPERTY(EditDefaultsOnly, Category = "Performance")
     int BlockSize = 100;
@@ -75,8 +75,11 @@ class  AVoxelGameModeBase : public AGameModeBase
 
     float ChunkSizeInMeters = 32.0;
     int chunksVisibleInViewDst;
-    bool addChunkTimerStarted = false;
 
+    FTimerHandle createChunkTimerHandle;
+    bool addChunkTimerStarted = false;
+    bool fastCreateChunkTimerStarted = false;
+    bool slowCreateChunkTimerStarted = false;
     bool UpdateChunk(AActor* chunk);
 
     AVoxelGameModeBase();

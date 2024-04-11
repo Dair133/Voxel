@@ -26,6 +26,29 @@ class AChunk : public AActor
 
 
 public:
+
+    UFUNCTION(BlueprintCallable, Category = "ChunkFunction")
+    void ModifyVoxel(FVector WorldPosition, EBlock Block);
+    FIntVector WorldToLocal(FIntVector WorldLocation);
+    FIntVector ConvertLocalCoordsToVoxel(FIntVector LocalCoords);
+    void ModifyVoxelData(FIntVector Position, EBlock Block);
+    FIntVector WorldToLocal(FVector WorldPosition);
+
+   
+    bool mountainBiome = false;
+    bool plainsBiome = false;
+    bool mountainPlainsTransition = false;
+
+
+    bool regeneratingMesh = false;
+    bool modifyingVoxel = false;
+
+    struct NoiseStruct
+    {
+        float noiseValue;
+        float biomeNumber;
+    };
+    TArray<NoiseStruct> globalNoiseMap;
     struct FMask
     {
         EBlock Block;
@@ -56,6 +79,7 @@ public:
     TArray<FQuadData> QuadDataArrayThree;
 
 
+    int generateRandomNumber(int min, int max);
     bool outOfBounds = false;
 
     TArray<FGraphEventRef> TaskDependencies;
@@ -67,10 +91,9 @@ public:
 
     // Sets default values for this actor's properties
     AChunk();
-    void ModifyVoxel(const FIntVector Position, const EBlock Block);
 
     UPROPERTY(EditAnywhere, Category = "Chunk")
-    int Size = 64;
+    int Size = 32;
 
     UPROPERTY(EditAnywhere, Category = "Chunk")
     int Scale = 1;
@@ -81,7 +104,7 @@ public:
     UPROPERTY()
     UStaticMesh* MyTreeMesh;
 
-    int VerticalHeight = 500;
+    int VerticalHeight = 470;
     UClass* MyTreeBPClass;
     UClass* MyGrassBPClass;
     // UFUNCTION(BlueprintCallable, Category = "Chunk")
@@ -100,7 +123,7 @@ public:
     TArray<FVector> TreeLocations;
     void GenerateBlocks();
     void RespawnTrees();
-
+    void StaticMeshConversion();
 
 protected:
     // Called when the game starts or when spawned
@@ -145,7 +168,6 @@ private:
     FastNoiseLite* ColorNoise;
     FastNoiseLite* SecondaryNoise;
     bool tree = false;
-    bool optionalMeshApplies = false;
     // Primcary block storage array
     TArray<EBlock> Blocks;
     TArray<int> NoiseNumbers;
@@ -190,7 +212,21 @@ private:
     bool finishedCreateQuad = false;
     bool resetQuadFrameTimer = false;
 
-    void ModifyVoxelData(const FIntVector Position, EBlock Block);
+    // Keeps track of whether all axis of a chunk have been generated
+    // So for mountain biomes we initially generate axis 1 and 2 
+    // when we generate axis 3 fullAxisGenerated will be set to true
+    bool fullAxisGenerated = false;
+
+    // Keeps track of whether the initial axis has been generated, so for a mountain biome
+    // keeps track of whether axis 1 and 2 have been generated
+    bool allAxisGenerated = false;
+
+    bool axisOneGenerated = false;
+    bool axisTwoGenerated = false;
+    bool axisThreeGenerated = false;
+    bool initialAxisGenerated = false;
+
+  
     void ClearMesh();
 
     const FVector BlockVertexData[8] = {
@@ -269,9 +305,7 @@ public:
     void ApplyAxisTwo();
     void ApplyAxisThree();
     bool isApplyingMeshReady = false;
-    bool axisOneGenerated = false;
-    bool axisTwoGenerated = false;
-    bool axisThreeGenerated = false;
+
     bool collisionActive;
 
 

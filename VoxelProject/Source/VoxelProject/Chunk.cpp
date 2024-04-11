@@ -100,10 +100,83 @@ AChunk::AChunk()
    
 }
 
+void AChunk::StaticMeshConversion() 
+{
+    DynamicMeshAxisThree.VertexCount();
+    // Assuming StaticMesh is properly initialized elsewhere
+    UStaticMesh* StaticMesh = NewObject<UStaticMesh>();
+
+    // Create a new render data object
+    TUniquePtr<FStaticMeshRenderData> RenderData = MakeUnique<FStaticMeshRenderData>();
+
+    // Initialize LODResources array with one element
+    RenderData->LODResources.Add(0);
+
+    // Now you can safely access the first LOD resource
+    FStaticMeshLODResources& LODResources = RenderData->LODResources[0];
+
+
+    // Copy vertex positions
+    LODResources.VertexBuffers.PositionVertexBuffer.Init(DynamicMeshAxisThree.VertexCount());
+  
+    for (int32 i = 0; i < DynamicMeshAxisThree.VertexCount(); i++)
+    {
+        FVector3d Position = DynamicMeshAxisThree.GetVertex(i);
+        LODResources.VertexBuffers.PositionVertexBuffer.VertexPosition(i) = FVector3f(Position);
+    }
+
+    // Copy triangles
+    //LODResources.IndexBuffer.SetNum(DynamicMeshAxisThree.TriangleCount() * 3);
+    for (int i = 0; i < DynamicMeshAxisThree.TriangleCount(); ++i)
+    {
+        UE::Geometry::FIndex3i Triangle = DynamicMeshAxisThree.GetTriangle(i);
+        LODResources.IndexBuffer.SetIndex(i * 3 + 0, Triangle.A);
+        LODResources.IndexBuffer.SetIndex(i * 3 + 1, Triangle.B);
+        LODResources.IndexBuffer.SetIndex(i * 3 + 2, Triangle.C);
+    }
+
+    // Copy vertex colors
+    LODResources.VertexBuffers.ColorVertexBuffer.Init(AxisThreeVertexColors.Num());
+    for (int32 i = 0; i < AxisThreeVertexColors.Num(); ++i)
+    {
+        FColor Color = AxisThreeVertexColors[i];
+        LODResources.VertexBuffers.ColorVertexBuffer.VertexColor(i) = Color;
+    }
+
+    // Copy normals
+    LODResources.VertexBuffers.StaticMeshVertexBuffer.Init(DynamicMeshAxisThree.VertexCount(), 1);
+    for (int32 i = 0; i < DynamicMeshAxisThree.VertexCount(); ++i)
+    {
+        FVector3f Normal = AxisThreeNormalOverlay->GetElement(i);
+        LODResources.VertexBuffers.StaticMeshVertexBuffer.SetVertexTangents(i, FVector3f::ZeroVector, FVector3f::ZeroVector, Normal);
+    }
+
+    // Copy UV data (if available)
+    // ...
+
+    // Set the LOD resources
+    //RenderData->LODResources[0] = LODResources;
+
+    // Set the static mesh's render data
+    StaticMesh->SetRenderData(MoveTemp(RenderData));
+
+    // Create a new static mesh component and set its static mesh
+    UStaticMeshComponent* StaticMeshComponent = NewObject<UStaticMeshComponent>(this);
+    StaticMeshComponent->SetStaticMesh(StaticMesh);
+    StaticMeshComponent->RegisterComponent();
+
+
+
+
+
+
+}
+
 void AChunk::ApplyAxisOne() 
 {
     
-
+    FGraphEventRef Taskx = FFunctionGraphTask::CreateAndDispatchWhenReady([&]()
+        {
     TArray<int32> ColorAttributeIndices;
     ColorAttributeIndices.SetNum(AxisOneVertexColors.Num());
 
@@ -150,18 +223,19 @@ void AChunk::ApplyAxisOne()
             }
            // Dont know what the 'CopyVertex' functions do but they seem work
      
-            // Somehow add color here?
+        }, TStatId(), nullptr, ENamedThreads::AnyHiPriThreadHiPriTask);
+    Taskx->Wait();
+
+             // Somehow add color here?
             AxisOneMesh->GetDynamicMesh()->SetMesh(MoveTemp(DynamicMeshAxisOne));
-            AxisOneMesh->bEnableAutoLODGeneration = true;
-            AxisOneMesh->SetCollisionEnabled(ECollisionEnabled::NoCollision);
-            AxisOneMesh->EnableComplexAsSimpleCollision();
             AxisOneMesh->SetMaterial(0, BaseMaterial);
             collisionActive = false;
 }
 
 void AChunk::ApplyAxisTwo()
 {
-
+    FGraphEventRef Taskx = FFunctionGraphTask::CreateAndDispatchWhenReady([&]()
+        {
     TArray<int32> ColorAttributeIndices;
     ColorAttributeIndices.SetNum(AxisTwoVertexColors.Num());
 
@@ -208,18 +282,18 @@ void AChunk::ApplyAxisTwo()
         DynamicMeshAxisTwo.SetVertexColor(i, FVector3f(AxisTwoVertexColors[i]));
     }
     // Dont know what the 'CopyVertex' functions do but they seem work
- 
+        }, TStatId(), nullptr, ENamedThreads::AnyHiPriThreadHiPriTask);
+
+    Taskx->Wait();
     // Somehow add color here?
     AxisTwoMesh->GetDynamicMesh()->SetMesh(MoveTemp(DynamicMeshAxisTwo));
-    AxisTwoMesh->SetCollisionEnabled(ECollisionEnabled::NoCollision);
-    AxisTwoMesh->EnableComplexAsSimpleCollision();
     AxisTwoMesh->SetMaterial(0, BaseMaterial);
     collisionActive = false;
-
 }
 void AChunk::ApplyAxisThree()
 {
-
+    FGraphEventRef Taskx = FFunctionGraphTask::CreateAndDispatchWhenReady([&]()
+        {
 	TArray<int32> ColorAttributeIndices;
 	ColorAttributeIndices.SetNum(AxisThreeVertexColors.Num());
 
@@ -265,12 +339,12 @@ void AChunk::ApplyAxisThree()
         DynamicMeshAxisThree.SetVertexColor(i, FVector3f(AxisThreeVertexColors[i]));
     }
     // Dont know what the 'CopyVertex' functions do but they seem work
+        }, TStatId(), nullptr, ENamedThreads::AnyHiPriThreadHiPriTask);
+    Taskx->Wait();
 
     // Somehow add color here?
     AxisThreeMesh->SetMaterial(0, BaseMaterial);
     AxisThreeMesh->GetDynamicMesh()->SetMesh(MoveTemp(DynamicMeshAxisThree));
-    AxisThreeMesh->SetCollisionEnabled(ECollisionEnabled::NoCollision);
-    AxisThreeMesh->EnableComplexAsSimpleCollision();
     collisionActive = false;
 }
 
@@ -335,67 +409,55 @@ void AChunk::ApplyCombinedAxis()
 void AChunk::ApplyMesh()
 {
    isApplyingMeshReady = true;
-  //  //ApplyCombinedAxis();
-  //  int meshApplicationDelay = 0;
-  //  while (!finishedApplyingMesh) {
-  //      meshApplicationDelay++;
-  //      if (meshApplicationDelay == 1) {
-  //          UE_LOG(LogTemp, Display, TEXT("applying mesh one %d"),meshApplicationDelay);
-  //          ApplyAxisOne();
-		//}
-  //      else if (meshApplicationDelay == 5000) {
-  //          UE_LOG(LogTemp, Display, TEXT("applying mesh two %d"),meshApplicationDelay);
-		//	ApplyAxisTwo();
-		//}
-  //      else if (meshApplicationDelay == 10000) {
-  //          UE_LOG(LogTemp, Display, TEXT("applying mesh three %d"),meshApplicationDelay);
-		//	ApplyAxisThree();
-		//}
-  //      else if(meshApplicationDelay > 10000) {
-		//	finishedApplyingMesh = true;
-  //      }
-  //  }  
 }
 
-void AChunk::ModifyVoxel(const FIntVector Position, const EBlock Block)
+FIntVector AChunk::WorldToLocal(FIntVector WorldLocation)
 {
-    if (Position.X >= Size || Position.Y >= Size || Position.Z >= VerticalHeight || Position.X < 0 || Position.Y < 0 || Position.Z < 0) return;
+    // World coordinates
+    float WorldX, WorldY, WorldZ;
+    WorldX = WorldLocation.X;
+    WorldY = WorldLocation.Y;
+    WorldZ = WorldLocation.Z;
 
-    ModifyVoxelData(Position, Block);
+    // Chunk origin in world coordinates
+    FVector Location; // Assuming this is the bottom-left corner of the chunk
 
-    ClearMesh();
+    // Calculate block coordinates within the chunk
+    int BlockX = (WorldX - Location.X) / 100;
+    int BlockY = (WorldY - Location.Y) / 100;
+    int BlockZ = (WorldZ - Location.Z) / 100;
 
-    GenerateMesh();
-
-    ApplyMesh();
-
-    // Removes the entire blocks array from memory
-    // // 10.3 gigs memeory used when NOT destroying this array
-    //Blocks.Empty(0);
-    NoiseNumbers.Empty(0);
-    QuadDataQueueOne.Empty();
-
-    QuadDataQueueTwo.Empty();
-    QuadDataQueueThree.Empty();
-    TaskDependencies.Empty(0);
- /*   VertexColors.Empty();
-    VertexData.Empty();
-    TriangleData.Empty();
-    NormalData.Empty();
-    UVData.Empty();*/
-
-
-    /*
-    Hacky way to clear the memory of the arrays if concerns about not deallocating correctly
-    TArray<FVector>().Swap(VertexData);
-TArray<FVector>().Swap(NormalData);
-TArray<int>().Swap(TriangleData);
-TArray<FVector2D>().Swap(UVData);
-
-    */
+    return FIntVector(BlockX, BlockY, BlockZ);
 
 }
 
+
+void AChunk::ModifyVoxel(FVector WorldPosition, const EBlock Block)
+{
+    modifyingVoxel = true;
+    FIntVector LocalPosition = WorldToLocal(WorldPosition);
+    FIntVector VoxelPosition = ConvertLocalCoordsToVoxel(LocalPosition);
+    ModifyVoxelData(VoxelPosition, Block);
+    ClearMesh();
+    GenerateMesh();
+    ApplyMesh();
+}
+FIntVector AChunk::WorldToLocal(FVector WorldPosition)
+{
+    FVector LocalPosition = WorldPosition - GetActorLocation();
+    return FIntVector(LocalPosition.X, LocalPosition.Y, LocalPosition.Z);
+}
+FIntVector AChunk::ConvertLocalCoordsToVoxel(FIntVector LocalCoords)
+{
+    int VoxelSize = 100; // Assuming each voxel is 100 Unreal units
+    int VoxelIndexX = FMath::FloorToInt((float)LocalCoords.X / VoxelSize);
+    int VoxelIndexY = FMath::FloorToInt((float)LocalCoords.Y / VoxelSize);
+    int VoxelIndexZ = FMath::FloorToInt((float)LocalCoords.Z / VoxelSize);
+    VoxelIndexX = FMath::Clamp(VoxelIndexX, 0, Size - 1);
+    VoxelIndexY = FMath::Clamp(VoxelIndexY, 0, Size - 1);
+    VoxelIndexZ = FMath::Clamp(VoxelIndexZ, 0, VerticalHeight - 1);
+    return FIntVector(VoxelIndexX, VoxelIndexY, VoxelIndexZ);
+}
 // Called when the game starts or when spawned
 void AChunk::BeginPlay()
 {
@@ -437,51 +499,131 @@ void AChunk::Tick(float DeltaTime)
 			// PrimaryActorTick.bCanEverTick = false;
 		}   
     }
+
+    // All rules on which biomes have which axis generated are located inside Enums.h
+
     if (isApplyingMeshReady) 
     {
         meshCounter++;
 		  // Perform a portion of your logic here
-        if (meshCounter == 2) {
-            ApplyAxisOne();
-        }
-        if (meshCounter == 80) {
-            ApplyAxisTwo();
-            optionalMeshApplies = true;
-        }
-        else if (meshCounter == 170) {
-            ApplyAxisThree();
-           
-        }
+
+        if (!modifyingVoxel) {
+            if (meshCounter == 2) {
+                //GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Green, TEXT("Axis One"));
+                ApplyAxisOne();
+                axisOneGenerated = true;
+            }
+            if (meshCounter == 20) {
+                //GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Green, TEXT("Axis Two"));
+                ApplyAxisTwo();
+                axisTwoGenerated = true;
+            }
+            else if (meshCounter == 30 && !mountainBiome) {
+                //GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Green, TEXT("Axis Three"));
+                // Axis three reoresents the ground tiles and thus when generating a mountain biome do NOT need
+                // to be included from far away as its not ground tiles are not noticeable
+                ApplyAxisThree();
+                axisThreeGenerated = true;
+            }
+
+            // Below we basically want to keep track of whether all of a chunks's initial axis generated
+            // i.e. if a biome starts with axis 1 and 2 , 1 and 2 must be complete BEFORE we apply LOD generated to 3
+            if (axisOneGenerated && axisTwoGenerated && axisThreeGenerated && !initialAxisGenerated)
+            {
+                allAxisGenerated = true;
+            }
+            if (axisOneGenerated && axisTwoGenerated && !allAxisGenerated)
+            {
+                initialAxisGenerated = true;
+            }
+            if (axisTwoGenerated && axisThreeGenerated && !allAxisGenerated)
+            {
+                initialAxisGenerated = true;
+            }
+            if (axisOneGenerated && axisThreeGenerated && !allAxisGenerated)
+            {
+                initialAxisGenerated = true;
+            }
+            else if (meshCounter == 31) {
+                //StaticMeshConversion();
+            }
+        }// For modifying voxels
         else {
-           // PrimaryActorTick.bCanEverTick = false;
+            if (meshCounter == 1) {
+                GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Green, TEXT("Axis One, modifying voxel"));
+                ApplyAxisOne();
+
+            }
+            if (meshCounter == 2) {
+                GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Green, TEXT("Axis Two, modifying voxel"));
+                ApplyAxisTwo();
+            }
+            else if (meshCounter == 3) {
+                GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Green, TEXT("Axis Three, modifying voxel"));
+                ApplyAxisThree();
+            }
+            // Here we will assume that no biome/chunk will ever only generate with only ONE initial chunk
+            // i.e. for all LOD calculations you can assume achunk will spawn with at least 2 axis
+
+            else if (meshCounter == 500) {
+                //StaticMeshConversion();
+            }
         }
-	}
+	
 
 
     if (PlayerPawn)
     {
-      
+        if (DistanceToPlayer <= 22000.0f && !allAxisGenerated && initialAxisGenerated)
+        {
+            if (!axisOneGenerated)
+            {
+				ApplyAxisOne();
+			}
+            if (!axisTwoGenerated)
+            {
+                ApplyAxisTwo();
+            }
+            if (!axisThreeGenerated)
+            {
+				//ApplyAxisThree();
+                axisThreeGenerated = true;
+			}
+           allAxisGenerated = true;
+        }
 
         // Check if the player is within 5,000 units
-        if (DistanceToPlayer <= 20000.0f && !collisionActive)
+        if (DistanceToPlayer <= 15000.0f && !collisionActive)
         {
             // The player is within 20,000 units, perform your action here
             // For example, print a message to the screen
-            //GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Green, TEXT("Player is within 10000 units!"));
+            FString name = GetActorLabel();
+            GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Green, FString::Printf(TEXT("blocks coords: %s"),*name));
+            AxisOneMesh->SetCollisionResponseToAllChannels(ECollisionResponse::ECR_Block);
             AxisOneMesh->SetCollisionEnabled(ECollisionEnabled::QueryAndPhysics);
             AxisOneMesh->EnableComplexAsSimpleCollision();
+           // //AxisOneMesh->bEnableComplexCollision = true;
+          //  AxisOneMesh->bDeferCollisionUpdates = true;
+           // AxisOneMesh->SetGenerateOverlapEvents(true);
 
+            AxisTwoMesh->SetCollisionResponseToAllChannels(ECollisionResponse::ECR_Block);
             AxisTwoMesh->SetCollisionEnabled(ECollisionEnabled::QueryAndPhysics);
             AxisTwoMesh->EnableComplexAsSimpleCollision();
+          //  AxisTwoMesh->bEnableComplexCollision = true;
+          //  AxisTwoMesh->bDeferCollisionUpdates = true;
+           // AxisTwoMesh->SetGenerateOverlapEvents(true);
 
+            AxisTwoMesh->SetCollisionResponseToAllChannels(ECollisionResponse::ECR_Block);
             AxisThreeMesh->SetCollisionEnabled(ECollisionEnabled::QueryAndPhysics);
             AxisThreeMesh->EnableComplexAsSimpleCollision();
+          //  AxisThreeMesh->bEnableComplexCollision = true;
+          //  AxisThreeMesh->bDeferCollisionUpdates = true;
+          //  AxisThreeMesh->SetGenerateOverlapEvents(true);
             collisionActive = true;
         }
     }
-
-  
-    }
+}
+}
  
 
 void AChunk::PerformBusyWait(int32 NumberOfIterations)
@@ -494,23 +636,69 @@ void AChunk::PerformBusyWait(int32 NumberOfIterations)
     }
 }
 
-void AChunk::ModifyVoxelData(const FIntVector Position, const EBlock Block)
+void AChunk::ModifyVoxelData( FIntVector Position, const EBlock Block)
 {
     const int Index = GetBlockIndex(Position.X, Position.Y, Position.Z);
 
-    Blocks[Index] = Block;
+    if (Index > Blocks.Num() - 1) {
+      
+        return;
+    }
+    //GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Green, FString::Printf(TEXT("LOOKING FOR BLOCK FAILED %d"), Index));
+    GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Green, FString::Printf(TEXT("blocks coords: %d %d %d"), Position.X, Position.Y, Position.Z));
+
+    std::string check = ToStringEnum(Blocks[Index]);
+    // Convert std::string to FString
+    FString CheckFString = FString(check.c_str());
+    // Use * operator to convert FString to TCHAR*
+    GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Green, FString::Printf(TEXT("Block returned was %s"), *CheckFString));
+
+    Blocks[Index] = EBlock::Air;
+ 
 }
 
 void AChunk::ClearMesh()
 {
+    isApplyingMeshReady = false;
+    GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Purple, TEXT("Clearing mesh!"));
+    QuadDataQueueOne.Empty();
+    QuadDataQueueTwo.Empty();
+    QuadDataQueueThree.Empty();
 
-    //VertexCount = 0;
+    meshCounter = 0;
+    quadOneSize = 0;
+    quadTwoSize = 0;
+    quadThreeSize = 0;
 
-    //VertexData.Empty();
-    //TriangleData.Empty();
-    //NormalData.Empty();
-    //UVData.Empty();
-    //VertexColors.Empty();
+    AxisOneVertexCount = 0;
+    AxisTwoVertexCount = 0;
+    AxisThreeVertexCount = 0;
+
+    AxisOneNormalOverlay->ClearElements();
+    AxisTwoNormalOverlay->ClearElements();
+    AxisThreeNormalOverlay->ClearElements();
+
+    DynamicMeshAxisOne.DiscardTriangleGroups();
+    DynamicMeshAxisTwo.DiscardTriangleGroups();
+    DynamicMeshAxisThree.DiscardTriangleGroups();
+
+    DynamicMeshAxisOne.DiscardAttributes();
+    DynamicMeshAxisTwo.DiscardAttributes();
+    DynamicMeshAxisThree.DiscardAttributes();
+
+
+    AxisOneVertexColors.Empty();
+    AxisTwoVertexColors.Empty();
+    AxisThreeVertexColors.Empty();
+
+	DynamicMeshAxisOne.Clear();
+    DynamicMeshAxisTwo.Clear();
+    DynamicMeshAxisThree.Clear();
+
+    DynamicMeshAxisCombined.Clear();
+
+
+
 
     UE_LOG(LogTemp, Display, TEXT("CLEARING MESH"));
 }
@@ -557,7 +745,14 @@ float AChunk::QueryNoiseValue(const std::vector<float>& noiseOutput, int x, int 
     return noiseOutput[index];
 }
 
+int AChunk::generateRandomNumber(int min, int max) {
+    // Static to initialize the random engine and distribution once
+    static std::random_device rd; // Seed with a real random value, if available
+    static std::minstd_rand rng(rd());
+    static std::uniform_int_distribution<int> uni(min, max); // Define the range
 
+    return uni(rng); // Generate a random number
+}
 void AChunk::GenerateBlocks()
 {
 
@@ -590,13 +785,19 @@ void AChunk::GenerateBlocks()
 
     const auto Location = GetActorLocation();
     const float baseHeight = VerticalHeight / 4.0f;
+
+    //create normal c++ array
+
     TArray<float> NoiseMap;
+    TArray<EBiome> biomeNumbers;
     int TotalElements = Size * Size * VerticalHeight;
     NoiseMap.SetNum(TotalElements);
+    biomeNumbers.SetNum(TotalElements);
 
     // 0 equals hilly
     //1 equals river
     int biomeNumber = 0;
+
 
     /*  float biomeNoise;
       float combinedNoise;
@@ -612,8 +813,10 @@ void AChunk::GenerateBlocks()
 
     for (int x = 0; x < Size; x++)
     {
-        NoiseMapOperations.Add([=, &NoiseMap]()
+        // passing biome numbers to lambda below causes lag
+        NoiseMapOperations.Add([=,&NoiseMap, &biomeNumbers]()
             {
+               
                 for (int y = 0; y < Size; y++)
                 {
                     float worldXpos = (x * 100 + Location.X) / 100;
@@ -629,13 +832,15 @@ void AChunk::GenerateBlocks()
                     {
                         float worldZpos = (z * 100 + Location.Z) / 100;
                         float combinedNoise;
-                        int biomeNumber;
+                        float biomeNumber;
                         float actualHeight;
 
                         // Determine biome based on biomeFactor
                         if (biomeFactor > 0.2f)
                         {
-                            // Hilly biome
+                           if(!mountainBiome)
+                            mountainBiome = true;
+
                             combinedNoise = HillyPlains->GetNoise(worldXpos, worldYpos, worldZpos);
                             biomeNumber = 0;
                             actualHeight = VerticalHeight;
@@ -644,17 +849,23 @@ void AChunk::GenerateBlocks()
                             float normalizedNoise = (combinedNoise + 1) / 2.0f;
                             float curvedNoise = FMath::Pow(normalizedNoise, 2);
                             int index = x + y * Size + z * Size * Size;
-                            NoiseMap[index] = curvedNoise * actualHeight;
+                            // For each noise value we also store the biome
+                            biomeNumbers[index] = EBiome::Mountain;
+                            NoiseMap[index]= curvedNoise * actualHeight;
                         }
                         else if (biomeFactor >= -0.2f && biomeFactor <= 0.2f)
                         {
+                            if(!mountainPlainsTransition)
+                                mountainPlainsTransition = true;
+
+
                             // Transition biome
                             // Interpolate between hilly and plains based on biomeFactor
                             float transitionFactor = (biomeFactor + 0.2f) / 0.4f; // Normalize to 0-1 range
                             float hillyNoise = HillyPlains->GetNoise(worldXpos, worldYpos, worldZpos);
                             float plainsNoise = PlainsNoise->GetNoise(worldXpos, worldYpos, worldZpos);
                             combinedNoise = FMath::Lerp(plainsNoise, hillyNoise, transitionFactor);
-                            biomeNumber = 2; // Transition biome number
+                            biomeNumber = 1.5; // Transition biome number
 
                             // Interpolate actualHeight for a smooth transition
                             float hillyHeight = VerticalHeight;
@@ -666,10 +877,14 @@ void AChunk::GenerateBlocks()
                             float normalizedNoise = (combinedNoise + 1) / 2.0f;
                             float curvedNoise = FMath::Pow(normalizedNoise, 2);
                             int index = x + y * Size + z * Size * Size;
+                            biomeNumbers[index] = EBiome::Mountain_Plains;
                             NoiseMap[index] = curvedNoise * actualHeight;
                         }
                         else
                         {
+                            if(!plainsBiome)
+								plainsBiome = true;
+                            //plainsBiome = true;
                             // Plains biome
                             combinedNoise = PlainsNoise->GetNoise(worldXpos, worldYpos, worldZpos);
                             biomeNumber = 1;
@@ -679,14 +894,17 @@ void AChunk::GenerateBlocks()
                             float normalizedNoise = (combinedNoise + 1) / 2.0f;
                             float curvedNoise = FMath::Pow(normalizedNoise, 2);
                             int index = x + y * Size + z * Size * Size;
-                            NoiseMap[index] = curvedNoise * actualHeight;
+                            biomeNumbers[index] = EBiome::Mountain;
+                            NoiseMap[index]= curvedNoise * actualHeight;
                         }
 
                     }
                 }
             });
     }
-    ParallelFor(NoiseMapOperations.Num(), [&](int32 Index)
+    
+   
+    ParallelFor(NoiseMapOperations.Num(), [=,&NoiseMapOperations](int32 Index)
         {
             NoiseMapOperations[Index]();
         }, EParallelForFlags::None);
@@ -695,33 +913,138 @@ void AChunk::GenerateBlocks()
     //float combinedNoise;
     TArray<TFunction<void()>> BlockOperations;
     //ParallelFor(Size, [&](int32 x) {
-          for (int x = 0; x < Size; x++){
-              BlockOperations.Add([=, &NoiseMap]()
-                  {
-        for (int y = 0; y < Size; ++y) {
-
-         
-            for (int z = 0; z < VerticalHeight; z++) {
+   for (int x = 0; x < Size; x++){
+       BlockOperations.Add([=, &NoiseMap,&biomeNumbers]()
+           {
+         for (int y = 0; y < Size; ++y) 
+         {
+            for (int z = 0; z < VerticalHeight; z++)
+            {
+              
                 int Index = x + y * Size + z * Size * Size;
-                int Height = static_cast<int>(NoiseMap[Index]);
-        
+                int height = static_cast<int>(NoiseMap[Index]);
+                EBiome biomeType = biomeNumbers[Index];
+                biomeType = EBiome::Plains;
                 EBlock BlockType = EBlock::Air;
 
-                if (z < Height - 1) {
-                    BlockType = biomeNumber == 0 ? EBlock::Stone : EBlock::Dirt;
+                // Make mountains be made of stone
+                if (z == height - 1) {
+                    if (biomeType == EBiome::Mountain) {
+                        BlockType = EBlock::SnowGrass;
+                    }
+                    if (biomeType == EBiome::Plains) {
+                        BlockType = EBlock::Grass;
+                    }
+       
+                    // Increasing the value that verticalheight is divided by will lower the beginning point of the transition
+
+                    // Block logic for top/'left' section of transition biome
+                    // Only transition biomes should be inside the following if statment
+                    if (z >= (VerticalHeight / 4) && z <= height) {
+                           
+                            // Make top of mountains inside transition biome be snow
+                             if (biomeNumber == 1.5f) {
+
+                                // Consider adding extra check here, lagre area of transition biome is just stone
+                                // and has no need for any of the transiiont logic?
+
+                                // Calculate the height difference between the current block and the transition point
+                                float heightDifference = static_cast<float>(z - (VerticalHeight / 4));
+
+                                // Use a simple linear interpolation to determine the block type
+                                float transitionFactor = heightDifference / (height - (VerticalHeight / 4));
+
+                                // Adjust the transition factor using a sine wave for a more natural look
+                                // Inrease 3.0 to to increase the number of stone blocks that appear in the snow area
+                               // transitionFactor = FMath::Sin(transitionFactor * PI / 2.15f);
+
+                                // Randomly choose between snow and grass based on the transition factor
+                                if (2 < transitionFactor) {
+                                    // Secondary block i.e. secondary block
+                                    BlockType = EBlock::SnowGrass;
+                                }
+                                else {
+                                    // Primary block of this section
+                                    BlockType = EBlock::Stone;
+                                }
+                            }
+                    }
+                    // Block logic for middle section of transition biome
+                    else if (z < (VerticalHeight / 4) && z >= (VerticalHeight / 5)) {
+                        // Make top of mountain be snow
+                     
+                        // Make top of mountains inside transition biome be snow
+                         if (biomeNumber == 1.5f) {
+
+                         //    Consider adding extra check here, lagre area of transition biome is just stone
+                           //  and has no need for any of the transiiont logic?
+
+                            // Calculate the height difference between the current block and the transition point
+                            float heightDifference = static_cast<float>(z - (VerticalHeight / 5));
+                            if (heightDifference == 0) {
+								heightDifference = 1;
+							}
+
+                            // Use a simple linear interpolation to determine the block type
+                            float transitionFactor = heightDifference / (height - (VerticalHeight / 5));
+                           
+
+                            // Adjust the transition factor using a sine wave for a more natural look
+                            // Increase the value of the denominator of the sine function increases the frequence of the secondary block
+                          //  transitionFactor = FMath::Sin(transitionFactor * PI / 2.5f);
+
+                            // Randomly choose between snow and grass based on the transition factor
+                            if (2 < transitionFactor) {
+                                BlockType = EBlock::Stone;
+                            }
+                            else {
+                                BlockType = EBlock::SnowGrass;
+                            }
+                        }
+                    }
+                    // Block logic for bottom /'right' section of transition biome
+                    else if (z < (VerticalHeight / 5) && z > 20) {
+                        if (biomeNumber == 1.5f) {
+                            // Consider adding extra check here, lagre area of transition biome is just stone
+                           // and has no need for any of the transiiont logic?
+
+                           // Calculate the height difference between the current block and the transition point
+                            float heightDifference = static_cast<float>(z - (VerticalHeight / 5));
+
+                            // Use a simple linear interpolation to determine the block type
+                            float transitionFactor = heightDifference / (height - (VerticalHeight / 5));
+
+                            // Adjust the transition factor using a sine wave for a more natural look
+                            // Inrease 3.0 to to increase the number of stone blocks that appear in the snow area,
+                            // at a high enough value the secondary block will essentially become the primary block
+                           // transitionFactor = FMath::Sin(transitionFactor * PI / 3.0f);
+
+                            // Randomly choose between snow and grass based on the transition factor
+                            if (2 < transitionFactor) {
+                                // primary
+                                BlockType = EBlock::Grass;
+                            }
+                            else {
+                                // secondary
+                                BlockType = EBlock::Stone;
+                            }
+                        }
+                    }
+                    else if (z <= 20) {
+                        if (biomeNumber == 1.5f) {
+                           //BlockType = EBlock::Grass;
+						}
+                    }
+                }// end of if z == height
+
+                if (z <= height -2) {
+                    BlockType = EBlock::Stone;
                 }
-                else if (z == Height || z == Height - 1) {
-
-                    if (biomeNumber == 0) {
-						BlockType = EBlock::Grass;
-					}
-                    else if (biomeNumber == 1) {
-						BlockType = EBlock::SnowGrass;
-					}
-                    else if (biomeNumber == 2) {//transition
-						BlockType = EBlock::Sand;
-					}
-
+          
+                // This is an override which is not strictly needed, should ensure that if there are errors in block assignment
+                // that no massive crazy block structures generate in the sky which are not intended.
+                if (z >= height) {
+                    BlockType = EBlock::Air;
                 }
 
                 Blocks[GetBlockIndex(x, y, z)] = BlockType;
@@ -732,10 +1055,13 @@ void AChunk::GenerateBlocks()
         }//, EParallelForFlags::BackgroundPriority);
     // RespawnTrees();
 
-         ParallelFor(NoiseMapOperations.Num(), [&](int32 Index)
+         ParallelFor(BlockOperations.Num(), [&](int32 Index)
              {
                 BlockOperations[Index]();
-             }, EParallelForFlags::BackgroundPriority);
+             }, EParallelForFlags::Unbalanced);
+
+
+
     delete HillyPlains;
     delete biomeNoiseMap;
 }
@@ -802,9 +1128,11 @@ bool AChunk::CompareMask(FMask M1, FMask M2) const
 FColor AChunk::GetColorFromBlock(EBlock Block, FIntVector Location)
 {
     // Convert FIntVector to FVector for noise calculation
-    FVector ConvertedLocation = FVector(Location.X, Location.Y, Location.Z) * 0.1f; // Scale to adjust frequency
-    float NoiseValue = FMath::PerlinNoise3D(ConvertedLocation);
-    NoiseValue = (NoiseValue + 1.0f) * 0.5f; // Normalize to 0-1
+    //FVector ConvertedLocation = FVector(Location.X, Location.Y, Location.Z) * 0.1f; // Scale to adjust frequency
+   /// float NoiseValue = FMath::PerlinNoise3D(ConvertedLocation);
+    float NoiseValue = 0.22f;
+    //NoiseValue = (NoiseValue + 1.0f) * 0.5f; // Normalize to 0-1
+    
     switch (Block)
     {
     case EBlock::Null:
@@ -814,27 +1142,48 @@ FColor AChunk::GetColorFromBlock(EBlock Block, FIntVector Location)
         return FColor();
         break;
     case EBlock::Stone:
+    {
+             // Map the normalized noise value to different shades of grey
+    if (NoiseValue < 0.33f)
+    {
+        FColor DarkerGrey = FColor::FromHex("#4B4B4B");
+        return DarkerGrey; // Slightly Darker Grey
+    }
+    else if (NoiseValue < 0.66f)
+    {
+        FColor BaseGrey = FColor::FromHex("#505050");
+        return BaseGrey; // Base Grey
+    }
+    else
+    {
+        FColor LighterGrey = FColor::FromHex("#555555");
+        return LighterGrey; // Slightly Lighter Grey
+    }
+
+
+
+    }
         return FColor::FromHex("#505050");
         break;
     case EBlock::Dirt:
         return FColor::FromHex("#31A0C3");//blue temporarily to test river
         break;
-    case EBlock::Grass:
-
-        // Map the normalized noise value to different shades of green
-        if (NoiseValue < 0.33f)
-        {
-            return FColor::FromHex("#4CBB17"); // Slightly Lighter Green than the base
-        }
-        else if (NoiseValue < 0.66f)
-        {
-            return FColor::FromHex("#228B22"); // Intermediate Green, closer to the base
-        }
-        else
-        {
-            return FColor::FromHex("#DFFF00"); // Darkest Green as the base
-        }
+        case EBlock::Sand:
+        return FColor::FromHex("#DFFF00");//blue temporarily to test river
         break;
+    case EBlock::Grass:
+    {
+        // Define two shades of green for grass
+        FLinearColor BaseGreen = FLinearColor::FromSRGBColor(FColor::FromHex("#0B6623")); // A nice grass green
+        FLinearColor LighterGreen = FLinearColor::FromSRGBColor(FColor::FromHex("#5aaa18")); // A slightly lighter lime green
+
+        // Smoothly transition between the two shades based on noise value
+        FLinearColor ResultingColor = FMath::Lerp(BaseGreen, LighterGreen, NoiseValue/3);
+
+        // Convert back to FColor if necessary
+        return ResultingColor.ToFColor(true);
+
+    }
     case EBlock::SnowGrass:
         return FColor::FromHex("#F3F6FB");
         break;
@@ -942,6 +1291,7 @@ void AChunk::GenerateMesh()
 
                 int N = 0;
 
+
                 ParallelFor(Axis2Limit, [&](int32 Axis2Index)
                     {
                         FMask Result;
@@ -958,13 +1308,13 @@ void AChunk::GenerateMesh()
                              auto CurrentBlock = GetBlock(LocalChunkItr);
                              auto CompareBlock = GetBlock(LocalChunkItr + AxisMask);
 
-                  
+                  /*
                              if (outOfBounds && CurrentBlock == EBlock::Stone)
                              {
                                  CompareBlock = EBlock::Stone;
                           
                                  outOfBounds = false;
-                             }
+                             }*/
 
                             const bool CurrentBlockOpaque = CurrentBlock != EBlock::Air;
                             const bool CompareBlockOpaque = CompareBlock != EBlock::Air;
@@ -1143,7 +1493,8 @@ void AChunk::GenerateMesh()
        }, TStatId(), nullptr, ENamedThreads::BackgroundThreadPriority);
    
 
-
+   // FGraphEventRef Taskx = FFunctionGraphTask::CreateAndDispatchWhenReady([&]()
+   //       {
  
             FQuadData QuadData;
 
@@ -1158,7 +1509,7 @@ void AChunk::GenerateMesh()
                     QuadData.Block);
             }
 
-
+            //   }, TStatId(), nullptr, ENamedThreads::GameThread);
 
     finishedCreateQuad = true;
 

@@ -65,6 +65,12 @@
     <Filter Include="Source\VoxelProject">
       <UniqueIdentifier>{675FB4DC-71E7-3EDE-A3EA-438EBC52DA40}</UniqueIdentifier>
     </Filter>
+    <ClCompile Include="..\..\Source\VoxelProject\BiomesEnum.cpp">
+      <Filter>Source\VoxelProject</Filter>
+    </ClCompile>
+    <ClInclude Include="..\..\Source\VoxelProject\BiomesEnum.h">
+      <Filter>Source\VoxelProject</Filter>
+    </ClInclude>
     <ClCompile Include="..\..\Source\VoxelProject\BoxTwo.cpp">
       <Filter>Source\VoxelProject</Filter>
     </ClCompile>

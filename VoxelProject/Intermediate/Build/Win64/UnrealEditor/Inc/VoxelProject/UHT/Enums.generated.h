@@ -34,6 +34,15 @@ enum class EBlock : uint8;
 template<> struct TIsUEnumClass<EBlock> { enum { Value = true }; };
 template<> VOXELPROJECT_API UEnum* StaticEnum<EBlock>();
 
+#define FOREACH_ENUM_EBIOME(op) \
+	op(EBiome::Mountain) \
+	op(EBiome::Plains) \
+	op(EBiome::Mountain_Plains) 
+
+enum class EBiome : uint8;
+template<> struct TIsUEnumClass<EBiome> { enum { Value = true }; };
+template<> VOXELPROJECT_API UEnum* StaticEnum<EBiome>();
+
 #define FOREACH_ENUM_EGENERATIONTYPE(op) \
 	op(EGenerationType::GT_3D) \
 	op(EGenerationType::GT_2D) 

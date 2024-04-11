@@ -64,7 +64,9 @@ AVoxelGameModeBase::AVoxelGameModeBase()
 
 void AVoxelGameModeBase::OnCheckUpdateChunks()
 {
-         
+     float WorldTime1 = GetWorld()->GetTimeSeconds();
+    FString DebugMessage1 = FString::Printf(TEXT("Time is %f"), WorldTime1);
+    GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, DebugMessage1);
     UpdateVisibleChunksAroundPlayers();
 
 
@@ -77,18 +79,18 @@ void AVoxelGameModeBase::OnCheckUpdateChunks()
         float WorldTime = GetWorld()->GetTimeSeconds();
         FString DebugMessage = FString::Printf(TEXT("World Time Section 2(Standard): %f"), WorldTime);
         GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, DebugMessage);
-        GetWorld()->GetTimerManager().SetTimer(chunkUpdateTimerHandle, this, &AVoxelGameModeBase::OnCheckUpdateChunks, 1.2f, true);
+        GetWorld()->GetTimerManager().SetTimer(chunkUpdateTimerHandle, this, &AVoxelGameModeBase::OnCheckUpdateChunks, 2.0f, true);
         addChunkTimerStarted = true;
     }
-    else if(!addChunkTimerStarted) {
+    else if (!addChunkTimerStarted) {
         int32 Key1 = -1;
         float TimeToDisplay1 = 5.0f; // Display the message for 5 seconds.
         FColor DisplayColor1 = FColor::Red; // Display the message in red.
         float WorldTime = GetWorld()->GetTimeSeconds();
-        FString DebugMessage = FString::Printf(TEXT("World Time Section 1(Loading): %f"), WorldTime);
-        GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, DebugMessage);
+        //FString DebugMessage = FString::Printf(TEXT("World Time Section 1(Loading): %f"), WorldTime);
+       // GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, DebugMessage);
     }
- 
+
 
 }
 
@@ -97,32 +99,26 @@ void AVoxelGameModeBase::BeginPlay()
     Super::BeginPlay();
 
     //200 height was the multiple 12.5
-    ChunkSizeInMeters = ChunkSize * BlockSize * 4;
+    ChunkSizeInMeters = ChunkSize * BlockSize;
     maxViewDst = maxViewDst * ChunkSizeInMeters;
     chunksVisibleInViewDst = maxViewDst / ChunkSizeInMeters;
 
     if (this->HasAuthority())
     {
-        
-           // below sets up infinite recursion basically
+        // below sets up infinite recursion basically
         int32 Key1 = -1;
         float TimeToDisplay1 = 5.0f; // Display the message for 5 seconds.
         FColor DisplayColor1 = FColor::Red; // Display the message in red.
         float WorldTime = GetWorld()->GetTimeSeconds();
         FString DebugMessage = FString::Printf(TEXT("Setting up 0.01 timer: %f"), WorldTime);
         GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, DebugMessage);
-             GetWorld()->GetTimerManager().SetTimer(chunkUpdateTimerHandle, this, &AVoxelGameModeBase::OnCheckUpdateChunks, 0.1f, true);
-       
-
-         
-
-
+        GetWorld()->GetTimerManager().SetTimer(chunkUpdateTimerHandle, this, &AVoxelGameModeBase::OnCheckUpdateChunks, 2.0f, true);
     }
 
     //UpdateVisibleChunksAroundPlayers();
 
 
-    
+
 
 
 }
@@ -242,17 +238,28 @@ void AVoxelGameModeBase::UpdateVisibleChunks(FVector2D viewerPosition)
             }
         }
     }
-    // Insread of doing this here we start a timer which simply checks the queueu x times per second and spawns a chunk if something in queue
-    ProcessChunkQueue();
    
+    // Insread of doing this here we start a timer which simply checks the queueu x times per second and spawns a chunk if something in queue
+    if (GetWorld()->GetTimeSeconds() > 80 && !slowCreateChunkTimerStarted)
+    {
+        UE_LOG(LogTemp, Warning, TEXT("Starting slow timer"));
+        GetWorld()->GetTimerManager().ClearTimer(createChunkTimerHandle);
+        GetWorld()->GetTimerManager().SetTimer(createChunkTimerHandle, this, &AVoxelGameModeBase::ProcessChunkQueue, 0.4f, true);
+        slowCreateChunkTimerStarted = true;
+    }
+    else if(!fastCreateChunkTimerStarted) {
+        UE_LOG(LogTemp, Warning, TEXT("Starting fast timer"));
+        GetWorld()->GetTimerManager().SetTimer(createChunkTimerHandle, this, &AVoxelGameModeBase::ProcessChunkQueue, 0.02f, true);
+        fastCreateChunkTimerStarted = true;
+    }
+
 }
 void AVoxelGameModeBase::ProcessChunkQueue()
 {
 
-
-   // UE_LOG(LogTemp, Warning, TEXT("Processing chunk queue"));
-   // UE_LOG(LogTemp, Warning, TEXT("Processing chunk queue"));
-    //UE_LOG(LogTemp, Warning, TEXT("Pcrocess entered"));
+    // UE_LOG(LogTemp, Warning, TEXT("Processing chunk queue"));
+    // UE_LOG(LogTemp, Warning, TEXT("Processing chunk queue"));
+     //UE_LOG(LogTemp, Warning, TEXT("Pcrocess entered"));
     if (ChunkQueue.IsEmpty())
     {
         //  OnCheckUpdateChunks();
@@ -282,7 +289,7 @@ void AVoxelGameModeBase::ProcessChunkQueue()
     {//130
         if (GetWorld()->GetTimeSeconds() > 12)
         {
-          
+
             if (!GetWorld()->GetTimerManager().IsTimerActive(SpawnTimerHandle))
             {
                 //std::random_device rd;
@@ -292,7 +299,7 @@ void AVoxelGameModeBase::ProcessChunkQueue()
                 //double randomFloat = distrib(gen); // Generates a random double between 0.0 and 1.0
 
 
-         
+
                 //GetWorld()->GetTimerManager().SetTimer(SpawnTimerHandle, this, &AVoxelGameModeBase::OnCheckUpdateChunks, 0.32f+(randomFloat), false);
             }
             //0.55 is a good value
@@ -314,7 +321,7 @@ void AVoxelGameModeBase::UpdateVisibleChunksAroundPlayers()
 {
 
     TArray<AActor*> updatedVisibleTerrainChunks;
-    
+
     for (AActor* currentChunk : visibleTerrainChunks) {
         UpdateChunk(currentChunk);
     }
@@ -338,7 +345,7 @@ void AVoxelGameModeBase::UpdateVisibleChunksAroundPlayers()
             FVector2D viewerPosition = FVector2D(PawnPosition.X, PawnPosition.Y);
 
             //UE_LOG(LogTemp, Warning, TEXT("Function being entered early"));
-            UE_LOG(LogTemp, Warning, TEXT("Updating visible chunks once"));
+           // UE_LOG(LogTemp, Warning, TEXT("Updating visible chunks once"));
             UpdateVisibleChunks(viewerPosition);
 
             //  GenerateTreeMap(PawnPosition);
@@ -369,11 +376,11 @@ void AVoxelGameModeBase::UpdateVisibleChunksAroundPlayers()
                 {
                     UE_LOG(LogTemp, Warning, TEXT("Player pawn has no controller"));
                 }
-              
-                UE_LOG(LogTemp, Warning, TEXT("Updating visible chunks twice"));
+
+                //UE_LOG(LogTemp, Warning, TEXT("Updating visible chunks twice"));
                 UpdateVisibleChunks(viewerPosition);
             }
-            else if(!current_pc) {
+            else if (!current_pc) {
                 UE_LOG(LogTemp, Warning, TEXT("Likely Error,else if entered inside UpdateVisibleChunksAroundPlayer"));
                 APawn* playerPawn = current_pc->GetPawn();
                 FVector PawnPosition = playerPawn->GetTransform().GetLocation();
@@ -421,7 +428,7 @@ float AVoxelGameModeBase::GetClosestPlayersDistance(FVector Goal)
 AActor* AVoxelGameModeBase::spawnChunk(FVector Loc)
 {
     chunksCounter++;
-    UE_LOG(LogTemp, Warning, TEXT("Inside spawn chun %d"),chunksCounter);
+    //UE_LOG(LogTemp, Warning, TEXT("Inside spawn chun %d"), chunksCounter);
     FActorSpawnParameters SpawnParams;
     if (ChunkToSpawn == nullptr)
     {
@@ -436,7 +443,7 @@ AActor* AVoxelGameModeBase::spawnChunk(FVector Loc)
 
 bool AVoxelGameModeBase::UpdateChunk(AActor* chunk)
 {
-    FVector currentChunkPos = chunk->GetTransform().GetLocation();
+   FVector currentChunkPos = chunk->GetTransform().GetLocation();
 
     float closest_distance = GetClosestPlayersDistance(FVector(currentChunkPos.X, currentChunkPos.Y, 0.f));
 
@@ -453,7 +460,7 @@ bool AVoxelGameModeBase::UpdateChunk(AActor* chunk)
     }
     else if (closest_distance >= maxViewDst && !isHidden) {
         // Chunk is out of view distance and is currently visible, hide it
-        chunk->SetActorHiddenInGame(true); //commenting out this line causes ALL chunks to appear, but obviously removing this line means they will never be hidden again
+       // chunk->SetActorHiddenInGame(true); //commenting out this line causes ALL chunks to appear, but obviously removing this line means they will never be hidden again
         return true;  // Chunk visibility changed to hidden
     }
 
