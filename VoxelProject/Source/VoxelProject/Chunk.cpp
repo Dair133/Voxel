@@ -38,6 +38,7 @@
 #include <DynamicMesh/MeshAttributeUtil.h>
 #include <DynamicMesh/Operations/SplitAttributeWelder.h>
 #include <Engine.h>
+#include <cmath> // For std::sin
 #include "MyPawn.h"
 
 
@@ -61,8 +62,10 @@ std::string ToStringEnum(EBlock blockType) {
     default: return "Unknown";
     }
 }
+
 AChunk::AChunk()
 {
+    treeLocations.SetNum(4);
     // Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
     PrimaryActorTick.bCanEverTick = true;
 
@@ -70,13 +73,13 @@ AChunk::AChunk()
     RootComponent = CreateDefaultSubobject<USceneComponent>(TEXT("RootComponent"));
 
 
-    CombinedAxisMesh = CreateDefaultSubobject<UDynamicMeshComponent>("MeshOne");
+    //CombinedAxisMesh = CreateDefaultSubobject<UDynamicMeshComponent>("MeshOne");
     AxisOneMesh = CreateDefaultSubobject<UDynamicMeshComponent>("MeshTwo");
     AxisTwoMesh = CreateDefaultSubobject<UDynamicMeshComponent>("MeshThree");
     AxisThreeMesh = CreateDefaultSubobject<UDynamicMeshComponent>("MeshFour");
 
     // Attach the mesh components to the root component
-    CombinedAxisMesh->SetupAttachment(RootComponent);
+   // CombinedAxisMesh->SetupAttachment(RootComponent);
     AxisOneMesh->SetupAttachment(RootComponent);
     AxisTwoMesh->SetupAttachment(RootComponent);
     AxisThreeMesh ->SetupAttachment(RootComponent);
@@ -86,114 +89,123 @@ AChunk::AChunk()
 
     // Mesh Settings
     //CombinedAxisMesh->SetCastShadow(false);
-    //AxisOneMesh->SetCastShadow(false);
-    //AxisTwoMesh->SetCastShadow(false);
-    AxisThreeMesh->SetCastShadow(false);
+    AxisOneMesh->SetCastShadow(false);
+    AxisTwoMesh->SetCastShadow(false);
+    AxisThreeMesh->SetCastShadow(true);
 
-    static ConstructorHelpers::FObjectFinder<UMaterialInterface> Material(TEXT("Material'/Game/Cubedeps/Basecube.Basecube'"));
+    static ConstructorHelpers::FObjectFinder<UMaterialInterface> Material(TEXT("Material'/Game/Cubedeps/Materials/Basecube.Basecube'"));
     if (Material.Succeeded())
     {
         BaseMaterial = Material.Object;
+    }
+
+    static ConstructorHelpers::FObjectFinder<UBlueprint> MyTreeBlueprintFinder(TEXT("Blueprint'/Game/CubeDeps/treeTestActor.treeTestActor'"));
+    // static ConstructorHelpers::FObjectFinder<UBlueprint> MyTreeBlueprintFinder(TEXT("Blueprint'/Game/CUBEGENERATIONMAP/Objects/Trees/Tree01.Tree01'"));
+    if (MyTreeBlueprintFinder.Succeeded())
+    {
+        MyTreeBPClass = (UClass*)MyTreeBlueprintFinder.Object->GeneratedClass;
+         // UE_LOG(LogTemp, Warning, TEXT("Blueprint loaded successfully."));
+    }
+    else
+    {
+        //UE_LOG(LogTemp, Warning, TEXT("tree bp not working."));
+	
     }
 
 
    
 }
 
-void AChunk::StaticMeshConversion() 
+void AChunk::StaticMeshConversion()
 {
-    DynamicMeshAxisThree.VertexCount();
-    // Assuming StaticMesh is properly initialized elsewhere
-    UStaticMesh* StaticMesh = NewObject<UStaticMesh>();
+   // // Assuming StaticMesh is properly initialized elsewhere
+   // UStaticMesh* StaticMesh = NewObject<UStaticMesh>();
 
-    // Create a new render data object
-    TUniquePtr<FStaticMeshRenderData> RenderData = MakeUnique<FStaticMeshRenderData>();
+   // // Create a new render data object
+   // TUniquePtr<FStaticMeshRenderData> RenderData = MakeUnique<FStaticMeshRenderData>();
 
-    // Initialize LODResources array with one element
-    RenderData->LODResources.Add(0);
+   // // Initialize LODResources array with one element
+   // FStaticMeshLODResources *testOne = new FStaticMeshLODResources();
+   // RenderData->LODResources.Add(testOne);
 
-    // Now you can safely access the first LOD resource
-    FStaticMeshLODResources& LODResources = RenderData->LODResources[0];
+   // // Now you can safely access the first LOD resource
+   // FStaticMeshLODResources& LODResources = RenderData->LODResources[0];
 
+   // // Copy vertex positions
+   // LODResources.VertexBuffers.PositionVertexBuffer.Init(DynamicMeshAxisOne.VertexCount());
+   // for (int32 i = 0; i < DynamicMeshAxisOne.VertexCount(); i++)
+   // {
+   //     FVector3d Position = DynamicMeshAxisOne.GetVertex(i);
+   //     LODResources.VertexBuffers.PositionVertexBuffer.VertexPosition(i) = FVector3f(Position);
+   // }
 
-    // Copy vertex positions
-    LODResources.VertexBuffers.PositionVertexBuffer.Init(DynamicMeshAxisThree.VertexCount());
-  
-    for (int32 i = 0; i < DynamicMeshAxisThree.VertexCount(); i++)
-    {
-        FVector3d Position = DynamicMeshAxisThree.GetVertex(i);
-        LODResources.VertexBuffers.PositionVertexBuffer.VertexPosition(i) = FVector3f(Position);
-    }
+   // // Copy triangles
+   //// LODResources.IndexBuffer.
+   //// LODResources.IndexBuffer.AddUninitialized(DynamicMeshAxisOne.TriangleCount() * 3);
+   // for (int32 i = 0; i < DynamicMeshAxisOne.TriangleCount(); ++i)
+   // {
+   //     UE::Geometry::FIndex3i Triangle = DynamicMeshAxisOne.GetTriangle(i);
+   //  //   LODResources.IndexBuffer.AppendIndices(i * 3 + 0,1) = Triangle.A;
+   //     LODResources.IndexBuffer[i * 3 + 1] = Triangle.B;
+   //     LODResources.IndexBuffer[i * 3 + 2] = Triangle.C;
+   // }
 
-    // Copy triangles
-    //LODResources.IndexBuffer.SetNum(DynamicMeshAxisThree.TriangleCount() * 3);
-    for (int i = 0; i < DynamicMeshAxisThree.TriangleCount(); ++i)
-    {
-        UE::Geometry::FIndex3i Triangle = DynamicMeshAxisThree.GetTriangle(i);
-        LODResources.IndexBuffer.SetIndex(i * 3 + 0, Triangle.A);
-        LODResources.IndexBuffer.SetIndex(i * 3 + 1, Triangle.B);
-        LODResources.IndexBuffer.SetIndex(i * 3 + 2, Triangle.C);
-    }
+   // // Copy vertex colors
+   // LODResources.VertexBuffers.ColorVertexBuffer.Init(AxisOneVertexColors.Num());
+   // for (int32 i = 0; i < AxisOneVertexColors.Num(); ++i)
+   // {
+   //     FColor Color = AxisOneVertexColors[i];
+   //     LODResources.VertexBuffers.ColorVertexBuffer.VertexColor(i) = Color;
+   // }
 
-    // Copy vertex colors
-    LODResources.VertexBuffers.ColorVertexBuffer.Init(AxisThreeVertexColors.Num());
-    for (int32 i = 0; i < AxisThreeVertexColors.Num(); ++i)
-    {
-        FColor Color = AxisThreeVertexColors[i];
-        LODResources.VertexBuffers.ColorVertexBuffer.VertexColor(i) = Color;
-    }
+   // // Copy normals
+   // LODResources.VertexBuffers.StaticMeshVertexBuffer.Init(DynamicMeshAxisOne.VertexCount(), 1);
+   // for (int32 i = 0; i < DynamicMeshAxisOne.VertexCount(); ++i)
+   // {
+   //     FVector3f Normal = AxisOneNormalOverlay->GetElement(i);
+   //     LODResources.VertexBuffers.StaticMeshVertexBuffer.SetVertexTangents(i, FVector3f::ZeroVector, FVector3f::ZeroVector, Normal);
+   // }
 
-    // Copy normals
-    LODResources.VertexBuffers.StaticMeshVertexBuffer.Init(DynamicMeshAxisThree.VertexCount(), 1);
-    for (int32 i = 0; i < DynamicMeshAxisThree.VertexCount(); ++i)
-    {
-        FVector3f Normal = AxisThreeNormalOverlay->GetElement(i);
-        LODResources.VertexBuffers.StaticMeshVertexBuffer.SetVertexTangents(i, FVector3f::ZeroVector, FVector3f::ZeroVector, Normal);
-    }
+   // // Copy UV data (if available)
+   // // ...
 
-    // Copy UV data (if available)
-    // ...
+   // // Set the static mesh's render data
+   // StaticMesh->SetRenderData(MoveTemp(RenderData));
 
-    // Set the LOD resources
-    //RenderData->LODResources[0] = LODResources;
-
-    // Set the static mesh's render data
-    StaticMesh->SetRenderData(MoveTemp(RenderData));
-
-    // Create a new static mesh component and set its static mesh
-    UStaticMeshComponent* StaticMeshComponent = NewObject<UStaticMeshComponent>(this);
-    StaticMeshComponent->SetStaticMesh(StaticMesh);
-    StaticMeshComponent->RegisterComponent();
-
-
-
-
-
-
+   // // Create a new static mesh component and set its static mesh
+   // UStaticMeshComponent* StaticMeshComponent = NewObject<UStaticMeshComponent>(this);
+   // StaticMeshComponent->SetStaticMesh(StaticMesh);
+   // StaticMeshComponent->RegisterComponent();
 }
 
 void AChunk::ApplyAxisOne() 
 {
     
-    FGraphEventRef Taskx = FFunctionGraphTask::CreateAndDispatchWhenReady([&]()
-        {
+ 
+      
+      
     TArray<int32> ColorAttributeIndices;
-    ColorAttributeIndices.SetNum(AxisOneVertexColors.Num());
+    // Some reason the below array is not being set correctly? should probably not just multiply this by 10
+    ColorAttributeIndices.SetNum(AxisOneVertexColors.Num()* 10);
 
     // Append vertices to the dynamic mesh
-
+  //  FGraphEventRef Taskx = FFunctionGraphTask::CreateAndDispatchWhenReady([&]()
+    //    {
     // Append color elements to the color overlay and store the returned indices
     for (int32 i = 0; i < AxisOneVertexColors.Num(); ++i) {
         FColor Color = AxisOneVertexColors[i];
         FVector4f ColorVector(Color.R / 255.0f, Color.G / 255.0f, Color.B / 255.0f, 1.0f);
         ColorAttributeIndices[i] = DynamicMeshAxisOne.Attributes()->PrimaryColors()->AppendElement(ColorVector);
     }
-
+     //   }, TStatId(), nullptr, ENamedThreads::HighTaskPriority);
+   // Taskx->Wait();
     // Get the color overlay
     UE::Geometry::FDynamicMeshColorOverlay* ColorOverlay = DynamicMeshAxisOne.Attributes()->PrimaryColors();
 
+    ParallelFor(DynamicMeshAxisOne.TriangleCount(), [&](int32 TriangleIndex) {
+
     // Iterate over the base mesh triangles and set the color attribute indices for each triangle
-    for (int32 TriangleIndex = 0; TriangleIndex < DynamicMeshAxisOne.TriangleCount(); ++TriangleIndex) {
+   // for (int32 TriangleIndex = 0; TriangleIndex < DynamicMeshAxisOne.TriangleCount(); ++TriangleIndex) {
         // Get the vertex indices of the current triangle
         UE::Geometry::FIndex3i TriangleVertexIndices = DynamicMeshAxisOne.GetTriangle(TriangleIndex);
 
@@ -206,26 +218,20 @@ void AChunk::ApplyAxisOne()
 
         // Set the color attribute indices for the current triangle
         ColorOverlay->SetTriangle(TriangleIndex, ColorAttributeTriangleIndices);
-    }
+
+         TriangleVertexIndices = DynamicMeshAxisOne.GetTriangle(TriangleIndex);
+        AxisOneNormalOverlay->SetTriangle(TriangleIndex, TriangleVertexIndices);
+    }, EParallelForFlags::None);
 
     // Copy the color overlay to the primary colors attribute
     DynamicMeshAxisOne.Attributes()->PrimaryColors()->Copy(*ColorOverlay);
       
+    ParallelFor(AxisOneVertexColors.Num(), [&](int32 i) {
 
-   
+     DynamicMeshAxisOne.SetVertexColor(i, FVector3f(AxisOneVertexColors[i]));
 
-            for (int32 TriangleIndex = 0; TriangleIndex < DynamicMeshAxisOne.TriangleCount(); ++TriangleIndex) {
-                UE::Geometry::FIndex3i TriangleVertexIndices = DynamicMeshAxisOne.GetTriangle(TriangleIndex);
-                AxisOneNormalOverlay->SetTriangle(TriangleIndex, TriangleVertexIndices);
-            }
-            for (int32 i = 0; i < AxisOneVertexColors.Num(); ++i) {
-                DynamicMeshAxisOne.SetVertexColor(i, FVector3f(AxisOneVertexColors[i]));
-            }
-           // Dont know what the 'CopyVertex' functions do but they seem work
-     
-        }, TStatId(), nullptr, ENamedThreads::AnyHiPriThreadHiPriTask);
-    Taskx->Wait();
-
+    }, EParallelForFlags::None);
+  
              // Somehow add color here?
             AxisOneMesh->GetDynamicMesh()->SetMesh(MoveTemp(DynamicMeshAxisOne));
             AxisOneMesh->SetMaterial(0, BaseMaterial);
@@ -234,57 +240,56 @@ void AChunk::ApplyAxisOne()
 
 void AChunk::ApplyAxisTwo()
 {
-    FGraphEventRef Taskx = FFunctionGraphTask::CreateAndDispatchWhenReady([&]()
-        {
+
     TArray<int32> ColorAttributeIndices;
     ColorAttributeIndices.SetNum(AxisTwoVertexColors.Num());
-
+    DynamicMeshAxisTwo.Attributes()->PrimaryColors()->InitializeTriangles(AxisTwoVertexColors.Num());
     // Append vertices to the dynamic mesh
 
     // Append color elements to the color overlay and store the returned indices
     for (int32 i = 0; i < AxisTwoVertexColors.Num(); ++i) {
         FColor Color = AxisTwoVertexColors[i];
         FVector4f ColorVector(Color.R / 255.0f, Color.G / 255.0f, Color.B / 255.0f, 1.0f);
-        ColorAttributeIndices[i] = DynamicMeshAxisTwo.Attributes()->PrimaryColors()->AppendElement(ColorVector);
+        ColorAttributeIndices[i] = i;
+         //DynamicMeshAxisTwo.Attributes()->PrimaryColors()->SetElement(i,ColorVector);
+         ColorAttributeIndices[i] = DynamicMeshAxisTwo.Attributes()->PrimaryColors()->AppendElement(ColorVector);
     }
 
     // Get the color overlay
     UE::Geometry::FDynamicMeshColorOverlay* ColorOverlay = DynamicMeshAxisTwo.Attributes()->PrimaryColors();
 
-    // Iterate over the base mesh triangles and set the color attribute indices for each triangle
-    for (int32 TriangleIndex = 0; TriangleIndex < DynamicMeshAxisTwo.TriangleCount(); ++TriangleIndex) {
-        // Get the vertex indices of the current triangle
-        UE::Geometry::FIndex3i TriangleVertexIndices = DynamicMeshAxisTwo.GetTriangle(TriangleIndex);
+    ParallelFor(DynamicMeshAxisTwo.TriangleCount(), [&](int32 TriangleIndex) {
 
-        // Map the triangle vertex indices to the color attribute indices
-        UE::Geometry::FIndex3i ColorAttributeTriangleIndices(
-            ColorAttributeIndices[TriangleVertexIndices.A],
-            ColorAttributeIndices[TriangleVertexIndices.B],
-            ColorAttributeIndices[TriangleVertexIndices.C]
-        );
+        // Iterate over the base mesh triangles and set the color attribute indices for each triangle
+       // for (int32 TriangleIndex = 0; TriangleIndex < DynamicMeshAxisTwo.TriangleCount(); ++TriangleIndex) {
+            // Get the vertex indices of the current triangle
+            UE::Geometry::FIndex3i TriangleVertexIndices = DynamicMeshAxisTwo.GetTriangle(TriangleIndex);
 
-        // Set the color attribute indices for the current triangle
-        ColorOverlay->SetTriangle(TriangleIndex, ColorAttributeTriangleIndices);
-    }
+            // Map the triangle vertex indices to the color attribute indices
+            UE::Geometry::FIndex3i ColorAttributeTriangleIndices(
+                ColorAttributeIndices[TriangleVertexIndices.A],
+                ColorAttributeIndices[TriangleVertexIndices.B],
+                ColorAttributeIndices[TriangleVertexIndices.C]
+            );
+
+            // Set the color attribute indices for the current triangle
+            ColorOverlay->SetTriangle(TriangleIndex, ColorAttributeTriangleIndices);
+
+            TriangleVertexIndices = DynamicMeshAxisTwo.GetTriangle(TriangleIndex);
+            AxisTwoNormalOverlay->SetTriangle(TriangleIndex, TriangleVertexIndices);
+        }, EParallelForFlags::None);
 
     // Copy the color overlay to the primary colors attribute
     DynamicMeshAxisTwo.Attributes()->PrimaryColors()->Copy(*ColorOverlay);
 
+    ParallelFor(AxisTwoVertexColors.Num(), [&](int32 i) {
 
+		DynamicMeshAxisTwo.SetVertexColor(i, FVector3f(AxisTwoVertexColors[i]));
 
-
-
-    for (int32 TriangleIndex = 0; TriangleIndex < DynamicMeshAxisTwo.TriangleCount(); ++TriangleIndex) {
-        UE::Geometry::FIndex3i TriangleVertexIndices = DynamicMeshAxisTwo.GetTriangle(TriangleIndex);
-        AxisTwoNormalOverlay->SetTriangle(TriangleIndex, TriangleVertexIndices);
-    }
-    for (int32 i = 0; i < AxisTwoVertexColors.Num(); ++i) {
-        DynamicMeshAxisTwo.SetVertexColor(i, FVector3f(AxisTwoVertexColors[i]));
-    }
+	}, EParallelForFlags::None);
     // Dont know what the 'CopyVertex' functions do but they seem work
-        }, TStatId(), nullptr, ENamedThreads::AnyHiPriThreadHiPriTask);
 
-    Taskx->Wait();
+
     // Somehow add color here?
     AxisTwoMesh->GetDynamicMesh()->SetMesh(MoveTemp(DynamicMeshAxisTwo));
     AxisTwoMesh->SetMaterial(0, BaseMaterial);
@@ -292,8 +297,7 @@ void AChunk::ApplyAxisTwo()
 }
 void AChunk::ApplyAxisThree()
 {
-    FGraphEventRef Taskx = FFunctionGraphTask::CreateAndDispatchWhenReady([&]()
-        {
+
 	TArray<int32> ColorAttributeIndices;
 	ColorAttributeIndices.SetNum(AxisThreeVertexColors.Num());
 
@@ -310,37 +314,37 @@ void AChunk::ApplyAxisThree()
 	UE::Geometry::FDynamicMeshColorOverlay* ColorOverlay = DynamicMeshAxisThree.Attributes()->PrimaryColors();
 
 	// Iterate over the base mesh triangles and set the color attribute indices for each triangle
-    for (int32 TriangleIndex = 0; TriangleIndex < DynamicMeshAxisThree.TriangleCount(); ++TriangleIndex) {
-		// Get the vertex indices of the current triangle
-		UE::Geometry::FIndex3i TriangleVertexIndices = DynamicMeshAxisThree.GetTriangle(TriangleIndex);
+    ParallelFor(DynamicMeshAxisThree.TriangleCount(), [&](int32 TriangleIndex) {
 
-		// Map the triangle vertex indices to the color attribute indices
-        UE::Geometry::FIndex3i ColorAttributeTriangleIndices(
-			ColorAttributeIndices[TriangleVertexIndices.A],
-			ColorAttributeIndices[TriangleVertexIndices.B],
-			ColorAttributeIndices[TriangleVertexIndices.C]
-		);
+    
+            // Get the vertex indices of the current triangle
+            UE::Geometry::FIndex3i TriangleVertexIndices = DynamicMeshAxisThree.GetTriangle(TriangleIndex);
 
-		// Set the color attribute indices for the current triangle
-		ColorOverlay->SetTriangle(TriangleIndex, ColorAttributeTriangleIndices);
-	}
+            // Map the triangle vertex indices to the color attribute indices
+            UE::Geometry::FIndex3i ColorAttributeTriangleIndices(
+                ColorAttributeIndices[TriangleVertexIndices.A],
+                ColorAttributeIndices[TriangleVertexIndices.B],
+                ColorAttributeIndices[TriangleVertexIndices.C]
+            );
 
-	// Copy the color overlay to the primary colors attribute
+            // Set the color attribute indices for the current triangle
+            ColorOverlay->SetTriangle(TriangleIndex, ColorAttributeTriangleIndices);
+
+            TriangleVertexIndices = DynamicMeshAxisThree.GetTriangle(TriangleIndex);
+            AxisThreeNormalOverlay->SetTriangle(TriangleIndex, TriangleVertexIndices);
+        }, EParallelForFlags::None);
+
+
 	DynamicMeshAxisThree.Attributes()->PrimaryColors()->Copy(*ColorOverlay);
 
- 
+    ParallelFor(AxisThreeVertexColors.Num(), [&](int32 i) {
 
-
-    for (int32 TriangleIndex = 0; TriangleIndex < DynamicMeshAxisThree.TriangleCount(); ++TriangleIndex) {
-        UE::Geometry::FIndex3i TriangleVertexIndices = DynamicMeshAxisThree.GetTriangle(TriangleIndex);
-        AxisThreeNormalOverlay->SetTriangle(TriangleIndex, TriangleVertexIndices);
-    }
-    for (int32 i = 0; i < AxisThreeVertexColors.Num(); ++i) {
         DynamicMeshAxisThree.SetVertexColor(i, FVector3f(AxisThreeVertexColors[i]));
-    }
-    // Dont know what the 'CopyVertex' functions do but they seem work
-        }, TStatId(), nullptr, ENamedThreads::AnyHiPriThreadHiPriTask);
-    Taskx->Wait();
+
+        }, EParallelForFlags::None);
+
+
+
 
     // Somehow add color here?
     AxisThreeMesh->SetMaterial(0, BaseMaterial);
@@ -475,154 +479,332 @@ void AChunk::BeginPlay()
 
 void AChunk::Tick(float DeltaTime)
 {
-    // Calculate the distance between this actor and the player
-    float DistanceToPlayer = FVector::Dist(PlayerPawn->GetActorLocation(), GetActorLocation());
-    // Increment your frame counter
-    frameCounter++;
-    if (frameCounter < 500) {
-        // Perform a portion of your logic here
-        if (frameCounter == 2) {
-            float TimeToDisplay1 = 5.0f; // Display the message for 5 seconds.
-            FColor DisplayColor1 = FColor::Red; // Display the message in red.
-            float WorldTime = GetWorld()->GetTimeSeconds();
-            FString DebugMessage = FString::Printf(TEXT("blocks"));
-            GenerateBlocks();
-        }
-        else if (frameCounter == 50) {
-          
-            GenerateMesh();
-        }
-        else if (frameCounter == 100) {
-            ApplyMesh();
-        }
-        else {
-			// PrimaryActorTick.bCanEverTick = false;
-		}   
-    }
+    globalTick++;
+    if (globalTick % 20 == 0) {
+        FVector playerLocation = PlayerPawn->GetActorLocation();
+        FVector actorLocation = GetActorLocation();
+        // Calculate the distance between this actor and the player
+        float distanceToPlayer = FVector::Dist(playerLocation, actorLocation);
+        ECompass directionOne;
+       // ECompass directionTwo;
 
-    // All rules on which biomes have which axis generated are located inside Enums.h
-
-    if (isApplyingMeshReady) 
-    {
-        meshCounter++;
-		  // Perform a portion of your logic here
-
-        if (!modifyingVoxel) {
-            if (meshCounter == 2) {
-                //GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Green, TEXT("Axis One"));
-                ApplyAxisOne();
-                axisOneGenerated = true;
-            }
-            if (meshCounter == 20) {
-                //GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Green, TEXT("Axis Two"));
-                ApplyAxisTwo();
-                axisTwoGenerated = true;
-            }
-            else if (meshCounter == 30 && !mountainBiome) {
-                //GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Green, TEXT("Axis Three"));
-                // Axis three reoresents the ground tiles and thus when generating a mountain biome do NOT need
-                // to be included from far away as its not ground tiles are not noticeable
-                ApplyAxisThree();
-                axisThreeGenerated = true;
-            }
-
-            // Below we basically want to keep track of whether all of a chunks's initial axis generated
-            // i.e. if a biome starts with axis 1 and 2 , 1 and 2 must be complete BEFORE we apply LOD generated to 3
-            if (axisOneGenerated && axisTwoGenerated && axisThreeGenerated && !initialAxisGenerated)
-            {
-                allAxisGenerated = true;
-            }
-            if (axisOneGenerated && axisTwoGenerated && !allAxisGenerated)
-            {
-                initialAxisGenerated = true;
-            }
-            if (axisTwoGenerated && axisThreeGenerated && !allAxisGenerated)
-            {
-                initialAxisGenerated = true;
-            }
-            if (axisOneGenerated && axisThreeGenerated && !allAxisGenerated)
-            {
-                initialAxisGenerated = true;
-            }
-            else if (meshCounter == 31) {
-                //StaticMeshConversion();
-            }
-        }// For modifying voxels
-        else {
-            if (meshCounter == 1) {
-                GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Green, TEXT("Axis One, modifying voxel"));
-                ApplyAxisOne();
-
-            }
-            if (meshCounter == 2) {
-                GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Green, TEXT("Axis Two, modifying voxel"));
-                ApplyAxisTwo();
-            }
-            else if (meshCounter == 3) {
-                GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Green, TEXT("Axis Three, modifying voxel"));
-                ApplyAxisThree();
-            }
-            // Here we will assume that no biome/chunk will ever only generate with only ONE initial chunk
-            // i.e. for all LOD calculations you can assume achunk will spawn with at least 2 axis
-
-            else if (meshCounter == 500) {
-                //StaticMeshConversion();
-            }
-        }
-	
-
-
-    if (PlayerPawn)
-    {
-        if (DistanceToPlayer <= 22000.0f && !allAxisGenerated && initialAxisGenerated)
+        if (PlayerPawn)
         {
-            if (!axisOneGenerated)
+
+
+            // Vector from the actor to the player
+            FVector Direction = playerLocation - actorLocation;
+            Direction.Normalize();
+
+            // Get the forward vector of the actor
+            FVector Forward = GetActorForwardVector();
+
+            // Calculate the angle between the actor's forward vector and the direction vector to the player
+            float DotProduct = FVector::DotProduct(Forward, Direction);
+            float AngleRadians = acosf(DotProduct);  // Get the angle in radians
+            float AngleDegrees = FMath::RadiansToDegrees(AngleRadians);  // Convert radians to degrees
+
+            // Determine the relative direction using the cross product to check if it is left or right
+            FVector CrossProduct = FVector::CrossProduct(Forward, Direction);
+            if (CrossProduct.Z < 0)
             {
-				ApplyAxisOne();
-			}
-            if (!axisTwoGenerated)
-            {
-                ApplyAxisTwo();
+                AngleDegrees = 360.0f - AngleDegrees;
             }
-            if (!axisThreeGenerated)
+
+            // Normalize the angle to a 0 - 360 range
+            AngleDegrees = FMath::Fmod(AngleDegrees + 360.0f, 360.0f);
+
+            // Determine if the player is in the North, South, East, or West sector
+         // Determine if the player is in the North, South, East, or West sector
+      // Determine if the player is in the North, South, East, or West sector
+
+            // 90 in first check affecs terrain
+            // leave 270
+
+            if ((AngleDegrees >= 270.0f && AngleDegrees <= 360.0f) || (AngleDegrees >= 0.0f && AngleDegrees < 25.0f))
             {
-				//ApplyAxisThree();
-                axisThreeGenerated = true;
-			}
-           allAxisGenerated = true;
+                directionOne = ECompass::North; 
+            }
+            if (AngleDegrees >= 25.0f && AngleDegrees < 170.0f)
+            {
+                directionOne = ECompass::East; 
+            }
+             if (AngleDegrees >= 170.0f && AngleDegrees < 225.0f)
+            {
+                directionOne = ECompass::South; 
+            }
+             if (AngleDegrees >= 225.0f && AngleDegrees < 360.0f)
+            {
+                directionOne = ECompass::West; 
+            }
+             if (AngleDegrees > 255 && AngleDegrees < 270) // Specific angle where both axis should be generated
+             {
+                 directionOne = ECompass::Other; // This case should not be hit now
+             }
+             if (AngleDegrees > 15 && AngleDegrees < 30) // Specific angle where both axis should be generated
+             {
+                 directionOne = ECompass::Other; // This case should not be hit now
+             }
+             if (AngleDegrees > 155 && AngleDegrees < 165) // Specific angle where both axis should be generated
+             {
+				 directionOne = ECompass::Other; // This case should not be hit now
+			 }
+        
         }
 
-        // Check if the player is within 5,000 units
-        if (DistanceToPlayer <= 15000.0f && !collisionActive)
+
+        frameCounter++;
+        if (frameCounter < 500 && !modifyingVoxel) {
+            // Perform a portion of your logic here
+            if (frameCounter == 2) {
+                float TimeToDisplay1 = 5.0f; // Display the message for 5 seconds.
+                FColor DisplayColor1 = FColor::Red; // Display the message in red.
+                float WorldTime = GetWorld()->GetTimeSeconds();
+                FString DebugMessage = FString::Printf(TEXT("blocks"));
+
+                GenerateBlocks();
+            }
+            else if (frameCounter == 15) {
+
+                GenerateMesh();
+            }
+            else if (frameCounter == 16) {
+                ApplyMesh();
+
+            }
+            else {
+                // PrimaryActorTick.bCanEverTick = false;
+            }
+        }
+
+        // All rules on which biomes have which axis generated are located inside Enums.h
+
+        if (isApplyingMeshReady)
         {
-            // The player is within 20,000 units, perform your action here
-            // For example, print a message to the screen
-            FString name = GetActorLabel();
-            GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Green, FString::Printf(TEXT("blocks coords: %s"),*name));
-            AxisOneMesh->SetCollisionResponseToAllChannels(ECollisionResponse::ECR_Block);
-            AxisOneMesh->SetCollisionEnabled(ECollisionEnabled::QueryAndPhysics);
-            AxisOneMesh->EnableComplexAsSimpleCollision();
-           // //AxisOneMesh->bEnableComplexCollision = true;
-          //  AxisOneMesh->bDeferCollisionUpdates = true;
-           // AxisOneMesh->SetGenerateOverlapEvents(true);
+            meshCounter++;
+            // Initial terrain generation
+            if (!modifyingVoxel) {
+                // Important thing here is that it does not generate the axis intiially unless player is facing that direction
 
-            AxisTwoMesh->SetCollisionResponseToAllChannels(ECollisionResponse::ECR_Block);
-            AxisTwoMesh->SetCollisionEnabled(ECollisionEnabled::QueryAndPhysics);
-            AxisTwoMesh->EnableComplexAsSimpleCollision();
-          //  AxisTwoMesh->bEnableComplexCollision = true;
-          //  AxisTwoMesh->bDeferCollisionUpdates = true;
-           // AxisTwoMesh->SetGenerateOverlapEvents(true);
 
-            AxisTwoMesh->SetCollisionResponseToAllChannels(ECollisionResponse::ECR_Block);
-            AxisThreeMesh->SetCollisionEnabled(ECollisionEnabled::QueryAndPhysics);
-            AxisThreeMesh->EnableComplexAsSimpleCollision();
-          //  AxisThreeMesh->bEnableComplexCollision = true;
-          //  AxisThreeMesh->bDeferCollisionUpdates = true;
-          //  AxisThreeMesh->SetGenerateOverlapEvents(true);
-            collisionActive = true;
+                if (distanceToPlayer < 80000.0f) {// Initial 'close' chunk generation
+
+                    // north south measurement needs to be increased
+                    if ((meshCounter > 2 && meshCounter < 10) && (directionOne == ECompass::North || directionOne == ECompass::South || directionOne == ECompass::Other)) {
+                        //GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Green, TEXT("Axis One"));
+                        if (meshCounter == 3 && !axisOneGenerated) {
+                            GenerateAxisOneMesh(false);
+                            axisOneGenerated = true;
+                        }
+                        if (meshCounter == 6 && !axisOneApplied) {
+                            ApplyAxisOne();
+                            axisOneApplied = true;
+
+                        }
+                    }
+                    if ((meshCounter > 12 && meshCounter < 18) && (directionOne == ECompass::East || directionOne == ECompass::West || directionOne == ECompass::Other)) {
+                        //GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Green, TEXT("Axis Two"));
+                        if (meshCounter == 13 && !axisTwoGenerated) {
+                            GenerateAxisTwoMesh(false);
+                            axisTwoGenerated = true;
+                        }
+                        if (meshCounter == 16 && !axisTwoApplied) {
+                            ApplyAxisTwo();
+                            axisTwoApplied = true;
+                        }
+                       
+                    }
+                    else if (meshCounter == 30 && !mountainBiome && !axisThreeGenerated) {
+                        // GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Green, TEXT("Axis Three initial generation"));
+                        // Axis three reoresents the ground tiles and thus when generating a mountain biome do NOT need
+                        // to be included from far away as its not ground tiles are not noticeable
+                        GenerateAxisThreeMesh();
+                        ApplyAxisThree();
+                        axisThreeGenerated = true;
+                        axisThreeApplied = true;
+                    }
+                }
+                else { // Initial far away generation
+                    if ((meshCounter > 2 && meshCounter < 10) && (directionOne == ECompass::North || directionOne == ECompass::South || directionOne == ECompass::Other)) {
+                        //GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Green, TEXT("Axis One"));
+                        if (meshCounter == 3 && !axisOneGenerated) {
+                            GenerateAxisOneMesh(false);
+                            axisOneGenerated = true;
+                        }
+                        if (meshCounter == 9 && !axisOneApplied) {
+                            ApplyAxisOne();
+                            axisOneApplied = true;
+
+                        }
+                    }
+                    if ((meshCounter > 12 && meshCounter < 18) && (directionOne == ECompass::East || directionOne == ECompass::West || directionOne == ECompass::Other)) {
+                        //GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Green, TEXT("Axis Two"));
+                        if (meshCounter == 13 && !axisTwoGenerated) {
+                            GenerateAxisTwoMesh(false);
+                            axisTwoGenerated = true;
+                        }
+                        if (meshCounter == 17 && !axisTwoApplied) {
+                            ApplyAxisTwo();
+                            axisTwoApplied = true;
+                        }
+
+                    }
+                    else if (meshCounter == 22 && !mountainBiome && !axisThreeGenerated) {
+                        // GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Green, TEXT("Axis Three initial generation"));
+                        // Axis three reoresents the ground tiles and thus when generating a mountain biome do NOT need
+                        // to be included from far away as its not ground tiles are not noticeable
+                        GenerateAxisThreeMesh();
+                        ApplyAxisThree();
+                        axisThreeGenerated = true;
+                        axisThreeApplied = true;
+                    }
+                }
+
+                // Below we basically want to keep track of whether all of a chunks's initial axis generated
+                // i.e. if a biome starts with axis 1 and 2 , 1 and 2 must be complete BEFORE we apply LOD generated to 3
+
+                // Below section after meshCounter check should be considered the LOD section for anything that needs to be done placed on
+                // player proximity AFTER all intial axis have generated
+                // Greater than meshCounter here is simply "are all chunks which should be initially generated done?"
+                if (meshCounter > 22) {
+                    if (distanceToPlayer <= 30000.0f)
+                    {
+                        if (!axisOneGenerated)
+                        {
+                            GenerateAxisOneMesh(false);
+                            axisOneGeneratedCounter = meshCounter;
+                            axisOneGenerated = true;
+                        }
+                        else if (!axisOneApplied && meshCounter - axisOneGeneratedCounter >= 15)
+                        {
+                            ApplyAxisOne();
+                            axisOneApplied = true;
+                        }
+
+                        if (!axisTwoGenerated)
+                        {
+                            GenerateAxisTwoMesh(false);
+                            axisTwoGeneratedCounter = meshCounter;
+                            axisTwoGenerated = true;
+                        }
+                        else if ( !axisTwoApplied && meshCounter - axisTwoGeneratedCounter >= 15)
+                        {
+                            ApplyAxisTwo();
+                            axisTwoApplied = true;
+                        }
+
+                        if (!axisThreeGenerated)
+                        {
+                           // GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Green, TEXT("Axis Three LOD generation"));
+                            // Do work to generate data for axis three
+                            GenerateAxisThreeMesh();
+                            axisThreeGeneratedCounter = meshCounter;
+                            axisThreeGenerated = true;
+                        }
+                        else if (!axisThreeApplied && meshCounter - axisThreeGeneratedCounter >= 15)
+                        {
+                            ApplyAxisThree();
+                            axisThreeApplied = true;
+                        }
+
+                        if (axisOneApplied && axisTwoApplied && axisThreeApplied)
+                        {
+                            allAxisGenerated = true;
+                        }
+                    }
+                    else {// Far away chunks whose faces need to be updated based on how far away the player is
+                        if (!axisOneGenerated && (directionOne == ECompass::North || directionOne == ECompass::South || directionOne == ECompass::Other))
+                        {
+                            GenerateAxisOneMesh(false);
+                            ApplyAxisOne();
+                            axisOneGenerated = true;
+                            axisOneApplied = true;
+                        }
+                        if (!axisTwoGenerated && (directionOne == ECompass::East || directionOne == ECompass::West || directionOne == ECompass::Other))
+                        {
+                            GenerateAxisTwoMesh(false);
+                            ApplyAxisTwo();
+                            axisTwoGenerated = true;
+                            axisTwoApplied = true;
+                        }
+                        if (!axisThreeGenerated && (directionOne == ECompass::North || directionOne == ECompass::South || directionOne == ECompass::Other))
+                        {
+                            // Do work to generate data for axis three
+                            //GenerateAxisThreeMesh();DONT UNCOMMN
+                            //ApplyAxisThree();
+                            //axisThreeGenerated = true;
+                        }
+                        allAxisGenerated = true;
+                    }
+                    if (distanceToPlayer <= 70000.0f && !shadowsActive)
+                    {
+                        AxisOneMesh->SetCastShadow(true);
+                        AxisTwoMesh->SetCastShadow(true);
+                        shadowsActive = true;
+                    }
+                    if (distanceToPlayer <= 50000.0f && !objectsSpawned)
+                    {
+                        SpawnTrees();
+                        objectsSpawned = true;
+                    }
+                    if (distanceToPlayer <= 16000.0f)
+                    {
+                      
+                        // The player is within 20,000 units, perform your action here
+                        // For example, print a message to the screen
+                        FString name = GetActorLabel();
+                        //GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Green, FString::Printf(TEXT("blocks coords: %s"), *name));
+                       // AxisOneMesh->SetCollisionResponseToAllChannels(ECollisionResponse::ECR_Block);
+                       // AxisOneMesh->SetCollisionEnabled(ECollisionEnabled::QueryAndPhysics);
+                       // AxisOneMesh->EnableComplexAsSimpleCollision();
+                       // // //AxisOneMesh->bEnableComplexCollision = true;
+                       ////  AxisOneMesh->bDeferCollisionUpdates = true;
+                       // // AxisOneMesh->SetGenerateOverlapEvents(true);
+
+                       // AxisTwoMesh->SetCollisionResponseToAllChannels(ECollisionResponse::ECR_Block);
+                       // AxisTwoMesh->SetCollisionEnabled(ECollisionEnabled::QueryAndPhysics);
+                       // AxisTwoMesh->EnableComplexAsSimpleCollision();
+                        //  AxisTwoMesh->bEnableComplexCollision = true;
+                        //  AxisTwoMesh->bDeferCollisionUpdates = true;
+                         // AxisTwoMesh->SetGenerateOverlapEvents(true);
+
+                        AxisThreeMesh->SetCollisionResponseToAllChannels(ECollisionResponse::ECR_Block);
+                        AxisThreeMesh->SetCollisionEnabled(ECollisionEnabled::QueryAndPhysics);
+                        AxisThreeMesh->EnableComplexAsSimpleCollision();
+                        //  AxisThreeMesh->bEnableComplexCollision = true;
+                        //  AxisThreeMesh->bDeferCollisionUpdates = true;
+                        //  AxisThreeMesh->SetGenerateOverlapEvents(true);
+                        collisionActive = true;
+              
+                    }
+                }
+                else if (meshCounter == 31) {
+                    //StaticMeshConversion();
+                }
+            }// For modifying voxels
+            else {
+                if (meshCounter == 1) {
+                    GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Green, TEXT("Axis One, modifying voxel"));
+                    ApplyAxisOne();
+
+                }
+                if (meshCounter == 2) {
+                    GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Green, TEXT("Axis Two, modifying voxel"));
+                    ApplyAxisTwo();
+                }
+                else if (meshCounter == 3) {
+                    GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Green, TEXT("Axis Three, modifying voxel"));
+                    ApplyAxisThree();
+                }
+                // Here we will assume that no biome/chunk will ever only generate with only ONE initial chunk
+                // i.e. for all LOD calculations you can assume achunk will spawn with at least 2 axis
+
+                else if (meshCounter == 500) {
+                    //StaticMeshConversion();
+                }
+            }
         }
     }
-}
 }
  
 
@@ -735,6 +917,7 @@ void AChunk::SetupBiomeNoise()
        //	}
        //}
 }
+
 float AChunk::QueryNoiseValue(const std::vector<float>& noiseOutput, int x, int y, int z, int Width, int Depth) {
 
 
@@ -745,13 +928,19 @@ float AChunk::QueryNoiseValue(const std::vector<float>& noiseOutput, int x, int 
     return noiseOutput[index];
 }
 
-int AChunk::generateRandomNumber(int min, int max) {
-    // Static to initialize the random engine and distribution once
-    static std::random_device rd; // Seed with a real random value, if available
-    static std::minstd_rand rng(rd());
-    static std::uniform_int_distribution<int> uni(min, max); // Define the range
+int AChunk::GenerateRandomNumber(int min, int max) {
+    static std::mt19937 rng(12345);  // Static ensures the rng is only initialized once with a fixed seed
+    std::uniform_int_distribution<int> uni(min, max);
+    return uni(rng);
+}
 
-    return uni(rng); // Generate a random number
+float AChunk::GenerateRandomDeterministicFloat(int uniqueId) {
+    // Use the unique ID as the seed for the random number generator
+    std::mt19937 rng(uniqueId);
+    std::uniform_real_distribution<float> dist(0.0f, 1.0f);  // Range between 0 and 1
+
+    // Generate a random float
+    return dist(rng);
 }
 void AChunk::GenerateBlocks()
 {
@@ -894,7 +1083,7 @@ void AChunk::GenerateBlocks()
                             float normalizedNoise = (combinedNoise + 1) / 2.0f;
                             float curvedNoise = FMath::Pow(normalizedNoise, 2);
                             int index = x + y * Size + z * Size * Size;
-                            biomeNumbers[index] = EBiome::Mountain;
+                            biomeNumbers[index] = EBiome::Plains;
                             NoiseMap[index]= curvedNoise * actualHeight;
                         }
 
@@ -910,21 +1099,24 @@ void AChunk::GenerateBlocks()
         }, EParallelForFlags::None);
 
 
+    // Ensures that there is suitable gap between the trees
+    int previousTreeIteration = 0;
+
     //float combinedNoise;
     TArray<TFunction<void()>> BlockOperations;
     //ParallelFor(Size, [&](int32 x) {
    for (int x = 0; x < Size; x++){
-       BlockOperations.Add([=, &NoiseMap,&biomeNumbers]()
+       BlockOperations.Add([=, &NoiseMap,&biomeNumbers, &previousTreeIteration]()
            {
          for (int y = 0; y < Size; ++y) 
          {
             for (int z = 0; z < VerticalHeight; z++)
             {
-              
+                float worldXpos = (x * 100 + Location.X) / 100;
+                float worldYpos = (y * 100 + Location.Y) / 100;
                 int Index = x + y * Size + z * Size * Size;
                 int height = static_cast<int>(NoiseMap[Index]);
                 EBiome biomeType = biomeNumbers[Index];
-                biomeType = EBiome::Plains;
                 EBlock BlockType = EBlock::Air;
 
                 // Make mountains be made of stone
@@ -934,6 +1126,29 @@ void AChunk::GenerateBlocks()
                     }
                     if (biomeType == EBiome::Plains) {
                         BlockType = EBlock::Grass;
+                        // Say we want to spawn trees inside the plains biome
+                        // Here we need to keep track of valid x y z locations
+                        // and then convert that loc to world pos
+                        // and then spawn the tree
+                        float randomFloat = GenerateRandomDeterministicFloat(x + y + z);
+                        int randNumber = randomFloat * 100;
+                        int randNumberTwo = (randomFloat * 50) + 1;
+                        if (randNumber % randNumberTwo == 0)
+                        {
+                         
+                            if (treeCount < 2 && x > previousTreeIteration + 10) {
+                                if (Location.X != 0 && Location.Y != 0)
+                                {
+                                    if (x != 0 && y != 0 && z != 0) {
+                                        FVector treeLocation = Location + FVector(x * 100, y * 100, (z + 1) * 100);
+                                        treeLocations[treeCount] = treeLocation;
+                                        treeCount++;
+                                        previousTreeIteration = x;
+                                        UE_LOG(LogTemp, Display, TEXT("Tree location: %s"), *treeLocation.ToString());
+                                    }
+								}
+                            }
+						}
                     }
        
                     // Increasing the value that verticalheight is divided by will lower the beginning point of the transition
@@ -943,7 +1158,7 @@ void AChunk::GenerateBlocks()
                     if (z >= (VerticalHeight / 4) && z <= height) {
                            
                             // Make top of mountains inside transition biome be snow
-                             if (biomeNumber == 1.5f) {
+                             if (biomeType == EBiome::Mountain_Plains) {
 
                                 // Consider adding extra check here, lagre area of transition biome is just stone
                                 // and has no need for any of the transiiont logic?
@@ -956,10 +1171,10 @@ void AChunk::GenerateBlocks()
 
                                 // Adjust the transition factor using a sine wave for a more natural look
                                 // Inrease 3.0 to to increase the number of stone blocks that appear in the snow area
-                               // transitionFactor = FMath::Sin(transitionFactor * PI / 2.15f);
+                                transitionFactor = std::sin(transitionFactor * PI / 2.15f);
 
                                 // Randomly choose between snow and grass based on the transition factor
-                                if (2 < transitionFactor) {
+                                if (GenerateRandomDeterministicFloat(Index) < transitionFactor) {
                                     // Secondary block i.e. secondary block
                                     BlockType = EBlock::SnowGrass;
                                 }
@@ -974,27 +1189,18 @@ void AChunk::GenerateBlocks()
                         // Make top of mountain be snow
                      
                         // Make top of mountains inside transition biome be snow
-                         if (biomeNumber == 1.5f) {
+                         if (biomeType == EBiome::Mountain_Plains) {
 
-                         //    Consider adding extra check here, lagre area of transition biome is just stone
-                           //  and has no need for any of the transiiont logic?
-
-                            // Calculate the height difference between the current block and the transition point
                             float heightDifference = static_cast<float>(z - (VerticalHeight / 5));
                             if (heightDifference == 0) {
 								heightDifference = 1;
 							}
-
-                            // Use a simple linear interpolation to determine the block type
-                            float transitionFactor = heightDifference / (height - (VerticalHeight / 5));
                            
-
-                            // Adjust the transition factor using a sine wave for a more natural look
-                            // Increase the value of the denominator of the sine function increases the frequence of the secondary block
-                          //  transitionFactor = FMath::Sin(transitionFactor * PI / 2.5f);
+                            float transitionFactor = heightDifference / (height - (VerticalHeight / 5));
+                            transitionFactor = std::sin(transitionFactor * PI / 2.5f);
 
                             // Randomly choose between snow and grass based on the transition factor
-                            if (2 < transitionFactor) {
+                            if (GenerateRandomDeterministicFloat(Index) < transitionFactor) {
                                 BlockType = EBlock::Stone;
                             }
                             else {
@@ -1004,23 +1210,15 @@ void AChunk::GenerateBlocks()
                     }
                     // Block logic for bottom /'right' section of transition biome
                     else if (z < (VerticalHeight / 5) && z > 20) {
-                        if (biomeNumber == 1.5f) {
-                            // Consider adding extra check here, lagre area of transition biome is just stone
-                           // and has no need for any of the transiiont logic?
-
-                           // Calculate the height difference between the current block and the transition point
+                        if (biomeType == EBiome::Mountain_Plains) {
+                          
                             float heightDifference = static_cast<float>(z - (VerticalHeight / 5));
 
-                            // Use a simple linear interpolation to determine the block type
                             float transitionFactor = heightDifference / (height - (VerticalHeight / 5));
+                           
+                            transitionFactor = std::sin(transitionFactor * PI / 3.0f);
 
-                            // Adjust the transition factor using a sine wave for a more natural look
-                            // Inrease 3.0 to to increase the number of stone blocks that appear in the snow area,
-                            // at a high enough value the secondary block will essentially become the primary block
-                           // transitionFactor = FMath::Sin(transitionFactor * PI / 3.0f);
-
-                            // Randomly choose between snow and grass based on the transition factor
-                            if (2 < transitionFactor) {
+                            if (GenerateRandomDeterministicFloat(Index) < transitionFactor) {
                                 // primary
                                 BlockType = EBlock::Grass;
                             }
@@ -1066,15 +1264,18 @@ void AChunk::GenerateBlocks()
     delete biomeNoiseMap;
 }
 
-void AChunk::RespawnTrees() {
-    FRotator TreeSpawnRotation = FRotator::ZeroRotator;
-    FActorSpawnParameters TreeSpawnParams;
-    TreeSpawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::DontSpawnIfColliding;
-    for (int i = 0; i < Trees.Num(); i++) {
-        //UE_LOG(LogTemp, Warning, TEXT("Respawning trees"));
-        actorData myActorData = Trees[i];
 
-        AActor* NewTreeActor = GetWorld()->SpawnActor<AActor>(MyTreeBPClass, myActorData.Location, myActorData.Rotation, TreeSpawnParams);
+void AChunk::SpawnTrees()
+{
+    for (const FVector& treeLocation : treeLocations)
+    {
+        if (treeLocation.X != 0 && treeLocation.Y != 0 && treeLocation.Z != 0 && treeLocation.Z > 800 && treeLocation.Z < 4000) {
+            // Generate a random yaw rotation
+            float RandomYaw = GenerateRandomDeterministicFloat(treeLocation.X + treeLocation.Y + treeLocation.Z) * 360.0f;
+            FRotator RandomRotation(0.0f, RandomYaw, 0.0f);  // Only rotate around the Z-axis (yaw)
+            SpawnActorAtLocation(treeLocation.X, treeLocation.Y, treeLocation.Z, MyTreeBPClass, RandomRotation);
+        }
+    
     }
 }
 
@@ -1125,7 +1326,7 @@ bool AChunk::CompareMask(FMask M1, FMask M2) const
 
 
 
-FColor AChunk::GetColorFromBlock(EBlock Block, FIntVector Location)
+FColor AChunk::GetColorFromBlock(EBlock Block, FIntVector Location, int iteration)
 {
     // Convert FIntVector to FVector for noise calculation
     //FVector ConvertedLocation = FVector(Location.X, Location.Y, Location.Z) * 0.1f; // Scale to adjust frequency
@@ -1144,6 +1345,8 @@ FColor AChunk::GetColorFromBlock(EBlock Block, FIntVector Location)
     case EBlock::Stone:
     {
              // Map the normalized noise value to different shades of grey
+        FVector ConvertedLocation = FVector(Location.X, Location.Y, Location.Z) * 0.1f; // Scale to adjust frequency
+        NoiseValue = GenerateRandomDeterministicFloat(Location.X + Location.Y + Location.Z);
     if (NoiseValue < 0.33f)
     {
         FColor DarkerGrey = FColor::FromHex("#4B4B4B");
@@ -1171,19 +1374,22 @@ FColor AChunk::GetColorFromBlock(EBlock Block, FIntVector Location)
         case EBlock::Sand:
         return FColor::FromHex("#DFFF00");//blue temporarily to test river
         break;
-    case EBlock::Grass:
-    {
-        // Define two shades of green for grass
-        FLinearColor BaseGreen = FLinearColor::FromSRGBColor(FColor::FromHex("#0B6623")); // A nice grass green
-        FLinearColor LighterGreen = FLinearColor::FromSRGBColor(FColor::FromHex("#5aaa18")); // A slightly lighter lime green
+  case EBlock::Grass:
+{
+    // Convert FIntVector to FVector for noise calculation
+    // Only use X and Y components for 2D noise
+      FVector ConvertedLocation = FVector(Location.X, Location.Y, Location.Z) * 0.1f; // Scale to adjust frequency
+      NoiseValue = FMath::PerlinNoise3D(ConvertedLocation);
 
-        // Smoothly transition between the two shades based on noise value
-        FLinearColor ResultingColor = FMath::Lerp(BaseGreen, LighterGreen, NoiseValue/3);
 
-        // Convert back to FColor if necessary
-        return ResultingColor.ToFColor(true);
+    // Smoothly transition between the two shades based on noise value
+    // Normalize NoiseValue to be between 0 and 1 if not already (Perlin noise typically returns values in a range around [0, 1])
+    //float NormalizedNoiseValue = (NoiseValue + 1.0f) / 2.0f;  // Adjust this line if the noise range is different
+    FLinearColor ResultingColor = FMath::Lerp(BaseGreen, LighterGreen, NoiseValue/6);
 
-    }
+    // Convert back to FColor if necessary
+    return ResultingColor.ToFColor(true);
+}
     case EBlock::SnowGrass:
         return FColor::FromHex("#F3F6FB");
         break;
@@ -1218,19 +1424,24 @@ void AChunk::GenerateMesh()
     AxisTwoUVOverlay = DynamicMeshAxisTwo.Attributes()->PrimaryUV();
     AxisTwoNormalOverlay = DynamicMeshAxisTwo.Attributes()->PrimaryNormals();
 
-
     DynamicMeshAxisThree.EnableAttributes();
     DynamicMeshAxisThree.EnableVertexUVs(FVector2f::Zero());
     DynamicMeshAxisThree.Attributes()->EnablePrimaryColors();
     DynamicMeshAxisThree.EnableVertexNormals(FVector3f::Zero());
     AxisThreeUVOverlay = DynamicMeshAxisThree.Attributes()->PrimaryUV();
     AxisThreeNormalOverlay = DynamicMeshAxisThree.Attributes()->PrimaryNormals();
+  
+
 
 
     int iterationCount = 0;
     iterationCount++;
     ParallelFor(3, [&](int32 Axis)
         {
+            if (Axis == 2 || Axis == 0 || Axis == 1)
+                return;
+
+
             bool doubleAir = false;
 
             const int Axis1 = (Axis + 1) % 3;
@@ -1363,6 +1574,7 @@ void AChunk::GenerateMesh()
 
                         for (int i = 0; i < Axis1Limit; )
                         {
+                      
 
                             //need to test localN with a normal loop to see if calculation is correct but multiyhreading is causing issues
                             int localN = j * Axis1Limit + i;
@@ -1443,88 +1655,93 @@ void AChunk::GenerateMesh()
     TArray<FGraphEventRef> Tasks;
 
 
-    // 2 threads per aixs? one thread does one half of arrays one thread does the other half, so one thread for axis one would ot trianbles and color
-    // and other thread could do normal uv something like that? would have to  makre sure everythgin was applied in correct order
-
-    FGraphEventRef TaskOne = FFunctionGraphTask::CreateAndDispatchWhenReady([&]()
-       {
-            FQuadData QuadData;
-            while (QuadDataQueueOne.Dequeue(QuadData))
+    // Multithreaded for intial generation and NOT multithreaded for modifying voxel as that causes errors for some reason
+    if (!modifyingVoxel) {
+        FGraphEventRef TaskOne = FFunctionGraphTask::CreateAndDispatchWhenReady([=]()
             {
-                CreateQuadOne(QuadData.CurrentMask, QuadData.AxisMask,
-                    QuadData.ChunkItr,
-                    QuadData.ChunkItr + QuadData.DeltaAxis1,
-                    QuadData.ChunkItr + QuadData.DeltaAxis2,
-                    QuadData.ChunkItr + QuadData.DeltaAxis1 + QuadData.DeltaAxis2,
-                    QuadData.Block);
-            }
-
-
-
-       }, TStatId(), nullptr, ENamedThreads::BackgroundThreadPriority);
-   
-
- /*   ParallelFor(QuadDataArrayOne.Num(), [&](int32 Index)
+               /* int iteration = 0;
+             
+                FQuadData QuadData;
+                while (QuadDataQueueOne.Dequeue(QuadData))
+                {
+                    iteration++;
+                    CreateQuadOne(QuadData.CurrentMask, QuadData.AxisMask,
+                        QuadData.ChunkItr,
+                        QuadData.ChunkItr + QuadData.DeltaAxis1,
+                        QuadData.ChunkItr + QuadData.DeltaAxis2,
+                        QuadData.ChunkItr + QuadData.DeltaAxis1 + QuadData.DeltaAxis2,
+                        QuadData.Block,iteration);
+                }*/
+            }, TStatId(), nullptr, ENamedThreads::BackgroundThreadPriority);
+    }
+    else {
+        int iterationQuadOne = 0;
+        FQuadData QuadData;
+        while (QuadDataQueueOne.Dequeue(QuadData))
         {
-			CreateQuadOne(QuadDataArrayOne[Index].CurrentMask, QuadDataArrayOne[Index].AxisMask,
-            				QuadDataArrayOne[Index].ChunkItr,
-                            QuadDataArrayOne[Index].ChunkItr + QuadDataArrayOne[Index].DeltaAxis1,
-                            QuadDataArrayOne[Index].ChunkItr + QuadDataArrayOne[Index].DeltaAxis2,
-                            QuadDataArrayOne[Index].ChunkItr + QuadDataArrayOne[Index].DeltaAxis1 + QuadDataArrayOne[Index].DeltaAxis2,
-                            QuadDataArrayOne[Index].Block);
-		}, EParallelForFlags::BackgroundPriority);*/
+            iterationQuadOne++;
+            CreateQuadOne(QuadData.CurrentMask, QuadData.AxisMask,
+                QuadData.ChunkItr,
+                QuadData.ChunkItr + QuadData.DeltaAxis1,
+                QuadData.ChunkItr + QuadData.DeltaAxis2,
+                QuadData.ChunkItr + QuadData.DeltaAxis1 + QuadData.DeltaAxis2,
+                QuadData.Block,iterationQuadOne);
+        }
+    }
+
+
 
 
             
            
-    FGraphEventRef TaskTwo = FFunctionGraphTask::CreateAndDispatchWhenReady([&]()
-        {
-             FQuadData QuadData;
-            while (QuadDataQueueTwo.Dequeue(QuadData))
-            {
-               
-                CreateQuadTwo(QuadData.CurrentMask, QuadData.AxisMask,
-                    QuadData.ChunkItr,
-                    QuadData.ChunkItr + QuadData.DeltaAxis1,
-                    QuadData.ChunkItr + QuadData.DeltaAxis2,
-                    QuadData.ChunkItr + QuadData.DeltaAxis1 + QuadData.DeltaAxis2,
-                    QuadData.Block);
-            }
-       }, TStatId(), nullptr, ENamedThreads::BackgroundThreadPriority);
+    //FGraphEventRef TaskTwo = FFunctionGraphTask::CreateAndDispatchWhenReady([&]()
+    //    {
+    //        int iterationQuadTwo = 0;
+    //         FQuadData QuadData;
+    //        while (QuadDataQueueTwo.Dequeue(QuadData))
+    //        {
+    //            iterationQuadTwo++;
+    //            CreateQuadTwo(QuadData.CurrentMask, QuadData.AxisMask,
+    //                QuadData.ChunkItr,
+    //                QuadData.ChunkItr + QuadData.DeltaAxis1,
+    //                QuadData.ChunkItr + QuadData.DeltaAxis2,
+    //                QuadData.ChunkItr + QuadData.DeltaAxis1 + QuadData.DeltaAxis2,
+    //                QuadData.Block,iterationQuadTwo);
+    //        }
+    //   }, TStatId(), nullptr, ENamedThreads::BackgroundThreadPriority);
    
 
-   // FGraphEventRef Taskx = FFunctionGraphTask::CreateAndDispatchWhenReady([&]()
-   //       {
- 
-            FQuadData QuadData;
 
+
+           /* int iterationQuadThree = 0;
+            FQuadData QuadData;
+            
             while (QuadDataQueueThree.Dequeue(QuadData))
             {
-               
+                iterationQuadThree++;
                 CreateQuadThree(QuadData.CurrentMask, QuadData.AxisMask,
                     QuadData.ChunkItr,
                     QuadData.ChunkItr + QuadData.DeltaAxis1,
                     QuadData.ChunkItr + QuadData.DeltaAxis2,
                     QuadData.ChunkItr + QuadData.DeltaAxis1 + QuadData.DeltaAxis2,
-                    QuadData.Block);
-            }
+                    QuadData.Block,iterationQuadThree);
+            }*/
 
-            //   }, TStatId(), nullptr, ENamedThreads::GameThread);
-
+        
     finishedCreateQuad = true;
 
 }
 
-void AChunk::CreateQuadOne(FMask Mask, FIntVector AxisMask, FIntVector V1, FIntVector V2, FIntVector V3, FIntVector V4, EBlock Block)
+void AChunk::CreateQuadOne(FMask Mask, FIntVector AxisMask, FIntVector V1, FIntVector V2, FIntVector V3, FIntVector V4, EBlock Block,int iteration)
 {
 
     FScopeLock Lock(&CreateQuadLockOne);
     const auto Normal = FVector(AxisMask * Mask.Normal);
-
+    
 
 
     EBlock BlockMaterial = Mask.Block;
-    FColor BlockColor = GetColorFromBlock(BlockMaterial, V1);
+    FColor BlockColor = GetColorFromBlock(BlockMaterial, V1, iteration);
     //DynamicMeshOne.AppendVertex(FVector3d(AxisOneVertexData[i]));
 
  
@@ -1588,7 +1805,7 @@ void AChunk::CreateQuadOne(FMask Mask, FIntVector AxisMask, FIntVector V1, FIntV
     Lock.Unlock();
 
 }
-void AChunk::CreateQuadTwo(FMask Mask, FIntVector AxisMask, FIntVector V1, FIntVector V2, FIntVector V3, FIntVector V4, EBlock Block)
+void AChunk::CreateQuadTwo(FMask Mask, FIntVector AxisMask, FIntVector V1, FIntVector V2, FIntVector V3, FIntVector V4, EBlock Block,int iteration)
 {
 
     FScopeLock Lock(&CreateQuadLockTwo);
@@ -1596,7 +1813,7 @@ void AChunk::CreateQuadTwo(FMask Mask, FIntVector AxisMask, FIntVector V1, FIntV
 
 
     EBlock BlockMaterial = Mask.Block;
-    FColor BlockColor = GetColorFromBlock(BlockMaterial, V1);
+    FColor BlockColor = GetColorFromBlock(BlockMaterial, V1, iteration);
 
   
     DynamicMeshAxisTwo.AppendVertex(FVector3d(FVector(V1) * 100));
@@ -1662,14 +1879,14 @@ void AChunk::CreateQuadTwo(FMask Mask, FIntVector AxisMask, FIntVector V1, FIntV
     Lock.Unlock();
 
 }
-void AChunk::CreateQuadThree(FMask Mask, FIntVector AxisMask, FIntVector V1, FIntVector V2, FIntVector V3, FIntVector V4, EBlock Block)
+void AChunk::CreateQuadThree(FMask Mask, FIntVector AxisMask, FIntVector V1, FIntVector V2, FIntVector V3, FIntVector V4, EBlock Block,int iteration)
 {
 
     FScopeLock Lock(&CreateQuadLockThree);
     const auto Normal = FVector(AxisMask * Mask.Normal);
 
     EBlock BlockMaterial = Mask.Block;
-    FColor BlockColor = GetColorFromBlock(BlockMaterial, V1);
+    FColor BlockColor = GetColorFromBlock(BlockMaterial, V1,iteration);
 
 
  
@@ -1732,6 +1949,744 @@ void AChunk::CreateQuadThree(FMask Mask, FIntVector AxisMask, FIntVector V1, FIn
     AxisThreeVertexCount += 4;
     Lock.Unlock();
 
+}
+
+
+
+
+void AChunk::GenerateAxisOneMesh(bool levelZeroLOD)
+{
+
+
+    if (levelZeroLOD)
+        halfGenerated = true;
+
+    DynamicMeshAxisOne.EnableAttributes();
+    DynamicMeshAxisOne.EnableVertexUVs(FVector2f::Zero());
+    DynamicMeshAxisOne.Attributes()->EnablePrimaryColors();
+    DynamicMeshAxisOne.EnableVertexNormals(FVector3f::Zero());
+    AxisOneUVOverlay = DynamicMeshAxisOne.Attributes()->PrimaryUV();
+    AxisOneNormalOverlay = DynamicMeshAxisOne.Attributes()->PrimaryNormals();
+
+    FGraphEventRef Taskx = FFunctionGraphTask::CreateAndDispatchWhenReady([&]()
+            {
+               
+
+     
+         
+            // Set to zero so its axis one
+            int Axis = 0;
+            bool doubleAir = false;
+
+            const int Axis1 = (Axis + 1) % 3;
+            const int Axis2 = (Axis + 2) % 3;
+
+            int MainAxisLimit = (Axis == 2 ? VerticalHeight : Size);
+            int Axis1Limit = (Axis1 == 2 ? VerticalHeight : Size);
+            int Axis2Limit = (Axis2 == 2 ? VerticalHeight : Size);
+
+            auto DeltaAxis1 = FIntVector::ZeroValue;
+            auto DeltaAxis2 = FIntVector::ZeroValue;
+
+            auto ChunkItr = FIntVector::ZeroValue;
+            auto AxisMask = FIntVector::ZeroValue;
+            auto XOneVector = FIntVector(1, 0, 0);
+            auto YOneVector = FIntVector(0, 1, 0);
+            auto ZOneVector = FIntVector(0, 0, 1);
+
+            auto NegativeXOneVector = FIntVector(-1, 0, 0);
+            auto NegativeYOneVector = FIntVector(0, -1, 0);
+            auto NegativeZOneVector = FIntVector(0, 0, -1);
+            TArray<FIntVector> checkVectors = { XOneVector, NegativeXOneVector, YOneVector, NegativeYOneVector, ZOneVector, NegativeZOneVector };
+            AxisMask[Axis] = 1;
+
+            TArray<FMask> Mask;
+            Mask.SetNumUninitialized(Axis1Limit * Axis2Limit);
+
+            // check each slice
+            //convert the below loop into a parallel for loop
+
+
+            for (ChunkItr[Axis] = -1; ChunkItr[Axis] < MainAxisLimit; )
+            {
+
+                bool skipBlock = true;
+                for (const auto& checkVector : checkVectors)
+                {
+                    const auto& CurrentBlock = GetBlock(ChunkItr + checkVector);
+                    const auto& CompareBlock = GetBlock(ChunkItr + checkVector + AxisMask);
+                    if (outOfBounds) {
+                        skipBlock = false;
+                        outOfBounds = false;
+                        break;
+                    }
+                    if (!(CurrentBlock == EBlock::Air && CompareBlock == EBlock::Air))
+                    {
+
+                        skipBlock = false;
+                        break; // Exit early if any surrounding block is not air
+                    }
+                }
+                if (skipBlock)
+                {
+                    //UE_LOG(LogTemp, Warning, TEXT("Skipping block"));
+                    ChunkItr[Axis]++; // Increment here to ensure the loop progresses
+                    continue; // Skip further processing for this iteration
+                }
+
+                int N = 0;
+
+
+                ParallelFor(Axis2Limit, [&](int32 Axis2Index)
+                    {
+                        FMask Result;
+                        TArray<FMask> LocalMask;
+                        LocalMask.SetNumUninitialized(Axis1Limit);
+
+                        auto LocalChunkItr = ChunkItr;
+                        LocalChunkItr[Axis2] = Axis2Index;
+
+                        for (int Axis1Index = 0; Axis1Index < Axis1Limit; ++Axis1Index)
+                        {
+                            LocalChunkItr[Axis1] = Axis1Index;
+                            // Add something here which checks out of bounds, to prevent the 'ground faces' from generatnig, may improve perforamce?
+                            auto CurrentBlock = GetBlock(LocalChunkItr);
+                            auto CompareBlock = GetBlock(LocalChunkItr + AxisMask);
+
+                            /*
+                                       if (outOfBounds && CurrentBlock == EBlock::Stone)
+                                       {
+                                           CompareBlock = EBlock::Stone;
+
+                                           outOfBounds = false;
+                                       }*/
+
+                            const bool CurrentBlockOpaque = CurrentBlock != EBlock::Air;
+                            const bool CompareBlockOpaque = CompareBlock != EBlock::Air;
+
+
+                            if (CurrentBlockOpaque == CompareBlockOpaque)
+                            {
+                                Result = FMask{ EBlock::Null, 0 };
+                            }
+                            else if (CurrentBlockOpaque)
+                            {
+                                Result = FMask{ CurrentBlock, 1 };
+                            }
+                            else
+                            {
+                                Result = FMask{ CompareBlock, -1 };
+                            }
+
+                            // Assuming Mask is not accessed concurrently or using thread-safe mechanism
+                            LocalMask[Axis1Index] = Result;
+                        }
+                        for (int Axis1Index = 0; Axis1Index < Axis1Limit; ++Axis1Index)
+                        {
+                            // Calculate the global index for Mask array
+                            int globalIndex = Axis2Index * Axis1Limit + Axis1Index;
+                            Mask[globalIndex] = LocalMask[Axis1Index];
+                        }
+                        // Merge local results into global Mask here
+                        // Ensure this is done in a thread-safe manner
+                    }, EParallelForFlags::None); // Adjust flags as needed
+
+
+                ++ChunkItr[Axis];
+            
+                for (int j = 0; j < Axis2Limit; j++)
+                {
+
+                    for (int i = 0; i < Axis1Limit; )
+                    {
+
+
+                        //need to test localN with a normal loop to see if calculation is correct but multiyhreading is causing issues
+                        int localN = j * Axis1Limit + i;
+                        if (Mask[localN].Normal != 0)
+                        {
+                            const auto CurrentMask = Mask[localN];
+                            ChunkItr[Axis1] = i;
+                            ChunkItr[Axis2] = j;
+
+                            int width = 1;
+                            int height;
+                            bool done = false;
+                            for (height = 1; j + height < Axis2Limit; ++height)
+                            {
+                                for (int k = 0; k < width; ++k)
+                                {
+                                    int index = (j + height) * Axis1Limit + (i + k);
+                                    if (CompareMask(Mask[index], CurrentMask)) continue;
+                                    done = true;
+                                    break;
+                                }
+                                if (done) break;
+                            }
+
+                            DeltaAxis1[Axis1] = width;
+                            DeltaAxis2[Axis2] = height;
+                            FQuadData QuadData;
+                            QuadData.CurrentMask = CurrentMask;
+                            QuadData.AxisMask = AxisMask;
+                            QuadData.ChunkItr = ChunkItr;
+                            QuadData.DeltaAxis1 = DeltaAxis1;
+                            QuadData.DeltaAxis2 = DeltaAxis2;
+                            QuadData.Block = CurrentMask.Block;
+                            if (Axis == 0)
+                            {
+                                QuadDataQueueOne.Enqueue(QuadData);
+                                quadOneSize++;
+                            }
+                            else if (Axis == 1)
+                            {
+                                QuadDataQueueTwo.Enqueue(QuadData);
+                                quadTwoSize++;
+                            }
+                            else if (Axis == 2)
+                            {
+                                QuadDataQueueThree.Enqueue(QuadData);
+                                quadThreeSize++;
+                            }
+
+                            DeltaAxis1 = FIntVector::ZeroValue;
+                            DeltaAxis2 = FIntVector::ZeroValue;
+                            for (int l = 0; l < height; ++l)
+                            {
+                                for (int k = 0; k < width; ++k)
+                                {
+                                    int index = (j + l) * Axis1Limit + (i + k);
+                                    Mask[index] = FMask{ EBlock::Null, 0 };
+                                }
+                            }
+
+                            i += width;
+                        }
+                        else
+                        {
+                            if (!levelZeroLOD) {
+                                i++;
+                            }
+                            else if (levelZeroLOD) {
+                                i++;
+                                i++;
+							}
+                        }
+                    }
+                }
+            }
+
+    int iteration = 0;
+
+    FQuadData QuadData;
+    while (QuadDataQueueOne.Dequeue(QuadData))
+    {
+        iteration++;
+        CreateQuadOne(QuadData.CurrentMask, QuadData.AxisMask,
+            QuadData.ChunkItr,
+            QuadData.ChunkItr + QuadData.DeltaAxis1,
+            QuadData.ChunkItr + QuadData.DeltaAxis2,
+            QuadData.ChunkItr + QuadData.DeltaAxis1 + QuadData.DeltaAxis2,
+            QuadData.Block, iteration);
+    }
+     }, TStatId(), nullptr, ENamedThreads::BackgroundThreadPriority);
+
+
+     Taskx->Wait();
+
+
+}
+void AChunk::GenerateAxisTwoMesh(bool levelZeroLOD)
+{
+    if(levelZeroLOD)
+        halfGenerated = true;
+
+    DynamicMeshAxisTwo.EnableAttributes();
+    DynamicMeshAxisTwo.EnableVertexUVs(FVector2f::Zero());
+    DynamicMeshAxisTwo.Attributes()->EnablePrimaryColors();
+    DynamicMeshAxisTwo.EnableVertexNormals(FVector3f::Zero());
+    AxisTwoUVOverlay = DynamicMeshAxisTwo.Attributes()->PrimaryUV();
+    AxisTwoNormalOverlay = DynamicMeshAxisTwo.Attributes()->PrimaryNormals();
+
+  //  ParallelFor(1, [&](int32 Axis)
+  //      {
+    FGraphEventRef Taskx = FFunctionGraphTask::CreateAndDispatchWhenReady([&]()
+        {
+          
+            // Set to zero so its axis one
+            int Axis = 1;
+            bool doubleAir = false;
+
+            const int Axis1 = (Axis + 1) % 3;
+            const int Axis2 = (Axis + 2) % 3;
+
+            int MainAxisLimit = (Axis == 2 ? VerticalHeight : Size);
+            int Axis1Limit = (Axis1 == 2 ? VerticalHeight : Size);
+            int Axis2Limit = (Axis2 == 2 ? VerticalHeight : Size);
+
+            auto DeltaAxis1 = FIntVector::ZeroValue;
+            auto DeltaAxis2 = FIntVector::ZeroValue;
+
+            auto ChunkItr = FIntVector::ZeroValue;
+            auto AxisMask = FIntVector::ZeroValue;
+            auto XOneVector = FIntVector(1, 0, 0);
+            auto YOneVector = FIntVector(0, 1, 0);
+            auto ZOneVector = FIntVector(0, 0, 1);
+
+            auto NegativeXOneVector = FIntVector(-1, 0, 0);
+            auto NegativeYOneVector = FIntVector(0, -1, 0);
+            auto NegativeZOneVector = FIntVector(0, 0, -1);
+            TArray<FIntVector> checkVectors = { XOneVector, NegativeXOneVector, YOneVector, NegativeYOneVector, ZOneVector, NegativeZOneVector };
+            AxisMask[Axis] = 1;
+
+            TArray<FMask> Mask;
+            Mask.SetNumUninitialized(Axis1Limit * Axis2Limit);
+
+            // check each slice
+            //convert the below loop into a parallel for loop
+
+
+            for (ChunkItr[Axis] = -1; ChunkItr[Axis] < MainAxisLimit; )
+            {
+
+                bool skipBlock = true;
+                for (const auto& checkVector : checkVectors)
+                {
+                    const auto& CurrentBlock = GetBlock(ChunkItr + checkVector);
+                    const auto& CompareBlock = GetBlock(ChunkItr + checkVector + AxisMask);
+                    if (outOfBounds) {
+                        skipBlock = false;
+                        outOfBounds = false;
+                        break;
+                    }
+                    if (!(CurrentBlock == EBlock::Air && CompareBlock == EBlock::Air))
+                    {
+
+                        skipBlock = false;
+                        break; // Exit early if any surrounding block is not air
+                    }
+                }
+                if (skipBlock)
+                {
+                    //UE_LOG(LogTemp, Warning, TEXT("Skipping block"));
+                    ChunkItr[Axis]++; // Increment here to ensure the loop progresses
+                    continue; // Skip further processing for this iteration
+                }
+
+                int N = 0;
+
+
+                ParallelFor(Axis2Limit, [&](int32 Axis2Index)
+                    {
+                        FMask Result;
+                        TArray<FMask> LocalMask;
+                        LocalMask.SetNumUninitialized(Axis1Limit);
+
+                        auto LocalChunkItr = ChunkItr;
+                        LocalChunkItr[Axis2] = Axis2Index;
+
+                        for (int Axis1Index = 0; Axis1Index < Axis1Limit; ++Axis1Index)
+                        {
+                            LocalChunkItr[Axis1] = Axis1Index;
+                            // Add something here which checks out of bounds, to prevent the 'ground faces' from generatnig, may improve perforamce?
+                            auto CurrentBlock = GetBlock(LocalChunkItr);
+                            auto CompareBlock = GetBlock(LocalChunkItr + AxisMask);
+
+                            /*
+                                       if (outOfBounds && CurrentBlock == EBlock::Stone)
+                                       {
+                                           CompareBlock = EBlock::Stone;
+
+                                           outOfBounds = false;
+                                       }*/
+
+                            const bool CurrentBlockOpaque = CurrentBlock != EBlock::Air;
+                            const bool CompareBlockOpaque = CompareBlock != EBlock::Air;
+
+
+                            if (CurrentBlockOpaque == CompareBlockOpaque)
+                            {
+                                Result = FMask{ EBlock::Null, 0 };
+                            }
+                            else if (CurrentBlockOpaque)
+                            {
+                                Result = FMask{ CurrentBlock, 1 };
+                            }
+                            else
+                            {
+                                Result = FMask{ CompareBlock, -1 };
+                            }
+
+                            // Assuming Mask is not accessed concurrently or using thread-safe mechanism
+                            LocalMask[Axis1Index] = Result;
+                        }
+                        for (int Axis1Index = 0; Axis1Index < Axis1Limit; ++Axis1Index)
+                        {
+                            // Calculate the global index for Mask array
+                            int globalIndex = Axis2Index * Axis1Limit + Axis1Index;
+                            Mask[globalIndex] = LocalMask[Axis1Index];
+                        }
+                        // Merge local results into global Mask here
+                        // Ensure this is done in a thread-safe manner
+                    }, EParallelForFlags::None); // Adjust flags as needed
+
+
+                ++ChunkItr[Axis];
+                // FGraphEventRef Taskx = FFunctionGraphTask::CreateAndDispatchWhenReady([&,Axis1Limit,Axis2Limit]()
+         //  {// try changing below N to localN?
+                 // Generate mesh from mask
+                // ParallelFor(Axis2Limit, [&](int32 j)
+                   //  {
+                 //add a thread here and divide loop into two seperate loops for 2 threads?
+
+
+               //  ParallelFor(Axis2Limit, [&](int32 j)
+                 //    {
+                for (int j = 0; j < Axis2Limit; j++)
+                {
+
+                    for (int i = 0; i < Axis1Limit;)
+                    {
+              /*      if (blocksGeneratedIndexes.Contains(i))
+                    {
+                            continue;
+                    }*/
+
+                   
+                        int localN = j * Axis1Limit + i;
+                        if (Mask[localN].Normal != 0)
+                        {
+                            const auto CurrentMask = Mask[localN];
+                            ChunkItr[Axis1] = i;
+                            ChunkItr[Axis2] = j;
+
+                            int width = 1;
+                            int height;
+                            bool done = false;
+                            for (height = 1; j + height < Axis2Limit; ++height)
+                            {
+                                for (int k = 0; k < width; ++k)
+                                {
+                                    int index = (j + height) * Axis1Limit + (i + k);
+                                    if (CompareMask(Mask[index], CurrentMask)) continue;
+                                    done = true;
+                                    break;
+                                }
+                                if (done) break;
+                            }
+
+                            DeltaAxis1[Axis1] = width;
+                            DeltaAxis2[Axis2] = height;
+                            FQuadData QuadData;
+                            QuadData.CurrentMask = CurrentMask;
+                            QuadData.AxisMask = AxisMask;
+                            QuadData.ChunkItr = ChunkItr;
+                            QuadData.DeltaAxis1 = DeltaAxis1;
+                            QuadData.DeltaAxis2 = DeltaAxis2;
+                            QuadData.Block = CurrentMask.Block;
+                            if (Axis == 0)
+                            {
+                                QuadDataQueueOne.Enqueue(QuadData);
+                                quadOneSize++;
+                            }
+                            else if (Axis == 1)
+                            {
+                                QuadDataQueueTwo.Enqueue(QuadData);
+                                quadTwoSize++;
+                            }
+                            else if (Axis == 2)
+                            {
+                                QuadDataQueueThree.Enqueue(QuadData);
+                                quadThreeSize++;
+                            }
+
+                            DeltaAxis1 = FIntVector::ZeroValue;
+                            DeltaAxis2 = FIntVector::ZeroValue;
+                            for (int l = 0; l < height; ++l)
+                            {
+                                for (int k = 0; k < width; ++k)
+                                {
+                                    int index = (j + l) * Axis1Limit + (i + k);
+                                    Mask[index] = FMask{ EBlock::Null, 0 };
+                                }
+                            }
+
+                            i += width;
+                        }
+                        else
+                        {
+                            if (!levelZeroLOD) {
+                                i++;
+							}
+                            else if (levelZeroLOD) {
+                                
+								i++;
+								i++;
+                                blocksGeneratedIndexes.Add(i);
+                            }
+                         
+                        }
+                    }
+                }
+            }
+   //     }, EParallelForFlags::Unbalanced);
+
+    int iterationQuadTwo = 0;
+    FQuadData QuadData;
+    while (QuadDataQueueTwo.Dequeue(QuadData))
+    {
+        iterationQuadTwo++;
+        CreateQuadTwo(QuadData.CurrentMask, QuadData.AxisMask,
+            QuadData.ChunkItr,
+            QuadData.ChunkItr + QuadData.DeltaAxis1,
+            QuadData.ChunkItr + QuadData.DeltaAxis2,
+            QuadData.ChunkItr + QuadData.DeltaAxis1 + QuadData.DeltaAxis2,
+            QuadData.Block, iterationQuadTwo);
+    }
+       }, TStatId(), nullptr, ENamedThreads::BackgroundThreadPriority);
+
+
+       Taskx->Wait();
+}
+void AChunk::GenerateAxisThreeMesh()
+{
+    DynamicMeshAxisThree.EnableAttributes();
+    DynamicMeshAxisThree.EnableVertexUVs(FVector2f::Zero());
+    DynamicMeshAxisThree.Attributes()->EnablePrimaryColors();
+    DynamicMeshAxisThree.EnableVertexNormals(FVector3f::Zero());
+    AxisThreeUVOverlay = DynamicMeshAxisThree.Attributes()->PrimaryUV();
+    AxisThreeNormalOverlay = DynamicMeshAxisThree.Attributes()->PrimaryNormals();
+    FGraphEventRef Taskx = FFunctionGraphTask::CreateAndDispatchWhenReady([&]()
+        {
+
+
+
+
+    //ParallelFor(1, [&](int32 Axis)
+    //    {
+         
+            int Axis = 2;
+            bool doubleAir = false;
+
+            const int Axis1 = (Axis + 1) % 3;
+            const int Axis2 = (Axis + 2) % 3;
+
+            int MainAxisLimit = (Axis == 2 ? VerticalHeight : Size);
+            int Axis1Limit = (Axis1 == 2 ? VerticalHeight : Size);
+            int Axis2Limit = (Axis2 == 2 ? VerticalHeight : Size);
+
+            auto DeltaAxis1 = FIntVector::ZeroValue;
+            auto DeltaAxis2 = FIntVector::ZeroValue;
+
+            auto ChunkItr = FIntVector::ZeroValue;
+            auto AxisMask = FIntVector::ZeroValue;
+            auto XOneVector = FIntVector(1, 0, 0);
+            auto YOneVector = FIntVector(0, 1, 0);
+            auto ZOneVector = FIntVector(0, 0, 1);
+
+            auto NegativeXOneVector = FIntVector(-1, 0, 0);
+            auto NegativeYOneVector = FIntVector(0, -1, 0);
+            auto NegativeZOneVector = FIntVector(0, 0, -1);
+            TArray<FIntVector> checkVectors = { XOneVector, NegativeXOneVector, YOneVector, NegativeYOneVector, ZOneVector, NegativeZOneVector };
+            AxisMask[Axis] = 1;
+
+            TArray<FMask> Mask;
+            Mask.SetNumUninitialized(Axis1Limit * Axis2Limit);
+
+            // check each slice
+            //convert the below loop into a parallel for loop
+
+
+            for (ChunkItr[Axis] = -1; ChunkItr[Axis] < MainAxisLimit; )
+            {
+
+                bool skipBlock = true;
+                for (const auto& checkVector : checkVectors)
+                {
+                    const auto& CurrentBlock = GetBlock(ChunkItr + checkVector);
+                    const auto& CompareBlock = GetBlock(ChunkItr + checkVector + AxisMask);
+                    if (outOfBounds) {
+                        skipBlock = false;
+                        outOfBounds = false;
+                        break;
+                    }
+                    if (!(CurrentBlock == EBlock::Air && CompareBlock == EBlock::Air))
+                    {
+
+                        skipBlock = false;
+                        break; // Exit early if any surrounding block is not air
+                    }
+                }
+                if (skipBlock)
+                {
+                    //UE_LOG(LogTemp, Warning, TEXT("Skipping block"));
+                    ChunkItr[Axis]++; // Increment here to ensure the loop progresses
+                    continue; // Skip further processing for this iteration
+                }
+
+                int N = 0;
+
+
+                ParallelFor(Axis2Limit, [&](int32 Axis2Index)
+                    {
+                        FMask Result;
+                        TArray<FMask> LocalMask;
+                        LocalMask.SetNumUninitialized(Axis1Limit);
+
+                        auto LocalChunkItr = ChunkItr;
+                        LocalChunkItr[Axis2] = Axis2Index;
+
+                        for (int Axis1Index = 0; Axis1Index < Axis1Limit; ++Axis1Index)
+                        {
+                            LocalChunkItr[Axis1] = Axis1Index;
+                            // Add something here which checks out of bounds, to prevent the 'ground faces' from generatnig, may improve perforamce?
+                            auto CurrentBlock = GetBlock(LocalChunkItr);
+                            auto CompareBlock = GetBlock(LocalChunkItr + AxisMask);
+
+                            /*
+                                       if (outOfBounds && CurrentBlock == EBlock::Stone)
+                                       {
+                                           CompareBlock = EBlock::Stone;
+
+                                           outOfBounds = false;
+                                       }*/
+
+                            const bool CurrentBlockOpaque = CurrentBlock != EBlock::Air;
+                            const bool CompareBlockOpaque = CompareBlock != EBlock::Air;
+
+
+                            if (CurrentBlockOpaque == CompareBlockOpaque)
+                            {
+                                Result = FMask{ EBlock::Null, 0 };
+                            }
+                            else if (CurrentBlockOpaque)
+                            {
+                                Result = FMask{ CurrentBlock, 1 };
+                            }
+                            else
+                            {
+                                Result = FMask{ CompareBlock, -1 };
+                            }
+
+                            // Assuming Mask is not accessed concurrently or using thread-safe mechanism
+                            LocalMask[Axis1Index] = Result;
+                        }
+                        for (int Axis1Index = 0; Axis1Index < Axis1Limit; ++Axis1Index)
+                        {
+                            // Calculate the global index for Mask array
+                            int globalIndex = Axis2Index * Axis1Limit + Axis1Index;
+                            Mask[globalIndex] = LocalMask[Axis1Index];
+                        }
+                        // Merge local results into global Mask here
+                        // Ensure this is done in a thread-safe manner
+                    }, EParallelForFlags::None); // Adjust flags as needed
+
+
+                ++ChunkItr[Axis];
+                // FGraphEventRef Taskx = FFunctionGraphTask::CreateAndDispatchWhenReady([&,Axis1Limit,Axis2Limit]()
+         //  {// try changing below N to localN?
+                 // Generate mesh from mask
+                // ParallelFor(Axis2Limit, [&](int32 j)
+                   //  {
+                 //add a thread here and divide loop into two seperate loops for 2 threads?
+
+
+               //  ParallelFor(Axis2Limit, [&](int32 j)
+                 //    {
+                for (int j = 0; j < Axis2Limit; j++)
+                {
+
+                    for (int i = 0; i < Axis1Limit; )
+                    {
+
+
+                        //need to test localN with a normal loop to see if calculation is correct but multiyhreading is causing issues
+                        int localN = j * Axis1Limit + i;
+                        if (Mask[localN].Normal != 0)
+                        {
+                            const auto CurrentMask = Mask[localN];
+                            ChunkItr[Axis1] = i;
+                            ChunkItr[Axis2] = j;
+
+                            int width = 1;
+                            int height;
+                            bool done = false;
+                            for (height = 1; j + height < Axis2Limit; ++height)
+                            {
+                                for (int k = 0; k < width; ++k)
+                                {
+                                    int index = (j + height) * Axis1Limit + (i + k);
+                                    if (CompareMask(Mask[index], CurrentMask)) continue;
+                                    done = true;
+                                    break;
+                                }
+                                if (done) break;
+                            }
+
+                            DeltaAxis1[Axis1] = width;
+                            DeltaAxis2[Axis2] = height;
+                            FQuadData QuadData;
+                            QuadData.CurrentMask = CurrentMask;
+                            QuadData.AxisMask = AxisMask;
+                            QuadData.ChunkItr = ChunkItr;
+                            QuadData.DeltaAxis1 = DeltaAxis1;
+                            QuadData.DeltaAxis2 = DeltaAxis2;
+                            QuadData.Block = CurrentMask.Block;
+                            if (Axis == 0)
+                            {
+                                QuadDataQueueOne.Enqueue(QuadData);
+                                quadOneSize++;
+                            }
+                            else if (Axis == 1)
+                            {
+                                QuadDataQueueTwo.Enqueue(QuadData);
+                                quadTwoSize++;
+                            }
+                            else if (Axis == 2)
+                            {
+                                QuadDataQueueThree.Enqueue(QuadData);
+                                quadThreeSize++;
+                            }
+
+                            DeltaAxis1 = FIntVector::ZeroValue;
+                            DeltaAxis2 = FIntVector::ZeroValue;
+                            for (int l = 0; l < height; ++l)
+                            {
+                                for (int k = 0; k < width; ++k)
+                                {
+                                    int index = (j + l) * Axis1Limit + (i + k);
+                                    Mask[index] = FMask{ EBlock::Null, 0 };
+                                }
+                            }
+
+                            i += width;
+
+                        }
+                        else
+                        {
+                            i++;
+                        }
+
+                    }
+                }
+            }
+    //    }, EParallelForFlags::Unbalanced);
+
+    int iterationQuadThree = 0;
+    FQuadData QuadData;
+    while (QuadDataQueueThree.Dequeue(QuadData))
+    {
+        iterationQuadThree++;
+        CreateQuadThree(QuadData.CurrentMask, QuadData.AxisMask,
+            QuadData.ChunkItr,
+            QuadData.ChunkItr + QuadData.DeltaAxis1,
+            QuadData.ChunkItr + QuadData.DeltaAxis2,
+            QuadData.ChunkItr + QuadData.DeltaAxis1 + QuadData.DeltaAxis2,
+            QuadData.Block, iterationQuadThree);
+    }
+     }, TStatId(), nullptr, ENamedThreads::BackgroundThreadPriority);
+
+     Taskx->Wait();
 }
 
 

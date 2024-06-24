@@ -9,6 +9,7 @@
 #include <DynamicMesh/DynamicVertexAttribute.h>
 #include <DynamicMesh/DynamicMeshAttributeSet.h>
 #include <GeometryCoreModule.h>
+#include <random>
 #include <GeometryBase.h>
 #include <DynamicMeshActor.h>
 #include <DynamicMesh/ColliderMesh.h>
@@ -29,6 +30,10 @@ public:
 
     UFUNCTION(BlueprintCallable, Category = "ChunkFunction")
     void ModifyVoxel(FVector WorldPosition, EBlock Block);
+
+
+    void SpawnTrees();
+
     FIntVector WorldToLocal(FIntVector WorldLocation);
     FIntVector ConvertLocalCoordsToVoxel(FIntVector LocalCoords);
     void ModifyVoxelData(FIntVector Position, EBlock Block);
@@ -40,7 +45,8 @@ public:
     bool mountainPlainsTransition = false;
 
 
-    bool regeneratingMesh = false;
+    bool axisOneHalfGenerated = false;
+    bool axisTwoHalfGenerated = false;
     bool modifyingVoxel = false;
 
     struct NoiseStruct
@@ -48,6 +54,19 @@ public:
         float noiseValue;
         float biomeNumber;
     };
+
+
+    int treeCount = 0;
+
+
+    TArray<FVector3d> treeLocations;
+
+    TSet<int> blocksGeneratedIndexes;
+
+
+
+
+
     TArray<NoiseStruct> globalNoiseMap;
     struct FMask
     {
@@ -79,7 +98,6 @@ public:
     TArray<FQuadData> QuadDataArrayThree;
 
 
-    int generateRandomNumber(int min, int max);
     bool outOfBounds = false;
 
     TArray<FGraphEventRef> TaskDependencies;
@@ -93,7 +111,7 @@ public:
     AChunk();
 
     UPROPERTY(EditAnywhere, Category = "Chunk")
-    int Size = 32;
+    int Size = 25;
 
     UPROPERTY(EditAnywhere, Category = "Chunk")
     int Scale = 1;
@@ -104,7 +122,7 @@ public:
     UPROPERTY()
     UStaticMesh* MyTreeMesh;
 
-    int VerticalHeight = 470;
+    int VerticalHeight = 770;
     UClass* MyTreeBPClass;
     UClass* MyGrassBPClass;
     // UFUNCTION(BlueprintCallable, Category = "Chunk")
@@ -113,17 +131,26 @@ public:
     UPROPERTY(EditAnywhere, Category = "Chunk")
     int AmtBlocksVertically = 1;
 
+    int globalTick = 0;
     int meshCounter = 0;
+    int axisOneGeneratedCounter;
+    int axisTwoGeneratedCounter;
+    int axisThreeGeneratedCounter;
+
     int frameCounter = 0;
     int CurrentX, CurrentY;
     int MaxX, MaxY;
     FTimerHandle WorkTimerHandle;
     TArray<FGraphEventRef> TaskList;
     float ChunkSizeInMeters = 32.0;
-    TArray<FVector> TreeLocations;
     void GenerateBlocks();
-    void RespawnTrees();
     void StaticMeshConversion();
+    // Generates a random integer between min and max
+
+    int GenerateRandomNumber(int min, int max);
+    // Generates a random float between 0.0 and 1.0
+    float GenerateRandomDeterministicFloat(int uniqueId);
+
 
 protected:
     // Called when the game starts or when spawned
@@ -221,13 +248,23 @@ private:
     // keeps track of whether axis 1 and 2 have been generated
     bool allAxisGenerated = false;
 
+    bool axisOneApplied = false;
+    bool axisTwoApplied = false;
+    bool axisThreeApplied = false;
+
+
     bool axisOneGenerated = false;
     bool axisTwoGenerated = false;
     bool axisThreeGenerated = false;
     bool initialAxisGenerated = false;
+    bool shadowsActive = false;
 
-  
+    bool objectsSpawned = false;
+
+    bool halfGenerated = false;
     void ClearMesh();
+    void ClearAxisOneMesh();
+    void ClearAxisTwoMesh();
 
     const FVector BlockVertexData[8] = {
             FVector(100,100,100),
@@ -252,6 +289,10 @@ private:
     float QueryNoiseValue(const std::vector<float>& noiseOutput, int x, int y, int z, int Width, int Height);
 
     void GenerateMesh();
+    void GenerateAxisOneMesh(bool levelZeroLOD);
+    void GenerateAxisTwoMesh(bool levelZeroLOD);
+    void GenerateAxisThreeMesh();
+
     void PerformBusyWait(int32 NumberOfIterations);
     void SetupBiomeNoise();
     void CreateQuads();
@@ -271,9 +312,9 @@ private:
     //void CreateQuadThree(FMask Mask, FIntVector AxisMask, FIntVector V1, FIntVector V2, FIntVector V3, FIntVector V4, EBlock Block);
 
 
-    void CreateQuadOne(FMask Mask, FIntVector AxisMask, FIntVector V1, FIntVector V2, FIntVector V3, FIntVector V4, EBlock Block);
-    void CreateQuadTwo(FMask Mask, FIntVector AxisMask, FIntVector V1, FIntVector V2, FIntVector V3, FIntVector V4, EBlock Block);
-    void CreateQuadThree(FMask Mask, FIntVector AxisMask, FIntVector V1, FIntVector V2, FIntVector V3, FIntVector V4, EBlock Block);
+    void CreateQuadOne(FMask Mask, FIntVector AxisMask, FIntVector V1, FIntVector V2, FIntVector V3, FIntVector V4, EBlock Block,int iteration);
+    void CreateQuadTwo(FMask Mask, FIntVector AxisMask, FIntVector V1, FIntVector V2, FIntVector V3, FIntVector V4, EBlock Block, int iteration);
+    void CreateQuadThree(FMask Mask, FIntVector AxisMask, FIntVector V1, FIntVector V2, FIntVector V3, FIntVector V4, EBlock Block, int iteration);
 
 
 
@@ -285,7 +326,7 @@ private:
 
     bool CompareMask(FMask M1, FMask M2) const;
 
-    FColor GetColorFromBlock(EBlock Block, FIntVector Location);
+    FColor GetColorFromBlock(EBlock Block, FIntVector Location, int randomNumberId);
 
     void DelayedBeginPlay();
 
@@ -296,6 +337,9 @@ private:
     //    TArray<FVector2D> TreeMap;
 
   
+    //Color Variables
+    FLinearColor BaseGreen = FLinearColor::FromSRGBColor(FColor::FromHex("#0B6623")); // A nice grass green
+    FLinearColor LighterGreen = FLinearColor::FromSRGBColor(FColor::FromHex("#5aaa18")); // A slightly lighter lime green
 
 public:
     // Called every frame

@@ -22,7 +22,11 @@ enum class EBiome : uint8
 // Plains biome = 1,2,3
 // Mountain = 1,2
 
-
+UENUM(BlueprintType)
+enum class ECompass : uint8
+{
+	North, South, East, West, Other, None
+};
 
 UENUM(BlueprintType)
 enum class EGenerationType : uint8

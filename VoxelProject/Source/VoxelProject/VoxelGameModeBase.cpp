@@ -240,16 +240,19 @@ void AVoxelGameModeBase::UpdateVisibleChunks(FVector2D viewerPosition)
     }
    
     // Insread of doing this here we start a timer which simply checks the queueu x times per second and spawns a chunk if something in queue
-    if (GetWorld()->GetTimeSeconds() > 80 && !slowCreateChunkTimerStarted)
+    if (GetWorld()->GetTimeSeconds() > 140 && !slowCreateChunkTimerStarted)
     {
         UE_LOG(LogTemp, Warning, TEXT("Starting slow timer"));
         GetWorld()->GetTimerManager().ClearTimer(createChunkTimerHandle);
-        GetWorld()->GetTimerManager().SetTimer(createChunkTimerHandle, this, &AVoxelGameModeBase::ProcessChunkQueue, 0.4f, true);
+        // Use the unique ID as the seed for the random number generator
+        std::mt19937 rng(1234);
+        std::uniform_real_distribution<float> dist(0.1f, 0.2f);  // Range between 0 and 1
+        GetWorld()->GetTimerManager().SetTimer(createChunkTimerHandle, this, &AVoxelGameModeBase::ProcessChunkQueue, 0.05f + dist(rng), true);
         slowCreateChunkTimerStarted = true;
     }
     else if(!fastCreateChunkTimerStarted) {
         UE_LOG(LogTemp, Warning, TEXT("Starting fast timer"));
-        GetWorld()->GetTimerManager().SetTimer(createChunkTimerHandle, this, &AVoxelGameModeBase::ProcessChunkQueue, 0.02f, true);
+        GetWorld()->GetTimerManager().SetTimer(createChunkTimerHandle, this, &AVoxelGameModeBase::ProcessChunkQueue, 0.018f, true);
         fastCreateChunkTimerStarted = true;
     }
 
@@ -454,7 +457,7 @@ bool AVoxelGameModeBase::UpdateChunk(AActor* chunk)
         chunk->SetActorHiddenInGame(false);
         AChunk* myChunk = Cast<AChunk>(chunk);
         if (myChunk != nullptr) {
-            myChunk->RespawnTrees();
+//            myChunk->RespawnTrees();
         }
         return true;  // Chunk visibility changed to visible
     }
