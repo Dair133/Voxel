@@ -1,0 +1,13 @@
+{
+    "Version": "1.2",
+    "Data": {
+        "Source": "e:\\ue5projects\\voxel\\voxelproject\\intermediate\\build\\win64\\unrealeditor\\inc\\voxelproject\\uht\\voxelproject.init.gen.cpp",
+        "ProvidedModule": "",
+        "PCH": "e:\\ue5projects\\voxel\\voxelproject\\intermediate\\build\\win64\\x64\\voxelprojecteditor\\development\\engine\\sharedpch.engine.cpp17.inclorderunreal5_0.h.pch",
+        "Includes": [
+            "e:\\ue5projects\\voxel\\voxelproject\\intermediate\\build\\win64\\x64\\unrealeditor\\development\\voxelproject\\definitions.voxelproject.h"
+        ],
+        "ImportedModules": [],
+        "ImportedHeaderUnits": []
+    }
+}
