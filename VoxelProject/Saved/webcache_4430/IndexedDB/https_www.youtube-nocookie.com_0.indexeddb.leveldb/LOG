@@ -1,0 +1,6 @@
+2024/07/09-21:34:49.441 1228 Creating DB E:/UE5Projects/Voxel/VoxelProject/Saved/webcache_4430\IndexedDB\https_www.youtube-nocookie.com_0.indexeddb.leveldb since it was missing.
+2024/07/09-21:34:49.456 1228 Reusing MANIFEST E:/UE5Projects/Voxel/VoxelProject/Saved/webcache_4430\IndexedDB\https_www.youtube-nocookie.com_0.indexeddb.leveldb/MANIFEST-000001
+2024/07/09-21:45:06.367 6e84 Level-0 table #5: started
+2024/07/09-21:45:06.377 6e84 Level-0 table #5: 1167 bytes OK
+2024/07/09-21:45:06.380 6e84 Delete type=0 #3
+2024/07/09-21:45:06.381 6e84 Manual compaction at level-0 from (begin) .. (end); will stop at (end)
