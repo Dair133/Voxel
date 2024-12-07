@@ -14,11 +14,6 @@ PRAGMA_DISABLE_DEPRECATION_WARNINGS
 #endif
 #define VOXELPROJECT_MyPawn_generated_h
 
-#define FID_UE5Projects_Voxel_VoxelProject_Source_VoxelProject_MyPawn_h_14_SPARSE_DATA
-#define FID_UE5Projects_Voxel_VoxelProject_Source_VoxelProject_MyPawn_h_14_SPARSE_DATA_PROPERTY_ACCESSORS
-#define FID_UE5Projects_Voxel_VoxelProject_Source_VoxelProject_MyPawn_h_14_EDITOR_ONLY_SPARSE_DATA_PROPERTY_ACCESSORS
-#define FID_UE5Projects_Voxel_VoxelProject_Source_VoxelProject_MyPawn_h_14_RPC_WRAPPERS_NO_PURE_DECLS
-#define FID_UE5Projects_Voxel_VoxelProject_Source_VoxelProject_MyPawn_h_14_ACCESSORS
 #define FID_UE5Projects_Voxel_VoxelProject_Source_VoxelProject_MyPawn_h_14_INCLASS_NO_PURE_DECLS \
 private: \
 	static void StaticRegisterNativesAMyPawn(); \
@@ -31,8 +26,8 @@ public: \
 #define FID_UE5Projects_Voxel_VoxelProject_Source_VoxelProject_MyPawn_h_14_ENHANCED_CONSTRUCTORS \
 private: \
 	/** Private move- and copy-constructors, should never be used */ \
-	NO_API AMyPawn(AMyPawn&&); \
-	NO_API AMyPawn(const AMyPawn&); \
+	AMyPawn(AMyPawn&&); \
+	AMyPawn(const AMyPawn&); \
 public: \
 	DECLARE_VTABLE_PTR_HELPER_CTOR(NO_API, AMyPawn); \
 	DEFINE_VTABLE_PTR_HELPER_CTOR_CALLER(AMyPawn); \
@@ -44,11 +39,6 @@ public: \
 #define FID_UE5Projects_Voxel_VoxelProject_Source_VoxelProject_MyPawn_h_14_GENERATED_BODY \
 PRAGMA_DISABLE_DEPRECATION_WARNINGS \
 public: \
-	FID_UE5Projects_Voxel_VoxelProject_Source_VoxelProject_MyPawn_h_14_SPARSE_DATA \
-	FID_UE5Projects_Voxel_VoxelProject_Source_VoxelProject_MyPawn_h_14_SPARSE_DATA_PROPERTY_ACCESSORS \
-	FID_UE5Projects_Voxel_VoxelProject_Source_VoxelProject_MyPawn_h_14_EDITOR_ONLY_SPARSE_DATA_PROPERTY_ACCESSORS \
-	FID_UE5Projects_Voxel_VoxelProject_Source_VoxelProject_MyPawn_h_14_RPC_WRAPPERS_NO_PURE_DECLS \
-	FID_UE5Projects_Voxel_VoxelProject_Source_VoxelProject_MyPawn_h_14_ACCESSORS \
 	FID_UE5Projects_Voxel_VoxelProject_Source_VoxelProject_MyPawn_h_14_INCLASS_NO_PURE_DECLS \
 	FID_UE5Projects_Voxel_VoxelProject_Source_VoxelProject_MyPawn_h_14_ENHANCED_CONSTRUCTORS \
 private: \

@@ -14,15 +14,10 @@ PRAGMA_DISABLE_DEPRECATION_WARNINGS
 #endif
 #define VOXELPROJECT_VoxelGameModeBase_generated_h
 
-#define FID_UE5Projects_Voxel_VoxelProject_Source_VoxelProject_VoxelGameModeBase_h_26_SPARSE_DATA
-#define FID_UE5Projects_Voxel_VoxelProject_Source_VoxelProject_VoxelGameModeBase_h_26_SPARSE_DATA_PROPERTY_ACCESSORS
-#define FID_UE5Projects_Voxel_VoxelProject_Source_VoxelProject_VoxelGameModeBase_h_26_EDITOR_ONLY_SPARSE_DATA_PROPERTY_ACCESSORS
 #define FID_UE5Projects_Voxel_VoxelProject_Source_VoxelProject_VoxelGameModeBase_h_26_RPC_WRAPPERS_NO_PURE_DECLS \
- \
 	DECLARE_FUNCTION(execOnCheckUpdateChunks);
 
 
-#define FID_UE5Projects_Voxel_VoxelProject_Source_VoxelProject_VoxelGameModeBase_h_26_ACCESSORS
 #define FID_UE5Projects_Voxel_VoxelProject_Source_VoxelProject_VoxelGameModeBase_h_26_INCLASS_NO_PURE_DECLS \
 private: \
 	static void StaticRegisterNativesAVoxelGameModeBase(); \
@@ -35,8 +30,8 @@ public: \
 #define FID_UE5Projects_Voxel_VoxelProject_Source_VoxelProject_VoxelGameModeBase_h_26_ENHANCED_CONSTRUCTORS \
 private: \
 	/** Private move- and copy-constructors, should never be used */ \
-	NO_API AVoxelGameModeBase(AVoxelGameModeBase&&); \
-	NO_API AVoxelGameModeBase(const AVoxelGameModeBase&); \
+	AVoxelGameModeBase(AVoxelGameModeBase&&); \
+	AVoxelGameModeBase(const AVoxelGameModeBase&); \
 public: \
 	DECLARE_VTABLE_PTR_HELPER_CTOR(NO_API, AVoxelGameModeBase); \
 	DEFINE_VTABLE_PTR_HELPER_CTOR_CALLER(AVoxelGameModeBase); \
@@ -48,11 +43,7 @@ public: \
 #define FID_UE5Projects_Voxel_VoxelProject_Source_VoxelProject_VoxelGameModeBase_h_26_GENERATED_BODY \
 PRAGMA_DISABLE_DEPRECATION_WARNINGS \
 public: \
-	FID_UE5Projects_Voxel_VoxelProject_Source_VoxelProject_VoxelGameModeBase_h_26_SPARSE_DATA \
-	FID_UE5Projects_Voxel_VoxelProject_Source_VoxelProject_VoxelGameModeBase_h_26_SPARSE_DATA_PROPERTY_ACCESSORS \
-	FID_UE5Projects_Voxel_VoxelProject_Source_VoxelProject_VoxelGameModeBase_h_26_EDITOR_ONLY_SPARSE_DATA_PROPERTY_ACCESSORS \
 	FID_UE5Projects_Voxel_VoxelProject_Source_VoxelProject_VoxelGameModeBase_h_26_RPC_WRAPPERS_NO_PURE_DECLS \
-	FID_UE5Projects_Voxel_VoxelProject_Source_VoxelProject_VoxelGameModeBase_h_26_ACCESSORS \
 	FID_UE5Projects_Voxel_VoxelProject_Source_VoxelProject_VoxelGameModeBase_h_26_INCLASS_NO_PURE_DECLS \
 	FID_UE5Projects_Voxel_VoxelProject_Source_VoxelProject_VoxelGameModeBase_h_26_ENHANCED_CONSTRUCTORS \
 private: \
