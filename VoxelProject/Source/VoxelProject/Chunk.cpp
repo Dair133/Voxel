@@ -1601,15 +1601,15 @@ void AChunk::GenerateBlocks()
                                 }
                             }
                         }
-                        if (flowerThreePatchCount < 100) {
-                            float flowerProbability = 0.145f; // Adjust this value to control the density of flowers
+                        //if (flowerThreePatchCount < 100) {
+                        //    float flowerProbability = 0.145f; // Adjust this value to control the density of flowers
 
-                            if (GenerateRandomDeterministicFloat(Index) < flowerProbability) {
-                                FVector newFlowerLocation = Location + FVector(x * 100, y * 100, z * 100);
-                                flowerLocations[flowerThreePatchCount] = newFlowerLocation;
-                                flowerThreePatchCount++;
-                            }
-                        }
+                        //    if (GenerateRandomDeterministicFloat(Index) < flowerProbability) {
+                        //       // FVector newFlowerLocation = Location + FVector(x * 100, y * 100, z * 100);
+                        //      //  flowerLocations[flowerThreePatchCount] = newFlowerLocation;
+                        //        flowerThreePatchCount++;
+                        //    }
+                        //}
 
                     }
                     if (biomeType == EBiome::Mountain_Plains) {
