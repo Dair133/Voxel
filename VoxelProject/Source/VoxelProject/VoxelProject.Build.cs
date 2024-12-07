@@ -9,11 +9,11 @@ public class VoxelProject : ModuleRules
     {
         PCHUsage = PCHUsageMode.UseExplicitOrSharedPCHs;
 
-        PublicDependencyModuleNames.AddRange(new string[] { "Core", "CoreUObject", "Engine", "InputCore", "ProceduralMeshComponent","DynamicMesh", "GeometryCore", "GeometryFramework" });
+        PublicDependencyModuleNames.AddRange(new string[] { "Core", "CoreUObject", "Engine", "InputCore", "ProceduralMeshComponent","DynamicMesh", "GeometryCore", "GeometryFramework","Niagara" });
 
         PrivateDependencyModuleNames.AddRange(new string[] { });
 
-        CMakeTarget.add(Target, this, "FastNoise", "E:\\GithubRepoes\\FastNoise2", "-DFASTNOISE2_NOISETOOL=OFF", true);
+       // CMakeTarget.add(Target, this, "FastNoise", "E:\\GithubRepoes\\FastNoise2", "-DFASTNOISE2_NOISETOOL=OFF", true);
 
         // Uncomment if you are using Slate UI
         // PrivateDependencyModuleNames.AddRange(new string[] { "Slate", "SlateCore" });

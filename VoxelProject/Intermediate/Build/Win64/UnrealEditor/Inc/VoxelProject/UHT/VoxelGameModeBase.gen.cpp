@@ -5,14 +5,13 @@
 ===========================================================================*/
 
 #include "UObject/GeneratedCppIncludes.h"
-#include "../../../UE5Projects/Voxel/VoxelProject/Source/VoxelProject/VoxelGameModeBase.h"
+#include "VoxelProject/VoxelGameModeBase.h"
 PRAGMA_DISABLE_DEPRECATION_WARNINGS
 void EmptyLinkFunctionForGeneratedCodeVoxelGameModeBase() {}
 // Cross Module References
 	COREUOBJECT_API UClass* Z_Construct_UClass_UClass();
 	ENGINE_API UClass* Z_Construct_UClass_AActor_NoRegister();
 	ENGINE_API UClass* Z_Construct_UClass_AGameModeBase();
-	ENGINE_API UClass* Z_Construct_UClass_UStaticMesh_NoRegister();
 	UPackage* Z_Construct_UPackage__Script_VoxelProject();
 	VOXELPROJECT_API UClass* Z_Construct_UClass_AVoxelGameModeBase();
 	VOXELPROJECT_API UClass* Z_Construct_UClass_AVoxelGameModeBase_NoRegister();
@@ -86,10 +85,6 @@ void EmptyLinkFunctionForGeneratedCodeVoxelGameModeBase() {}
 		static const UECodeGen_Private::FMetaDataPairParam NewProp_ChunkToSpawn_MetaData[];
 #endif
 		static const UECodeGen_Private::FClassPropertyParams NewProp_ChunkToSpawn;
-#if WITH_METADATA
-		static const UECodeGen_Private::FMetaDataPairParam NewProp_MyTreeMesh_MetaData[];
-#endif
-		static const UECodeGen_Private::FObjectPropertyParams NewProp_MyTreeMesh;
 		static const UECodeGen_Private::FPropertyParamsBase* const PropPointers[];
 		static const FCppClassTypeInfoStatic StaticCppClassTypeInfo;
 		static const UECodeGen_Private::FClassParams ClassParams;
@@ -155,19 +150,12 @@ void EmptyLinkFunctionForGeneratedCodeVoxelGameModeBase() {}
 	};
 #endif
 	const UECodeGen_Private::FClassPropertyParams Z_Construct_UClass_AVoxelGameModeBase_Statics::NewProp_ChunkToSpawn = { "ChunkToSpawn", nullptr, (EPropertyFlags)0x0044000000000001, UECodeGen_Private::EPropertyGenFlags::Class, RF_Public|RF_Transient|RF_MarkAsNative, nullptr, nullptr, 1, STRUCT_OFFSET(AVoxelGameModeBase, ChunkToSpawn), Z_Construct_UClass_UClass, Z_Construct_UClass_AActor_NoRegister, METADATA_PARAMS(UE_ARRAY_COUNT(Z_Construct_UClass_AVoxelGameModeBase_Statics::NewProp_ChunkToSpawn_MetaData), Z_Construct_UClass_AVoxelGameModeBase_Statics::NewProp_ChunkToSpawn_MetaData) };
-#if WITH_METADATA
-	const UECodeGen_Private::FMetaDataPairParam Z_Construct_UClass_AVoxelGameModeBase_Statics::NewProp_MyTreeMesh_MetaData[] = {
-		{ "ModuleRelativePath", "VoxelGameModeBase.h" },
-	};
-#endif
-	const UECodeGen_Private::FObjectPropertyParams Z_Construct_UClass_AVoxelGameModeBase_Statics::NewProp_MyTreeMesh = { "MyTreeMesh", nullptr, (EPropertyFlags)0x0040000000000000, UECodeGen_Private::EPropertyGenFlags::Object, RF_Public|RF_Transient|RF_MarkAsNative, nullptr, nullptr, 1, STRUCT_OFFSET(AVoxelGameModeBase, MyTreeMesh), Z_Construct_UClass_UStaticMesh_NoRegister, METADATA_PARAMS(UE_ARRAY_COUNT(Z_Construct_UClass_AVoxelGameModeBase_Statics::NewProp_MyTreeMesh_MetaData), Z_Construct_UClass_AVoxelGameModeBase_Statics::NewProp_MyTreeMesh_MetaData) };
 	const UECodeGen_Private::FPropertyParamsBase* const Z_Construct_UClass_AVoxelGameModeBase_Statics::PropPointers[] = {
 		(const UECodeGen_Private::FPropertyParamsBase*)&Z_Construct_UClass_AVoxelGameModeBase_Statics::NewProp_maxViewDst,
 		(const UECodeGen_Private::FPropertyParamsBase*)&Z_Construct_UClass_AVoxelGameModeBase_Statics::NewProp_ChunkSize,
 		(const UECodeGen_Private::FPropertyParamsBase*)&Z_Construct_UClass_AVoxelGameModeBase_Statics::NewProp_BlockSize,
 		(const UECodeGen_Private::FPropertyParamsBase*)&Z_Construct_UClass_AVoxelGameModeBase_Statics::NewProp_chunkUpdateTickSpeed,
 		(const UECodeGen_Private::FPropertyParamsBase*)&Z_Construct_UClass_AVoxelGameModeBase_Statics::NewProp_ChunkToSpawn,
-		(const UECodeGen_Private::FPropertyParamsBase*)&Z_Construct_UClass_AVoxelGameModeBase_Statics::NewProp_MyTreeMesh,
 	};
 	const FCppClassTypeInfoStatic Z_Construct_UClass_AVoxelGameModeBase_Statics::StaticCppClassTypeInfo = {
 		TCppClassTypeTraits<AVoxelGameModeBase>::IsAbstract,
@@ -207,9 +195,9 @@ void EmptyLinkFunctionForGeneratedCodeVoxelGameModeBase() {}
 		static const FClassRegisterCompiledInInfo ClassInfo[];
 	};
 	const FClassRegisterCompiledInInfo Z_CompiledInDeferFile_FID_UE5Projects_Voxel_VoxelProject_Source_VoxelProject_VoxelGameModeBase_h_Statics::ClassInfo[] = {
-		{ Z_Construct_UClass_AVoxelGameModeBase, AVoxelGameModeBase::StaticClass, TEXT("AVoxelGameModeBase"), &Z_Registration_Info_UClass_AVoxelGameModeBase, CONSTRUCT_RELOAD_VERSION_INFO(FClassReloadVersionInfo, sizeof(AVoxelGameModeBase), 1096474162U) },
+		{ Z_Construct_UClass_AVoxelGameModeBase, AVoxelGameModeBase::StaticClass, TEXT("AVoxelGameModeBase"), &Z_Registration_Info_UClass_AVoxelGameModeBase, CONSTRUCT_RELOAD_VERSION_INFO(FClassReloadVersionInfo, sizeof(AVoxelGameModeBase), 2878645030U) },
 	};
-	static FRegisterCompiledInInfo Z_CompiledInDeferFile_FID_UE5Projects_Voxel_VoxelProject_Source_VoxelProject_VoxelGameModeBase_h_704761196(TEXT("/Script/VoxelProject"),
+	static FRegisterCompiledInInfo Z_CompiledInDeferFile_FID_UE5Projects_Voxel_VoxelProject_Source_VoxelProject_VoxelGameModeBase_h_4245215527(TEXT("/Script/VoxelProject"),
 		Z_CompiledInDeferFile_FID_UE5Projects_Voxel_VoxelProject_Source_VoxelProject_VoxelGameModeBase_h_Statics::ClassInfo, UE_ARRAY_COUNT(Z_CompiledInDeferFile_FID_UE5Projects_Voxel_VoxelProject_Source_VoxelProject_VoxelGameModeBase_h_Statics::ClassInfo),
 		nullptr, 0,
 		nullptr, 0);

@@ -8,7 +8,10 @@
 #include <DynamicMesh/DynamicAttribute.h>
 #include <DynamicMesh/DynamicVertexAttribute.h>
 #include <DynamicMesh/DynamicMeshAttributeSet.h>
+#include "Components/HierarchicalInstancedStaticMeshComponent.h"
 #include <GeometryCoreModule.h>
+#include <random>
+#include <NiagaraComponent.h>
 #include <GeometryBase.h>
 #include <DynamicMeshActor.h>
 #include <DynamicMesh/ColliderMesh.h>
@@ -26,21 +29,45 @@ class AChunk : public AActor
 
 
 public:
+    UPROPERTY(EditAnywhere, Category = "Chunk")
+    int Size = 25;
+
+    UPROPERTY(EditAnywhere, Category = "Chunk")
+    int Scale = 1;
+
+    UPROPERTY(EditAnywhere, Category = "Materials")
+    UMaterialInterface* BaseMaterial;
 
     UFUNCTION(BlueprintCallable, Category = "ChunkFunction")
     void ModifyVoxel(FVector WorldPosition, EBlock Block);
+
+    UPROPERTY(BlueprintReadOnly, Category = "ChunkInformation")
+    FString biomeName;
+
+    void SpawnTreesAndFoliage();
+    UHierarchicalInstancedStaticMeshComponent* treeHISM;
+    UHierarchicalInstancedStaticMeshComponent* grassHISM;
+    UHierarchicalInstancedStaticMeshComponent* flowerSpawnerOneHISM;
+    UHierarchicalInstancedStaticMeshComponent* flowerSpawnerTwoHISM;
+    UHierarchicalInstancedStaticMeshComponent* flowerSpawnerThreeHISM;
+    UHierarchicalInstancedStaticMeshComponent* wheatHISM;
+
+
     FIntVector WorldToLocal(FIntVector WorldLocation);
     FIntVector ConvertLocalCoordsToVoxel(FIntVector LocalCoords);
     void ModifyVoxelData(FIntVector Position, EBlock Block);
     FIntVector WorldToLocal(FVector WorldPosition);
-
+    void SpawnNiagaraAtLocation(const FVector& Location, UNiagaraComponent* niagaraComponent);
    
     bool mountainBiome = false;
     bool plainsBiome = false;
     bool mountainPlainsTransition = false;
+    bool lowMountainPlainsTransition = false;
+    bool adjustPlainsHeight = false;
 
 
-    bool regeneratingMesh = false;
+    bool axisOneHalfGenerated = false;
+    bool axisTwoHalfGenerated = false;
     bool modifyingVoxel = false;
 
     struct NoiseStruct
@@ -48,6 +75,21 @@ public:
         float noiseValue;
         float biomeNumber;
     };
+
+    FVector treeScale;
+    FVector grassScale;
+    FVector flowerScale;
+    int treeCount = 0;
+    int mountainTreeCount = 0;
+    int wheatCount = 0;
+    int flowerThreePatchCount = 0;
+
+    TArray<FVector3d> treeLocations;
+    TArray<FVector3d> mountainTreeLocations;
+    TArray<FVector3d> flowerLocations;
+
+    TSet<int> blocksGeneratedIndexes;
+
     TArray<NoiseStruct> globalNoiseMap;
     struct FMask
     {
@@ -79,7 +121,6 @@ public:
     TArray<FQuadData> QuadDataArrayThree;
 
 
-    int generateRandomNumber(int min, int max);
     bool outOfBounds = false;
 
     TArray<FGraphEventRef> TaskDependencies;
@@ -92,38 +133,40 @@ public:
     // Sets default values for this actor's properties
     AChunk();
 
-    UPROPERTY(EditAnywhere, Category = "Chunk")
-    int Size = 32;
+   
 
-    UPROPERTY(EditAnywhere, Category = "Chunk")
-    int Scale = 1;
+  
 
-    UPROPERTY(EditAnywhere, Category = "Materials")
-    UMaterialInterface* BaseMaterial;
+ 
 
-    UPROPERTY()
-    UStaticMesh* MyTreeMesh;
-
-    int VerticalHeight = 470;
+    int VerticalHeight = 400;
     UClass* MyTreeBPClass;
     UClass* MyGrassBPClass;
-    // UFUNCTION(BlueprintCallable, Category = "Chunk")
-    //     void ModifyVoxel(const FIntVector Position, const EBlock Block);
+
 
     UPROPERTY(EditAnywhere, Category = "Chunk")
     int AmtBlocksVertically = 1;
 
+    int globalTick = 0;
     int meshCounter = 0;
+    int axisOneGeneratedCounter;
+    int axisTwoGeneratedCounter;
+    int axisThreeGeneratedCounter;
+
     int frameCounter = 0;
     int CurrentX, CurrentY;
     int MaxX, MaxY;
     FTimerHandle WorkTimerHandle;
     TArray<FGraphEventRef> TaskList;
     float ChunkSizeInMeters = 32.0;
-    TArray<FVector> TreeLocations;
     void GenerateBlocks();
-    void RespawnTrees();
     void StaticMeshConversion();
+    // Generates a random integer between min and max
+
+    int GenerateRandomNumber(int min, int max);
+    // Generates a random float between 0.0 and 1.0
+    float GenerateRandomDeterministicFloat(int uniqueId);
+
 
 protected:
     // Called when the game starts or when spawned
@@ -164,6 +207,10 @@ private:
     UE::Geometry::FDynamicMeshNormalOverlay* AxisThreeNormalOverlay;
 
     FastNoiseLite* HillyPlains;
+    FastNoiseLite* PlainsTreeNoise;
+    FastNoiseLite* MountainTreeNoise;
+    FastNoiseLite* TransitionPlainsNoise;
+    FastNoiseLite* PlainsWheatNoise;
     FastNoiseLite* PlainsNoise;
     FastNoiseLite* ColorNoise;
     FastNoiseLite* SecondaryNoise;
@@ -221,14 +268,25 @@ private:
     // keeps track of whether axis 1 and 2 have been generated
     bool allAxisGenerated = false;
 
+    bool axisOneApplied = false;
+    bool axisTwoApplied = false;
+    bool axisThreeApplied = false;
+
+
     bool axisOneGenerated = false;
     bool axisTwoGenerated = false;
     bool axisThreeGenerated = false;
     bool initialAxisGenerated = false;
+    bool shadowsActive = false;
 
-  
+    bool objectsSpawned = false;
+    bool niagaraSpawned = false;
+
+    bool halfGenerated = false;
     void ClearMesh();
-
+    void ClearAxisOneMesh();
+    void ClearAxisTwoMesh();
+    bool IsValidVector(const FVector& Vec) const;
     const FVector BlockVertexData[8] = {
             FVector(100,100,100),
             FVector(100,0,100),
@@ -252,6 +310,10 @@ private:
     float QueryNoiseValue(const std::vector<float>& noiseOutput, int x, int y, int z, int Width, int Height);
 
     void GenerateMesh();
+    void GenerateAxisOneMesh(bool levelZeroLOD);
+    void GenerateAxisTwoMesh(bool levelZeroLOD);
+    void GenerateAxisThreeMesh();
+
     void PerformBusyWait(int32 NumberOfIterations);
     void SetupBiomeNoise();
     void CreateQuads();
@@ -271,9 +333,9 @@ private:
     //void CreateQuadThree(FMask Mask, FIntVector AxisMask, FIntVector V1, FIntVector V2, FIntVector V3, FIntVector V4, EBlock Block);
 
 
-    void CreateQuadOne(FMask Mask, FIntVector AxisMask, FIntVector V1, FIntVector V2, FIntVector V3, FIntVector V4, EBlock Block);
-    void CreateQuadTwo(FMask Mask, FIntVector AxisMask, FIntVector V1, FIntVector V2, FIntVector V3, FIntVector V4, EBlock Block);
-    void CreateQuadThree(FMask Mask, FIntVector AxisMask, FIntVector V1, FIntVector V2, FIntVector V3, FIntVector V4, EBlock Block);
+    void CreateQuadOne(FMask Mask, FIntVector AxisMask, FIntVector V1, FIntVector V2, FIntVector V3, FIntVector V4, EBlock Block,int iteration);
+    void CreateQuadTwo(FMask Mask, FIntVector AxisMask, FIntVector V1, FIntVector V2, FIntVector V3, FIntVector V4, EBlock Block, int iteration);
+    void CreateQuadThree(FMask Mask, FIntVector AxisMask, FIntVector V1, FIntVector V2, FIntVector V3, FIntVector V4, EBlock Block, int iteration);
 
 
 
@@ -285,7 +347,7 @@ private:
 
     bool CompareMask(FMask M1, FMask M2) const;
 
-    FColor GetColorFromBlock(EBlock Block, FIntVector Location);
+    FColor GetColorFromBlock(EBlock Block, FIntVector Location, int randomNumberId);
 
     void DelayedBeginPlay();
 
@@ -296,7 +358,9 @@ private:
     //    TArray<FVector2D> TreeMap;
 
   
-
+    //Color Variables
+   
+    void SpawnNiagara();
 public:
     // Called every frame
     virtual void Tick(float DeltaTime) override;

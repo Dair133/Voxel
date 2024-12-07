@@ -1,4 +1,4 @@
-#include "E:/UE5Projects/Voxel/VoxelProject/Intermediate/Build/Win64/x64/VoxelProjectEditor/Development/Engine/SharedDefinitions.Engine.Cpp17.InclOrderUnreal5_0.h"
+#include "E:/UE5Projects/Voxel/VoxelProject/Intermediate/Build/Win64/x64/VoxelProjectEditor/Development/Engine/SharedDefinitions.Engine.Cpp20.InclOrderUnreal5_0.h"
 #undef UE_IS_ENGINE_MODULE
 #undef DEPRECATED_FORGAME
 #define DEPRECATED_FORGAME DEPRECATED
@@ -27,3 +27,12 @@
 #define GEOMETRYALGORITHMS_API DLLIMPORT
 #define GEOMETRYFRAMEWORK_API DLLIMPORT
 #define MESHCONVERSION_API DLLIMPORT
+#define VECTORVM_SUPPORTS_EXPERIMENTAL 1
+#define VECTORVM_SUPPORTS_LEGACY 1
+#define NIAGARA_API DLLIMPORT
+#define NIAGARACORE_API DLLIMPORT
+#define VECTORVM_SUPPORTS_EXPERIMENTAL 1
+#define VECTORVM_SUPPORTS_LEGACY 1
+#define VECTORVM_API DLLIMPORT
+#define NIAGARASHADER_API DLLIMPORT
+#define NIAGARAVERTEXFACTORIES_API DLLIMPORT

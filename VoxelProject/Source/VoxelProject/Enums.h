@@ -9,20 +9,24 @@ enum class EDirection
 UENUM(BlueprintType)
 enum class EBlock : uint8
 {
-	Null, Air, Stone, Dirt, Grass, Sand, Water, SnowGrass,OutOfBounds
+	Null, Air, Stone, Dirt, Grass, Sand, Water, SnowGrass,DarkGrass,OutOfBounds
 };
 
 UENUM(BlueprintType)
 enum class EBiome : uint8
 {
-	Mountain,Plains,Mountain_Plains
+	Mountain,Plains,Mountain_Plains,lowMountain_Plains
 };
 // Biome = Axis which are generated for this biome
 // i.e. Plains biome below has all 3 axis generated for it
 // Plains biome = 1,2,3
 // Mountain = 1,2
 
-
+UENUM(BlueprintType)
+enum class ECompass : uint8
+{
+	North, South, East, West, Other, None
+};
 
 UENUM(BlueprintType)
 enum class EGenerationType : uint8

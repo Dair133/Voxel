@@ -1,6 +1,8 @@
 // Copyright Epic Games, Inc. All Rights Reserved.
 
 #include <VoxelProject/VoxelGameModeBase.h>
+#include "Engine/Engine.h"
+#include <EngineUtils.h>
 //#include <FastNoise/FastNoise.h>
 #include <VoxelProject/Chunk.h>
 #include <VoxelProject/Enums.h>
@@ -13,6 +15,8 @@
 #include <Kismet/GameplayStatics.h>
 #include <chrono>
 #include <thread>
+#include "GameFramework/HUD.h"
+#include <NiagaraComponent.h>
 #include <GameFramework/CharacterMovementComponent.h>
 #include <EditorCategoryUtils.h>
 #include <random>
@@ -51,6 +55,27 @@ AVoxelGameModeBase::AVoxelGameModeBase()
     ChunkToSpawn = AChunk::StaticClass();
     DefaultPawnClass = MyBlueprintCharacterClass;
     PlayerControllerClass = APlayerController::StaticClass();
+
+    // Create function for assigning found objects, so it takes in object found, obj to assign does null check? so it doesnt have to be repeated
+    // if I have a lot of objects down the road?
+  
+   // / Script / Engine.Blueprint'/Game/ThirdPerson/CustomBp/MyHud.MyHud'
+   
+// Assume this is inside the AGMyGameMode class constructor
+        // Set default HUD class
+        static ConstructorHelpers::FClassFinder<AHUD> HUDClassHolder(TEXT("'/Game/ThirdPerson/CustomBp/MyHud.MyHud'"));
+        if (HUDClassHolder.Succeeded())
+        {
+            UE_LOG(LogTemp, Warning, TEXT("HUD class found!"));
+            MyHUDClass = HUDClassHolder.Class;
+        }
+        else
+        {
+            UE_LOG(LogTemp, Warning, TEXT("HUD class not found!"));
+            MyHUDClass = nullptr; // Ensure a safe default is set
+        }
+
+
 
     static ConstructorHelpers::FObjectFinder<UBlueprint> MyTreeBlueprintFinder(TEXT("Blueprint'/Game/CUBEGENERATIONMAP/TreeTest.TreeTest'"));
     if (MyTreeBlueprintFinder.Succeeded())
@@ -91,8 +116,88 @@ void AVoxelGameModeBase::OnCheckUpdateChunks()
        // GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, DebugMessage);
     }
 
-
+  
 }
+
+void AVoxelGameModeBase::InitialiseActorReferences() {
+    AActor* TreeSpawnerReference = FindActorByName(GetWorld(), TEXT("TreeSpawner"));
+    if (TreeSpawnerReference)
+    {
+        UE_LOG(LogTemp, Warning, TEXT("TreeSpawner actor found sucessfully"));
+        treeSpawner = TreeSpawnerReference;
+    }
+    else
+    {
+        // TreeSpawner was not found
+        UE_LOG(LogTemp, Warning, TEXT("TreeSpawner actor not found."));
+    }
+
+    AActor* GrassSpawnerReference = FindActorByName(GetWorld(), TEXT("GrassSpawner"));
+    if (GrassSpawnerReference)
+    {
+    UE_LOG(LogTemp, Warning, TEXT("GrassSpawner actor found sucessfully"));
+    grassSpawner = GrassSpawnerReference;
+	}
+    else
+    {
+    // GrassSpawner was not found
+    UE_LOG(LogTemp, Warning, TEXT("GrassSpawner actor not found."));
+	}
+
+    AActor* FlowerSpawnerOneReference = FindActorByName(GetWorld(), TEXT("FlowerSpawnerOne"));
+    if (FlowerSpawnerOneReference)
+    {
+        UE_LOG(LogTemp, Warning, TEXT("FlowerSpawnerOne found sucessfully"));
+       
+        flowerSpawnerOne = FlowerSpawnerOneReference;
+        flowerSpawnerOneHISM = Cast<UHierarchicalInstancedStaticMeshComponent>(flowerSpawnerOne->GetComponentByClass(UHierarchicalInstancedStaticMeshComponent::StaticClass()));
+    }
+    else
+    {
+        // GrassSpawner was not found
+        UE_LOG(LogTemp, Warning, TEXT("FlowerSpawnerOne actor not found."));
+    }
+
+    AActor* FlowerSpawnerTwoReference = FindActorByName(GetWorld(), TEXT("FlowerSpawnerTwo"));
+    if (FlowerSpawnerTwoReference)
+    {
+        UE_LOG(LogTemp, Warning, TEXT("FlowerSpawnerTwo found sucessfully"));
+        flowerSpawnerTwo = FlowerSpawnerTwoReference;
+        flowerSpawnerTwoHISM = Cast<UHierarchicalInstancedStaticMeshComponent>(flowerSpawnerTwo->GetComponentByClass(UHierarchicalInstancedStaticMeshComponent::StaticClass()));
+        
+    }
+    else
+    {
+        // GrassSpawner was not found
+        UE_LOG(LogTemp, Warning, TEXT("FlowerSpawnerTwo actor not found."));
+    }
+
+    AActor* FlowerSpawnerThreeReference = FindActorByName(GetWorld(), TEXT("FlowerSpawnerThree"));
+    if (FlowerSpawnerThreeReference)
+    {
+        UE_LOG(LogTemp, Warning, TEXT("FlowerSpawnerThree found sucessfully"));
+        flowerSpawnerThree = FlowerSpawnerThreeReference;
+        flowerSpawnerThreeHISM = Cast<UHierarchicalInstancedStaticMeshComponent>(flowerSpawnerThree->GetComponentByClass(UHierarchicalInstancedStaticMeshComponent::StaticClass()));
+    }
+    else
+    {
+        // GrassSpawner was not found
+        UE_LOG(LogTemp, Warning, TEXT("FlowerSpawnerThree actor not found."));
+    }
+
+    AActor* wheatSpawnerReference = FindActorByName(GetWorld(), TEXT("WheatSpawner"));
+    if (wheatSpawnerReference)
+    {
+        UE_LOG(LogTemp, Warning, TEXT("Wheat Spawner found in gamemode"));
+        wheatSpawner = Cast<UHierarchicalInstancedStaticMeshComponent>(wheatSpawnerReference->GetComponentByClass(UHierarchicalInstancedStaticMeshComponent::StaticClass()));
+    }
+    else
+    {
+        // GrassSpawner was not found
+        UE_LOG(LogTemp, Warning, TEXT("Wheat Spawner not found in gamemode."));
+    }
+}
+
 
 void AVoxelGameModeBase::BeginPlay()
 {
@@ -117,8 +222,9 @@ void AVoxelGameModeBase::BeginPlay()
 
     //UpdateVisibleChunksAroundPlayers();
 
+    InitialiseActorReferences();
 
-
+  
 
 
 }
@@ -159,6 +265,7 @@ void AVoxelGameModeBase::PostLogin(APlayerController* NewPlayer)
             NewPlayer->SetPawn(playerPawn);
             NewPlayer->Possess(playerPawn);
             NewPlayer->SetViewTargetWithBlend(playerPawn);
+            NewPlayer->ClientSetHUD(HUDClass);
             UE_LOG(LogTemp, Warning, TEXT("Correct pos login called"));
         }
     }
@@ -240,16 +347,20 @@ void AVoxelGameModeBase::UpdateVisibleChunks(FVector2D viewerPosition)
     }
    
     // Insread of doing this here we start a timer which simply checks the queueu x times per second and spawns a chunk if something in queue
-    if (GetWorld()->GetTimeSeconds() > 80 && !slowCreateChunkTimerStarted)
+    if (GetWorld()->GetTimeSeconds() > 180 && !slowCreateChunkTimerStarted)
     {
         UE_LOG(LogTemp, Warning, TEXT("Starting slow timer"));
         GetWorld()->GetTimerManager().ClearTimer(createChunkTimerHandle);
-        GetWorld()->GetTimerManager().SetTimer(createChunkTimerHandle, this, &AVoxelGameModeBase::ProcessChunkQueue, 0.4f, true);
+        // Use the unique ID as the seed for the random number generator
+        std::mt19937 rng(1234);
+        std::uniform_real_distribution<float> dist(0.1f, 0.2f);  // Range between 0 and 1
+        // Original spawning time code :  GetWorld()->GetTimerManager().SetTimer(createChunkTimerHandle, this, &AVoxelGameModeBase::ProcessChunkQueue, 0.07f + dist(rng), true);
+        GetWorld()->GetTimerManager().SetTimer(createChunkTimerHandle, this, &AVoxelGameModeBase::ProcessChunkQueue, 0.07f + dist(rng), true);
         slowCreateChunkTimerStarted = true;
     }
     else if(!fastCreateChunkTimerStarted) {
         UE_LOG(LogTemp, Warning, TEXT("Starting fast timer"));
-        GetWorld()->GetTimerManager().SetTimer(createChunkTimerHandle, this, &AVoxelGameModeBase::ProcessChunkQueue, 0.02f, true);
+        GetWorld()->GetTimerManager().SetTimer(createChunkTimerHandle, this, &AVoxelGameModeBase::ProcessChunkQueue, 0.018f, true);
         fastCreateChunkTimerStarted = true;
     }
 
@@ -356,7 +467,7 @@ void AVoxelGameModeBase::UpdateVisibleChunksAroundPlayers()
         if (current_pc && current_pc->IsValidLowLevel())
         {
             // UE_LOG(LogTemp, Warning, TEXT("VALID PLAYER CONTROLLER"));
-
+            
             if (current_pc->GetPawn() == nullptr) {
                 UE_LOG(LogTemp, Warning, TEXT("PLayer controller is valid but has no pawn"));
                 FVector spawnLocation = FVector(-2100.0f, 250.f, 730.f);
@@ -454,13 +565,13 @@ bool AVoxelGameModeBase::UpdateChunk(AActor* chunk)
         chunk->SetActorHiddenInGame(false);
         AChunk* myChunk = Cast<AChunk>(chunk);
         if (myChunk != nullptr) {
-            myChunk->RespawnTrees();
+//            myChunk->RespawnTrees();
         }
         return true;  // Chunk visibility changed to visible
     }
     else if (closest_distance >= maxViewDst && !isHidden) {
         // Chunk is out of view distance and is currently visible, hide it
-       // chunk->SetActorHiddenInGame(true); //commenting out this line causes ALL chunks to appear, but obviously removing this line means they will never be hidden again
+        chunk->SetActorHiddenInGame(true); //commenting out this line causes ALL chunks to appear, but obviously removing this line means they will never be hidden again
         return true;  // Chunk visibility changed to hidden
     }
 
@@ -534,3 +645,46 @@ void AVoxelGameModeBase::SpawnTrees(const FVector& PlayerPosition)
         }
     }
 }
+
+
+AActor* AVoxelGameModeBase::GetTreeSpawner() {
+    return treeSpawner;
+}
+AActor* AVoxelGameModeBase::GetGrassSpawner() {
+    return grassSpawner;
+}
+UHierarchicalInstancedStaticMeshComponent* AVoxelGameModeBase::GetFlowerSpawnerOne() {
+	return flowerSpawnerOneHISM;
+}
+UHierarchicalInstancedStaticMeshComponent* AVoxelGameModeBase::GetFlowerSpawnerTwo() {
+	return flowerSpawnerTwoHISM;
+}
+UHierarchicalInstancedStaticMeshComponent* AVoxelGameModeBase::GetFlowerSpawnerThree() {
+	return flowerSpawnerThreeHISM;
+}
+UHierarchicalInstancedStaticMeshComponent* AVoxelGameModeBase::GetWheatSpawner() {
+    return wheatSpawner;
+}
+
+
+
+AActor* AVoxelGameModeBase::FindActorByName(UWorld* World, const FString& ActorName)
+{
+    if (!World) {
+        UE_LOG(LogTemp, Warning, TEXT("Invalid world context provided to FindActorByName"));
+        return nullptr;
+    }
+
+    for (TActorIterator<AActor> It(World); It; ++It)
+    {
+        AActor* Actor = *It;
+        UE_LOG(LogTemp, Warning, TEXT("Searching for actor %s"), *Actor->GetActorLabel());
+        if (Actor && Actor->GetActorLabel() == ActorName)
+        {
+       
+            return Actor;
+        }
+    }
+    return nullptr;
+}
+

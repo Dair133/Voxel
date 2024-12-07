@@ -1,7 +1,6 @@
 {
 	"SourceFiles": [
 		"E:\\UE5Projects\\Voxel\\VoxelProject\\Source\\VoxelProject\\VoxelProject.Build.cs",
-		"E:\\UE5Projects\\Voxel\\VoxelProject\\Plugins\\UE4CMake\\Source\\CMakeTarget.Build.cs",
 		"E:\\UE5Projects\\Voxel\\VoxelProject\\Source\\VoxelProject.Target.cs",
 		"E:\\UE5Projects\\Voxel\\VoxelProject\\Source\\VoxelProjectEditor.Target.cs"
 	],
