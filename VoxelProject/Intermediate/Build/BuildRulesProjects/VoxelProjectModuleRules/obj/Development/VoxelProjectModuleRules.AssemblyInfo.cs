@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("VoxelProjectModuleRules")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Development")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+dbc6dbd3b6fcd5a65052f29e93fe30a082108d3a")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+c179c25f0926c4a8b44ee3e56ae42715e3a0629e")]
 [assembly: System.Reflection.AssemblyProductAttribute("VoxelProjectModuleRules")]
 [assembly: System.Reflection.AssemblyTitleAttribute("VoxelProjectModuleRules")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

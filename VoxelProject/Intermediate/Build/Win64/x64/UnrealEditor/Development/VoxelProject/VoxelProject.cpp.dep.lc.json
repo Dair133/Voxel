@@ -1,0 +1,14 @@
+{
+    "Version": "1.2",
+    "Data": {
+        "Source": "e:\\ue5projects\\voxel\\voxelproject\\source\\voxelproject\\voxelproject.cpp",
+        "ProvidedModule": "",
+        "PCH": "e:\\ue5projects\\voxel\\voxelproject\\intermediate\\build\\win64\\x64\\unrealeditor\\development\\unrealed\\sharedpch.unrealed.project.valapi.cpp20.h.pch",
+        "Includes": [
+            "e:\\ue5projects\\voxel\\voxelproject\\intermediate\\build\\win64\\x64\\unrealeditor\\development\\voxelproject\\definitions.voxelproject.h",
+            "e:\\ue5projects\\voxel\\voxelproject\\source\\voxelproject\\voxelproject.h"
+        ],
+        "ImportedModules": [],
+        "ImportedHeaderUnits": []
+    }
+}

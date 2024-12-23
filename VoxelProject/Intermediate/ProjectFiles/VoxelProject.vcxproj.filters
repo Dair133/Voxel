@@ -26,45 +26,21 @@
     <None Include="..\..\Config\DefaultGame.ini">
       <Filter>Config</Filter>
     </None>
-    <None Include="..\..\Config\DefaultInput.ini">
+    <None Include="..\..\Config\DefaultGameplayTags.ini">
       <Filter>Config</Filter>
     </None>
-    <Filter Include="Plugins">
-      <UniqueIdentifier>{BB38096A-B391-30DC-A0D4-4F3EA6B44507}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Plugins\UE4CMake">
-      <UniqueIdentifier>{3CA1DF75-832E-3B89-812C-12927730DC8D}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Plugins\UE4CMake\Source">
-      <UniqueIdentifier>{60780580-6546-3C55-8DFE-E4E265D2C48E}</UniqueIdentifier>
-    </Filter>
-    <None Include="..\..\Plugins\UE4CMake\Source\CMakeLists.in">
-      <Filter>Plugins\UE4CMake\Source</Filter>
-    </None>
-    <None Include="..\..\Plugins\UE4CMake\Source\CMakeTarget.Build.cs">
-      <Filter>Plugins\UE4CMake\Source</Filter>
-    </None>
-    <ClCompile Include="..\..\Plugins\UE4CMake\Source\module.cpp">
-      <Filter>Plugins\UE4CMake\Source</Filter>
-    </ClCompile>
-    <ClInclude Include="..\..\Plugins\UE4CMake\Source\module.h">
-      <Filter>Plugins\UE4CMake\Source</Filter>
-    </ClInclude>
-    <Filter Include="Plugins\UE4CMake\Source\toolchains">
-      <UniqueIdentifier>{A2AA4E24-DDFA-3D24-B898-05DE2082378F}</UniqueIdentifier>
-    </Filter>
-    <None Include="..\..\Plugins\UE4CMake\Source\toolchains\unix_toolchain.in">
-      <Filter>Plugins\UE4CMake\Source\toolchains</Filter>
-    </None>
-    <None Include="..\..\Plugins\UE4CMake\Source\toolchains\windows_toolchain.in">
-      <Filter>Plugins\UE4CMake\Source\toolchains</Filter>
-    </None>
-    <None Include="..\..\Plugins\UE4CMake\CMakeTarget.uplugin">
-      <Filter>Plugins\UE4CMake</Filter>
+    <None Include="..\..\Config\DefaultInput.ini">
+      <Filter>Config</Filter>
     </None>
     <Filter Include="Source\VoxelProject">
       <UniqueIdentifier>{675FB4DC-71E7-3EDE-A3EA-438EBC52DA40}</UniqueIdentifier>
     </Filter>
+    <ClCompile Include="..\..\Source\VoxelProject\BiomesEnum.cpp">
+      <Filter>Source\VoxelProject</Filter>
+    </ClCompile>
+    <ClInclude Include="..\..\Source\VoxelProject\BiomesEnum.h">
+      <Filter>Source\VoxelProject</Filter>
+    </ClInclude>
     <ClCompile Include="..\..\Source\VoxelProject\BoxTwo.cpp">
       <Filter>Source\VoxelProject</Filter>
     </ClCompile>

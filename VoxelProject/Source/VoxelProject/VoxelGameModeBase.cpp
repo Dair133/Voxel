@@ -1,7 +1,9 @@
 // Copyright Epic Games, Inc. All Rights Reserved.
 
 #include <VoxelProject/VoxelGameModeBase.h>
-#include <FastNoise/FastNoise.h>
+#include "Engine/Engine.h"
+#include <EngineUtils.h>
+//#include <FastNoise/FastNoise.h>
 #include <VoxelProject/Chunk.h>
 #include <VoxelProject/Enums.h>
 #include <VoxelProject/BoxTwo.h>
@@ -13,8 +15,11 @@
 #include <Kismet/GameplayStatics.h>
 #include <chrono>
 #include <thread>
+#include "GameFramework/HUD.h"
+#include <NiagaraComponent.h>
 #include <GameFramework/CharacterMovementComponent.h>
 #include <EditorCategoryUtils.h>
+#include <random>
 //#include "Octree/Octree.h"
 //#include "Octree/Enums.h"
 
@@ -51,6 +56,27 @@ AVoxelGameModeBase::AVoxelGameModeBase()
     DefaultPawnClass = MyBlueprintCharacterClass;
     PlayerControllerClass = APlayerController::StaticClass();
 
+    // Create function for assigning found objects, so it takes in object found, obj to assign does null check? so it doesnt have to be repeated
+    // if I have a lot of objects down the road?
+  
+   // / Script / Engine.Blueprint'/Game/ThirdPerson/CustomBp/MyHud.MyHud'
+   
+// Assume this is inside the AGMyGameMode class constructor
+        // Set default HUD class
+        static ConstructorHelpers::FClassFinder<AHUD> HUDClassHolder(TEXT("'/Game/ThirdPerson/CustomBp/MyHud.MyHud'"));
+        if (HUDClassHolder.Succeeded())
+        {
+            UE_LOG(LogTemp, Warning, TEXT("HUD class found!"));
+            MyHUDClass = HUDClassHolder.Class;
+        }
+        else
+        {
+            UE_LOG(LogTemp, Warning, TEXT("HUD class not found!"));
+            MyHUDClass = nullptr; // Ensure a safe default is set
+        }
+
+
+
     static ConstructorHelpers::FObjectFinder<UBlueprint> MyTreeBlueprintFinder(TEXT("Blueprint'/Game/CUBEGENERATIONMAP/TreeTest.TreeTest'"));
     if (MyTreeBlueprintFinder.Succeeded())
     {
@@ -63,29 +89,144 @@ AVoxelGameModeBase::AVoxelGameModeBase()
 
 void AVoxelGameModeBase::OnCheckUpdateChunks()
 {
+     float WorldTime1 = GetWorld()->GetTimeSeconds();
+    FString DebugMessage1 = FString::Printf(TEXT("Time is %f"), WorldTime1);
+    GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, DebugMessage1);
     UpdateVisibleChunksAroundPlayers();
+
+
+    if (GetWorld()->GetTimeSeconds() > 80 && !addChunkTimerStarted)
+    {
+        GetWorld()->GetTimerManager().ClearTimer(chunkUpdateTimerHandle);
+        int32 Key1 = -1;
+        float TimeToDisplay1 = 5.0f; // Display the message for 5 seconds.
+        FColor DisplayColor1 = FColor::Red; // Display the message in red.
+        float WorldTime = GetWorld()->GetTimeSeconds();
+        FString DebugMessage = FString::Printf(TEXT("World Time Section 2(Standard): %f"), WorldTime);
+        GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, DebugMessage);
+        GetWorld()->GetTimerManager().SetTimer(chunkUpdateTimerHandle, this, &AVoxelGameModeBase::OnCheckUpdateChunks, 2.0f, true);
+        addChunkTimerStarted = true;
+    }
+    else if (!addChunkTimerStarted) {
+        int32 Key1 = -1;
+        float TimeToDisplay1 = 5.0f; // Display the message for 5 seconds.
+        FColor DisplayColor1 = FColor::Red; // Display the message in red.
+        float WorldTime = GetWorld()->GetTimeSeconds();
+        //FString DebugMessage = FString::Printf(TEXT("World Time Section 1(Loading): %f"), WorldTime);
+       // GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, DebugMessage);
+    }
+
+  
 }
+
+void AVoxelGameModeBase::InitialiseActorReferences() {
+    AActor* TreeSpawnerReference = FindActorByName(GetWorld(), TEXT("TreeSpawner"));
+    if (TreeSpawnerReference)
+    {
+        UE_LOG(LogTemp, Warning, TEXT("TreeSpawner actor found sucessfully"));
+        treeSpawner = TreeSpawnerReference;
+    }
+    else
+    {
+        // TreeSpawner was not found
+        UE_LOG(LogTemp, Warning, TEXT("TreeSpawner actor not found."));
+    }
+
+    AActor* GrassSpawnerReference = FindActorByName(GetWorld(), TEXT("GrassSpawner"));
+    if (GrassSpawnerReference)
+    {
+    UE_LOG(LogTemp, Warning, TEXT("GrassSpawner actor found sucessfully"));
+    grassSpawner = GrassSpawnerReference;
+	}
+    else
+    {
+    // GrassSpawner was not found
+    UE_LOG(LogTemp, Warning, TEXT("GrassSpawner actor not found."));
+	}
+
+    AActor* FlowerSpawnerOneReference = FindActorByName(GetWorld(), TEXT("FlowerSpawnerOne"));
+    if (FlowerSpawnerOneReference)
+    {
+        UE_LOG(LogTemp, Warning, TEXT("FlowerSpawnerOne found sucessfully"));
+       
+        flowerSpawnerOne = FlowerSpawnerOneReference;
+        flowerSpawnerOneHISM = Cast<UHierarchicalInstancedStaticMeshComponent>(flowerSpawnerOne->GetComponentByClass(UHierarchicalInstancedStaticMeshComponent::StaticClass()));
+    }
+    else
+    {
+        // GrassSpawner was not found
+        UE_LOG(LogTemp, Warning, TEXT("FlowerSpawnerOne actor not found."));
+    }
+
+    AActor* FlowerSpawnerTwoReference = FindActorByName(GetWorld(), TEXT("FlowerSpawnerTwo"));
+    if (FlowerSpawnerTwoReference)
+    {
+        UE_LOG(LogTemp, Warning, TEXT("FlowerSpawnerTwo found sucessfully"));
+        flowerSpawnerTwo = FlowerSpawnerTwoReference;
+        flowerSpawnerTwoHISM = Cast<UHierarchicalInstancedStaticMeshComponent>(flowerSpawnerTwo->GetComponentByClass(UHierarchicalInstancedStaticMeshComponent::StaticClass()));
+        
+    }
+    else
+    {
+        // GrassSpawner was not found
+        UE_LOG(LogTemp, Warning, TEXT("FlowerSpawnerTwo actor not found."));
+    }
+
+    AActor* FlowerSpawnerThreeReference = FindActorByName(GetWorld(), TEXT("FlowerSpawnerThree"));
+    if (FlowerSpawnerThreeReference)
+    {
+        UE_LOG(LogTemp, Warning, TEXT("FlowerSpawnerThree found sucessfully"));
+        flowerSpawnerThree = FlowerSpawnerThreeReference;
+        flowerSpawnerThreeHISM = Cast<UHierarchicalInstancedStaticMeshComponent>(flowerSpawnerThree->GetComponentByClass(UHierarchicalInstancedStaticMeshComponent::StaticClass()));
+    }
+    else
+    {
+        // GrassSpawner was not found
+        UE_LOG(LogTemp, Warning, TEXT("FlowerSpawnerThree actor not found."));
+    }
+
+    AActor* wheatSpawnerReference = FindActorByName(GetWorld(), TEXT("WheatSpawner"));
+    if (wheatSpawnerReference)
+    {
+        UE_LOG(LogTemp, Warning, TEXT("Wheat Spawner found in gamemode"));
+        wheatSpawner = Cast<UHierarchicalInstancedStaticMeshComponent>(wheatSpawnerReference->GetComponentByClass(UHierarchicalInstancedStaticMeshComponent::StaticClass()));
+    }
+    else
+    {
+        // GrassSpawner was not found
+        UE_LOG(LogTemp, Warning, TEXT("Wheat Spawner not found in gamemode."));
+    }
+}
+
 
 void AVoxelGameModeBase::BeginPlay()
 {
-  
+    Super::BeginPlay();
 
     //200 height was the multiple 12.5
-    ChunkSizeInMeters = ChunkSize * BlockSize * 4;
+    ChunkSizeInMeters = ChunkSize * BlockSize;
     maxViewDst = maxViewDst * ChunkSizeInMeters;
     chunksVisibleInViewDst = maxViewDst / ChunkSizeInMeters;
 
     if (this->HasAuthority())
     {
-        GetWorld()->GetTimerManager().SetTimer(chunkUpdateTimerHandle, this, &AVoxelGameModeBase::OnCheckUpdateChunks, chunkUpdateTickSpeed, true);
+        // below sets up infinite recursion basically
+        int32 Key1 = -1;
+        float TimeToDisplay1 = 5.0f; // Display the message for 5 seconds.
+        FColor DisplayColor1 = FColor::Red; // Display the message in red.
+        float WorldTime = GetWorld()->GetTimeSeconds();
+        FString DebugMessage = FString::Printf(TEXT("Setting up 0.01 timer: %f"), WorldTime);
+        GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, DebugMessage);
+        GetWorld()->GetTimerManager().SetTimer(chunkUpdateTimerHandle, this, &AVoxelGameModeBase::OnCheckUpdateChunks, 2.0f, true);
     }
 
     //UpdateVisibleChunksAroundPlayers();
 
+    InitialiseActorReferences();
 
-    
+  
 
-    Super::BeginPlay();
+
 }
 
 void AVoxelGameModeBase::PostLogin(APlayerController* NewPlayer)
@@ -99,7 +240,7 @@ void AVoxelGameModeBase::PostLogin(APlayerController* NewPlayer)
     UE_LOG(LogTemp, Warning, TEXT("Inside post loginc"));
     if (!NewPlayer->GetPawn())
     {
-        FVector spawnLocation = FVector(-2200.0f, 250.f, 2000.f);
+        FVector spawnLocation = FVector(-2200.0f, 250.f, 15000.f);
         FActorSpawnParameters SpawnParams;
         SpawnParams.Owner = NewPlayer;
         SpawnParams.bNoFail = true;
@@ -124,6 +265,7 @@ void AVoxelGameModeBase::PostLogin(APlayerController* NewPlayer)
             NewPlayer->SetPawn(playerPawn);
             NewPlayer->Possess(playerPawn);
             NewPlayer->SetViewTargetWithBlend(playerPawn);
+            NewPlayer->ClientSetHUD(HUDClass);
             UE_LOG(LogTemp, Warning, TEXT("Correct pos login called"));
         }
     }
@@ -164,7 +306,7 @@ void AVoxelGameModeBase::HideOutOfRangeChunks()
 void AVoxelGameModeBase::UpdateVisibleChunks(FVector2D viewerPosition)
 {
 
-
+    //UE_LOG(LogTemp, Warning, TEXT("Testing process chunk queue %d"), test);
     FBox2D viewBox(
         FVector2D(viewerPosition.X - chunksVisibleInViewDst * ChunkSizeInMeters, viewerPosition.Y - chunksVisibleInViewDst * ChunkSizeInMeters),
         FVector2D(viewerPosition.X + chunksVisibleInViewDst * ChunkSizeInMeters, viewerPosition.Y + chunksVisibleInViewDst * ChunkSizeInMeters)
@@ -203,13 +345,28 @@ void AVoxelGameModeBase::UpdateVisibleChunks(FVector2D viewerPosition)
             }
         }
     }
-    ProcessChunkQueue();
    
+    // Insread of doing this here we start a timer which simply checks the queueu x times per second and spawns a chunk if something in queue
+    if (GetWorld()->GetTimeSeconds() > 80 && !slowCreateChunkTimerStarted)
+    {
+        UE_LOG(LogTemp, Warning, TEXT("Starting slow timer"));
+        GetWorld()->GetTimerManager().ClearTimer(createChunkTimerHandle);
+        GetWorld()->GetTimerManager().SetTimer(createChunkTimerHandle, this, &AVoxelGameModeBase::ProcessChunkQueue, 0.4f, true);
+        slowCreateChunkTimerStarted = true;
+    }
+    else if(!fastCreateChunkTimerStarted) {
+        UE_LOG(LogTemp, Warning, TEXT("Starting fast timer"));
+        GetWorld()->GetTimerManager().SetTimer(createChunkTimerHandle, this, &AVoxelGameModeBase::ProcessChunkQueue, 0.018f, true);
+        fastCreateChunkTimerStarted = true;
+    }
+
 }
 void AVoxelGameModeBase::ProcessChunkQueue()
 {
-    //UE_LOG(LogTemp, Warning, TEXT("Processing chunk queue"));
-    //UE_LOG(LogTemp, Warning, TEXT("Pcrocess entered"));
+
+    // UE_LOG(LogTemp, Warning, TEXT("Processing chunk queue"));
+    // UE_LOG(LogTemp, Warning, TEXT("Processing chunk queue"));
+     //UE_LOG(LogTemp, Warning, TEXT("Pcrocess entered"));
     if (ChunkQueue.IsEmpty())
     {
         //  OnCheckUpdateChunks();
@@ -237,26 +394,33 @@ void AVoxelGameModeBase::ProcessChunkQueue()
     // Set a timer to call this function again after 1.0 second, if there are more chunks in the queue.
     if (!ChunkQueue.IsEmpty())
     {//130
-        if (GetWorld()->GetTimeSeconds() > 20)
+        if (GetWorld()->GetTimeSeconds() > 12)
         {
-            float TimeToDisplay1 = 10.0f; // Display the message for 5 seconds.
-            FColor DisplayColor1 = FColor::Red; // Display the message in red.
-            float WorldTime = GetWorld()->GetTimeSeconds();
-            FString DebugMessage = FString::Printf(TEXT("World Time SECTION TWO: %f"), WorldTime);
-            GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, DebugMessage);
-            GetWorld()->GetTimerManager().SetTimer(SpawnTimerHandle, this, &AVoxelGameModeBase::ProcessChunkQueue, 0.42f, false);
+
+            if (!GetWorld()->GetTimerManager().IsTimerActive(SpawnTimerHandle))
+            {
+                //std::random_device rd;
+                //std::mt19937 gen(rd());
+                //std::uniform_real_distribution<> distrib(0.0, 0.003); // Range from 0.0 to 1.0
+
+                //double randomFloat = distrib(gen); // Generates a random double between 0.0 and 1.0
+
+
+
+                //GetWorld()->GetTimerManager().SetTimer(SpawnTimerHandle, this, &AVoxelGameModeBase::OnCheckUpdateChunks, 0.32f+(randomFloat), false);
+            }
             //0.55 is a good value
+            //0.42 is a good value(main value used for testing over previous days)
         }
         else {
-            int32 Key1 = -1;
-            float TimeToDisplay1 = 10.0f; // Display the message for 5 seconds.
-            FColor DisplayColor1 = FColor::Red; // Display the message in red.
-            float WorldTime = GetWorld()->GetTimeSeconds();
-            FString DebugMessage = FString::Printf(TEXT("World Time: %f"), WorldTime);
-            GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, DebugMessage);
-            GetWorld()->GetTimerManager().SetTimer(SpawnTimerHandle, this, &AVoxelGameModeBase::ProcessChunkQueue, 0.05f, false);
+            //int32 Key1 = -1;
+            //float TimeToDisplay1 = 5.0f; // Display the message for 5 seconds.
+            //FColor DisplayColor1 = FColor::Red; // Display the message in red.
+            //float WorldTime = GetWorld()->GetTimeSeconds();
+            //FString DebugMessage = FString::Printf(TEXT("World Time: %f"), WorldTime);
+            //GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, DebugMessage);
+           //GetWorld()->GetTimerManager().SetTimer(SpawnTimerHandle, this, &AVoxelGameModeBase::OnCheckUpdateChunks, 0.001f, false);
         }
-        //7 chunk render distance at 0.000 takes 55 secs roughly
     }
 }
 
@@ -264,7 +428,7 @@ void AVoxelGameModeBase::UpdateVisibleChunksAroundPlayers()
 {
 
     TArray<AActor*> updatedVisibleTerrainChunks;
-    
+
     for (AActor* currentChunk : visibleTerrainChunks) {
         UpdateChunk(currentChunk);
     }
@@ -288,7 +452,7 @@ void AVoxelGameModeBase::UpdateVisibleChunksAroundPlayers()
             FVector2D viewerPosition = FVector2D(PawnPosition.X, PawnPosition.Y);
 
             //UE_LOG(LogTemp, Warning, TEXT("Function being entered early"));
-
+           // UE_LOG(LogTemp, Warning, TEXT("Updating visible chunks once"));
             UpdateVisibleChunks(viewerPosition);
 
             //  GenerateTreeMap(PawnPosition);
@@ -299,7 +463,7 @@ void AVoxelGameModeBase::UpdateVisibleChunksAroundPlayers()
         if (current_pc && current_pc->IsValidLowLevel())
         {
             // UE_LOG(LogTemp, Warning, TEXT("VALID PLAYER CONTROLLER"));
-
+            
             if (current_pc->GetPawn() == nullptr) {
                 UE_LOG(LogTemp, Warning, TEXT("PLayer controller is valid but has no pawn"));
                 FVector spawnLocation = FVector(-2100.0f, 250.f, 730.f);
@@ -319,14 +483,16 @@ void AVoxelGameModeBase::UpdateVisibleChunksAroundPlayers()
                 {
                     UE_LOG(LogTemp, Warning, TEXT("Player pawn has no controller"));
                 }
-              
 
+                //UE_LOG(LogTemp, Warning, TEXT("Updating visible chunks twice"));
                 UpdateVisibleChunks(viewerPosition);
             }
-            else {
+            else if (!current_pc) {
+                UE_LOG(LogTemp, Warning, TEXT("Likely Error,else if entered inside UpdateVisibleChunksAroundPlayer"));
                 APawn* playerPawn = current_pc->GetPawn();
                 FVector PawnPosition = playerPawn->GetTransform().GetLocation();
                 FVector2D viewerPosition = FVector2D(PawnPosition.X, PawnPosition.Y);
+                UE_LOG(LogTemp, Warning, TEXT("Updating visible chunks three"));
                 UpdateVisibleChunks(viewerPosition);
 
             }
@@ -368,6 +534,8 @@ float AVoxelGameModeBase::GetClosestPlayersDistance(FVector Goal)
 
 AActor* AVoxelGameModeBase::spawnChunk(FVector Loc)
 {
+    chunksCounter++;
+    //UE_LOG(LogTemp, Warning, TEXT("Inside spawn chun %d"), chunksCounter);
     FActorSpawnParameters SpawnParams;
     if (ChunkToSpawn == nullptr)
     {
@@ -375,13 +543,14 @@ AActor* AVoxelGameModeBase::spawnChunk(FVector Loc)
         return nullptr;
     }
     AActor* SpawnedActorRef = GetWorld()->SpawnActor<AActor>(ChunkToSpawn, Loc, FRotator(0.f, 0.f, 0.f), SpawnParams);
-
+    AChunk* myChunk = Cast<AChunk>(SpawnedActorRef);
+    AxisOneQueue.Enqueue(myChunk);
     return SpawnedActorRef;
 }
 
 bool AVoxelGameModeBase::UpdateChunk(AActor* chunk)
 {
-    FVector currentChunkPos = chunk->GetTransform().GetLocation();
+   FVector currentChunkPos = chunk->GetTransform().GetLocation();
 
     float closest_distance = GetClosestPlayersDistance(FVector(currentChunkPos.X, currentChunkPos.Y, 0.f));
 
@@ -392,7 +561,7 @@ bool AVoxelGameModeBase::UpdateChunk(AActor* chunk)
         chunk->SetActorHiddenInGame(false);
         AChunk* myChunk = Cast<AChunk>(chunk);
         if (myChunk != nullptr) {
-            myChunk->RespawnTrees();
+//            myChunk->RespawnTrees();
         }
         return true;  // Chunk visibility changed to visible
     }
@@ -472,3 +641,46 @@ void AVoxelGameModeBase::SpawnTrees(const FVector& PlayerPosition)
         }
     }
 }
+
+
+AActor* AVoxelGameModeBase::GetTreeSpawner() {
+    return treeSpawner;
+}
+AActor* AVoxelGameModeBase::GetGrassSpawner() {
+    return grassSpawner;
+}
+UHierarchicalInstancedStaticMeshComponent* AVoxelGameModeBase::GetFlowerSpawnerOne() {
+	return flowerSpawnerOneHISM;
+}
+UHierarchicalInstancedStaticMeshComponent* AVoxelGameModeBase::GetFlowerSpawnerTwo() {
+	return flowerSpawnerTwoHISM;
+}
+UHierarchicalInstancedStaticMeshComponent* AVoxelGameModeBase::GetFlowerSpawnerThree() {
+	return flowerSpawnerThreeHISM;
+}
+UHierarchicalInstancedStaticMeshComponent* AVoxelGameModeBase::GetWheatSpawner() {
+    return wheatSpawner;
+}
+
+
+
+AActor* AVoxelGameModeBase::FindActorByName(UWorld* World, const FString& ActorName)
+{
+    if (!World) {
+        UE_LOG(LogTemp, Warning, TEXT("Invalid world context provided to FindActorByName"));
+        return nullptr;
+    }
+
+    for (TActorIterator<AActor> It(World); It; ++It)
+    {
+        AActor* Actor = *It;
+        UE_LOG(LogTemp, Warning, TEXT("Searching for actor %s"), *Actor->GetActorLabel());
+        if (Actor && Actor->GetActorLabel() == ActorName)
+        {
+       
+            return Actor;
+        }
+    }
+    return nullptr;
+}
+

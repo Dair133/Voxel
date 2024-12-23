@@ -27,11 +27,35 @@ PRAGMA_DISABLE_DEPRECATION_WARNINGS
 	op(EBlock::Grass) \
 	op(EBlock::Sand) \
 	op(EBlock::Water) \
-	op(EBlock::SnowGrass) 
+	op(EBlock::SnowGrass) \
+	op(EBlock::DarkGrass) \
+	op(EBlock::OutOfBounds) 
 
 enum class EBlock : uint8;
 template<> struct TIsUEnumClass<EBlock> { enum { Value = true }; };
 template<> VOXELPROJECT_API UEnum* StaticEnum<EBlock>();
+
+#define FOREACH_ENUM_EBIOME(op) \
+	op(EBiome::Mountain) \
+	op(EBiome::Plains) \
+	op(EBiome::Mountain_Plains) \
+	op(EBiome::lowMountain_Plains) 
+
+enum class EBiome : uint8;
+template<> struct TIsUEnumClass<EBiome> { enum { Value = true }; };
+template<> VOXELPROJECT_API UEnum* StaticEnum<EBiome>();
+
+#define FOREACH_ENUM_ECOMPASS(op) \
+	op(ECompass::North) \
+	op(ECompass::South) \
+	op(ECompass::East) \
+	op(ECompass::West) \
+	op(ECompass::Other) \
+	op(ECompass::None) 
+
+enum class ECompass : uint8;
+template<> struct TIsUEnumClass<ECompass> { enum { Value = true }; };
+template<> VOXELPROJECT_API UEnum* StaticEnum<ECompass>();
 
 #define FOREACH_ENUM_EGENERATIONTYPE(op) \
 	op(EGenerationType::GT_3D) \

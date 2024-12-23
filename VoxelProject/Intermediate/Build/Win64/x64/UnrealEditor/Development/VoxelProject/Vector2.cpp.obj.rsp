@@ -1,8 +1,8 @@
 "E:\UE5Projects\Voxel\VoxelProject\Source\VoxelProject\Vector2.cpp"
-/FI"E:\UE5Projects\Voxel\VoxelProject\Intermediate\Build\Win64\x64\VoxelProjectEditor\Development\Engine\SharedPCH.Engine.Cpp17.InclOrderUnreal5_0.h"
+/FI"E:\UE5Projects\Voxel\VoxelProject\Intermediate\Build\Win64\x64\VoxelProjectEditor\Development\UnrealEd\SharedPCH.UnrealEd.Project.NoValFmtStr.ValApi.Cpp20.InclOrderOldest.h"
 /FI"E:\UE5Projects\Voxel\VoxelProject\Intermediate\Build\Win64\x64\UnrealEditor\Development\VoxelProject\Definitions.VoxelProject.h"
-/Yu"E:\UE5Projects\Voxel\VoxelProject\Intermediate\Build\Win64\x64\VoxelProjectEditor\Development\Engine\SharedPCH.Engine.Cpp17.InclOrderUnreal5_0.h"
-/Fp"E:\UE5Projects\Voxel\VoxelProject\Intermediate\Build\Win64\x64\VoxelProjectEditor\Development\Engine\SharedPCH.Engine.Cpp17.InclOrderUnreal5_0.h.pch"
+/Yu"E:\UE5Projects\Voxel\VoxelProject\Intermediate\Build\Win64\x64\VoxelProjectEditor\Development\UnrealEd\SharedPCH.UnrealEd.Project.NoValFmtStr.ValApi.Cpp20.InclOrderOldest.h"
+/Fp"E:\UE5Projects\Voxel\VoxelProject\Intermediate\Build\Win64\x64\VoxelProjectEditor\Development\UnrealEd\SharedPCH.UnrealEd.Project.NoValFmtStr.ValApi.Cpp20.InclOrderOldest.h.pch"
 /Fo"E:\UE5Projects\Voxel\VoxelProject\Intermediate\Build\Win64\x64\UnrealEditor\Development\VoxelProject\Vector2.cpp.obj"
 /sourceDependencies "E:\UE5Projects\Voxel\VoxelProject\Intermediate\Build\Win64\x64\UnrealEditor\Development\VoxelProject\Vector2.cpp.dep.json"
 @"E:\UE5Projects\Voxel\VoxelProject\Intermediate\Build\Win64\x64\UnrealEditor\Development\VoxelProject\VoxelProject.Shared.rsp"
@@ -24,6 +24,7 @@
 /D_WINDLL
 /D_DISABLE_EXTENDED_ALIGNED_STORAGE
 /Ob2
+/d2ExtendedWarningInfo
 /Ox
 /Ot
 /GF
@@ -45,4 +46,6 @@
 /TP
 /GR-
 /W4
-/std:c++17
+/std:c++20
+/Zc:preprocessor
+/wd5054

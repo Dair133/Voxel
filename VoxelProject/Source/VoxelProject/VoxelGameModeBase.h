@@ -1,6 +1,7 @@
 
 #pragma once
 #include "CoreMinimal.h"
+#include "Chunk.h"
 #include <VoxelProject/BoxTwo.h>
 #include <VoxelProject/Vector2.h>
 #include <VoxelProject/Enums.h>
@@ -8,8 +9,10 @@
 //#include "Blueprint/AIBlueprintHelperLibrary.h"
 #include <Kismet/GameplayStatics.h>
 #include "HAL/PlatformProcess.h"
+#include "NiagaraComponent.h"
 #include "GameFramework/GameModeBase.h"
 #include "VoxelGameModeBase.generated.h"
+
 
 
 
@@ -24,10 +27,10 @@ class  AVoxelGameModeBase : public AGameModeBase
 
     // UProperties
     UPROPERTY(EditDefaultsOnly, Category = "Performance")
-    float maxViewDst = 3;
+    float maxViewDst = 20;
 
     UPROPERTY(EditDefaultsOnly, Category = "Performance")
-    int ChunkSize = 16;
+    int ChunkSize = 25;
 
     UPROPERTY(EditDefaultsOnly, Category = "Performance")
     int BlockSize = 100;
@@ -37,12 +40,27 @@ class  AVoxelGameModeBase : public AGameModeBase
 
     UPROPERTY(EditAnywhere, Category = "Spawning")
     TSubclassOf<AActor> ChunkToSpawn;
+    
+    
+    
+    
+    TSubclassOf<class AHUD> MyHUDClass;
 
-    UPROPERTY()
-    UStaticMesh* MyTreeMesh;
+       // Object Spawners
+    AActor* treeSpawner;
+    AActor* grassSpawner;
+    AActor* flowerSpawnerOne;
+    AActor* flowerSpawnerTwo;
+    AActor* flowerSpawnerThree;
+    UHierarchicalInstancedStaticMeshComponent* flowerSpawnerOneHISM;
+    UHierarchicalInstancedStaticMeshComponent* flowerSpawnerTwoHISM;
+    UHierarchicalInstancedStaticMeshComponent* flowerSpawnerThreeHISM;
+    UHierarchicalInstancedStaticMeshComponent* wheatSpawner;
+
 
     UClass* MyTreeBPClass;
-
+    AActor* FindActorByName(UWorld* World, const FString& ActorName);
+    void InitialiseActorReferences();
     void GenerateTreeMap(const FVector& PlayerPosition);
     void SpawnTrees(const FVector& PlayerPosition);
     std::string ToStringEnumFunc(EBlock blockType);
@@ -51,6 +69,7 @@ class  AVoxelGameModeBase : public AGameModeBase
     //void AVoxelGameGameModeBase::SpawnNextChunk();
     void ProcessChunkQueue();
     FTimerHandle SpawnTimerHandle;
+    FTimerHandle GenerateAxisHandle;
     bool loaded;
     void HideOutOfRangeChunks();
 
@@ -63,8 +82,9 @@ class  AVoxelGameModeBase : public AGameModeBase
 
 
     UClass* MyBlueprintCharacterClass;
-
-
+    int chunksCounter = 0;
+    int chunkcCounterTwo = 0;
+    int numTimers;
     void UpdateVisibleChunks(FVector2D viewerPosition);
     void UpdateVisibleChunksAroundPlayers();
     int InitialChunkPoolSize = 100;
@@ -73,18 +93,23 @@ class  AVoxelGameModeBase : public AGameModeBase
     float ChunkSizeInMeters = 32.0;
     int chunksVisibleInViewDst;
 
-
-
+    FTimerHandle createChunkTimerHandle;
+    bool addChunkTimerStarted = false;
+    bool fastCreateChunkTimerStarted = false;
+    bool slowCreateChunkTimerStarted = false;
     bool UpdateChunk(AActor* chunk);
 
     AVoxelGameModeBase();
-
+    void  GenerateAxisOne();
     AActor* spawnChunk(FVector Loc);
 
     TMap<FVector2D, AActor*> terrainChunkMap;
     TMap<FVector, AActor*> terrainChunkMap2;
     TArray<AActor*> visibleTerrainChunks;
-   
+
+    TQueue<AChunk*> AxisOneQueue;
+    TQueue<AChunk*> AxisTwoQueue;
+    TQueue<AChunk*> AxisThreeQueue;
 
     //pooling stuff
     //TUniquePtr<ChunkPool> ChunkPoolPtr;
@@ -92,7 +117,15 @@ class  AVoxelGameModeBase : public AGameModeBase
     FCriticalSection CriticalSection;
     FCriticalSection VertexCountCriticalSection;
 public:
+    AActor* GetTreeSpawner();
+    AActor* GetGrassSpawner();
 
+    UHierarchicalInstancedStaticMeshComponent* GetFlowerSpawnerOne();
+    UHierarchicalInstancedStaticMeshComponent* GetFlowerSpawnerTwo();
+    UHierarchicalInstancedStaticMeshComponent* GetFlowerSpawnerThree();
+    UHierarchicalInstancedStaticMeshComponent* GetWheatSpawner();
+
+    UNiagaraComponent* GetLeavesSpawner();
 
 
 protected:
