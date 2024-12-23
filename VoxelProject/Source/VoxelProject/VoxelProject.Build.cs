@@ -2,7 +2,6 @@
 
 using UnrealBuildTool;
 using UnrealBuildTool.Rules;
-
 public class VoxelProject : ModuleRules
 {
     public VoxelProject(ReadOnlyTargetRules Target) : base(Target)

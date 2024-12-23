@@ -190,5 +190,18 @@ Plugins/*/Intermediate/*
 DerivedDataCache/* ```
 
 
-# Custom
+
+# Binary Files - Make this more specific to your project structure
+/VoxelProject/Binaries/**
+/Binaries/**
+/VoxelProject/Binaries/**
+**/Binaries/**
+
+# Custom .uasset handling
 *.uasset
+!/VoxelProject/Content/CubeDeps/*.uasset
+
+# Other standard UE ignores
+/VoxelProject/Intermediate/
+/VoxelProject/Saved/
+/VoxelProject/DerivedDataCache/
