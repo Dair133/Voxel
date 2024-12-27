@@ -38,9 +38,10 @@ std::string AVoxelGameModeBase::ToStringEnumFunc(EBlock blockType) {
 }
 
 AVoxelGameModeBase::AVoxelGameModeBase()
-
 {
-    // ChunkPool(GetWorld(), AChunk::StaticClass(), );  // Initialize the ChunkPool here
+    static ConstructorHelpers::FObjectFinder<UClass> BP_MotionMatchingCharacter(TEXT("Class'/Game/MotionCharacter/CBP_SandboxCharacter.CBP_SandboxCharacter_C'"));
+    // /Game/MotionCharacter/CBP_SandboxCharacter.CBP_SandboxCharacter
+
     static ConstructorHelpers::FObjectFinder<UClass> BP_CharacterClass(TEXT("Class'/Game/ThirdPerson/Blueprints/BP_ThirdPersonCharacter.BP_ThirdPersonCharacter_C'"));
     if (BP_CharacterClass.Object != NULL) {
         UE_LOG(LogTemp, Warning, TEXT("BP_CharacterClass is not null"));
@@ -50,7 +51,15 @@ AVoxelGameModeBase::AVoxelGameModeBase()
         return;
     }
 
-    MyBlueprintCharacterClass = BP_CharacterClass.Object;
+    if (BP_MotionMatchingCharacter.Object != NULL) {
+		UE_LOG(LogTemp, Warning, TEXT("BP_MotionMatchingCharacter is not null"));
+	}
+    else {
+		UE_LOG(LogTemp, Warning, TEXT("BP_MotionMatchingCharacter is null"));
+	}
+
+
+    MyBlueprintCharacterClass = BP_MotionMatchingCharacter.Object;
 
     ChunkToSpawn = AChunk::StaticClass();
     DefaultPawnClass = MyBlueprintCharacterClass;
@@ -240,7 +249,7 @@ void AVoxelGameModeBase::PostLogin(APlayerController* NewPlayer)
     UE_LOG(LogTemp, Warning, TEXT("Inside post loginc"));
     if (!NewPlayer->GetPawn())
     {
-        FVector spawnLocation = FVector(-2200.0f, 250.f, 15000.f);
+        FVector spawnLocation = FVector(-2200.0f, 250.f, 26900.f);
         FActorSpawnParameters SpawnParams;
         SpawnParams.Owner = NewPlayer;
         SpawnParams.bNoFail = true;
@@ -567,7 +576,7 @@ bool AVoxelGameModeBase::UpdateChunk(AActor* chunk)
     }
     else if (closest_distance >= maxViewDst && !isHidden) {
         // Chunk is out of view distance and is currently visible, hide it
-        chunk->SetActorHiddenInGame(true); //commenting out this line causes ALL chunks to appear, but obviously removing this line means they will never be hidden again
+      //  chunk->SetActorHiddenInGame(true); //commenting out this line causes ALL chunks to appear, but obviously removing this line means they will never be hidden again
         return true;  // Chunk visibility changed to hidden
     }
 

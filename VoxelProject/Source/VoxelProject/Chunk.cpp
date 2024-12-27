@@ -71,7 +71,7 @@ AChunk::AChunk()
     treeLocations.SetNum(4);
     flowerLocations.SetNum(300);
     mountainTreeLocations.SetNum(100);
-    treeScale = FVector(2.3f, 2.3f, 2.3f);
+    treeScale = FVector(1.9f, 1.9f, 1.85f);
     grassScale = FVector(0.1f, 0.1f, 0.1f);
     flowerScale = FVector(0.1f, 0.1f, 0.1f);
 
@@ -376,7 +376,7 @@ FIntVector AChunk::WorldToLocal(FIntVector WorldLocation)
     WorldZ = WorldLocation.Z;
 
     // Chunk origin in world coordinates
-    FVector Location; // Assuming this is the bottom-left corner of the chunk
+    FVector Location = GetActorLocation(); // Assuming this is the bottom-left corner of the chunk
 
     // Calculate block coordinates within the chunk
     int BlockX = (WorldX - Location.X) / 100;
@@ -1569,15 +1569,11 @@ void AChunk::GenerateBlocks()
                         if (treeCount < 3 && x > 8) {
 
                             float treeNoise = PlainsTreeNoise->GetNoise(worldXpos, worldYpos);
-                            FString actorName = GetActorLabel();
+                           // FString actorName = GetActorLabel();
                             // Format the string with the actor name and noise value
                             //FString Message = FString::Printf(TEXT("TreeNoise is for chunk %s: %f"), *actorName, treeNoise);
 
-                            //// Display the message on screen
-                            //if (GEngine)
-                            //{
-                            //    GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Purple, Message);
-                            //}
+                           
                             if (treeNoise > 0.2f) {
                                 bool isValidTreeLocation = true;
 
