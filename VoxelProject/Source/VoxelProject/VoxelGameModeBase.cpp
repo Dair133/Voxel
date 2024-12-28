@@ -20,8 +20,7 @@
 #include <GameFramework/CharacterMovementComponent.h>
 #include <EditorCategoryUtils.h>
 #include <random>
-//#include "Octree/Octree.h"
-//#include "Octree/Enums.h"
+
 
 std::string AVoxelGameModeBase::ToStringEnumFunc(EBlock blockType) {
     switch (blockType) {
@@ -39,39 +38,11 @@ std::string AVoxelGameModeBase::ToStringEnumFunc(EBlock blockType) {
 
 AVoxelGameModeBase::AVoxelGameModeBase()
 {
-    static ConstructorHelpers::FObjectFinder<UClass> BP_MotionMatchingCharacter(TEXT("Class'/Game/MotionCharacter/CBP_SandboxCharacter.CBP_SandboxCharacter_C'"));
-    // /Game/MotionCharacter/CBP_SandboxCharacter.CBP_SandboxCharacter
-
-    static ConstructorHelpers::FObjectFinder<UClass> BP_CharacterClass(TEXT("Class'/Game/ThirdPerson/Blueprints/BP_ThirdPersonCharacter.BP_ThirdPersonCharacter_C'"));
-    if (BP_CharacterClass.Object != NULL) {
-        UE_LOG(LogTemp, Warning, TEXT("BP_CharacterClass is not null"));
-    }
-    else {
-        UE_LOG(LogTemp, Warning, TEXT("BP_CharacterClass is null"));
-        return;
-    }
-
-    if (BP_MotionMatchingCharacter.Object != NULL) {
-		UE_LOG(LogTemp, Warning, TEXT("BP_MotionMatchingCharacter is not null"));
-	}
-    else {
-		UE_LOG(LogTemp, Warning, TEXT("BP_MotionMatchingCharacter is null"));
-	}
-
-
-    MyBlueprintCharacterClass = BP_MotionMatchingCharacter.Object;
 
     ChunkToSpawn = AChunk::StaticClass();
-    DefaultPawnClass = MyBlueprintCharacterClass;
     PlayerControllerClass = APlayerController::StaticClass();
 
-    // Create function for assigning found objects, so it takes in object found, obj to assign does null check? so it doesnt have to be repeated
-    // if I have a lot of objects down the road?
-  
-   // / Script / Engine.Blueprint'/Game/ThirdPerson/CustomBp/MyHud.MyHud'
    
-// Assume this is inside the AGMyGameMode class constructor
-        // Set default HUD class
         static ConstructorHelpers::FClassFinder<AHUD> HUDClassHolder(TEXT("'/Game/ThirdPerson/CustomBp/MyHud.MyHud'"));
         if (HUDClassHolder.Succeeded())
         {
@@ -240,7 +211,25 @@ void AVoxelGameModeBase::BeginPlay()
 
 void AVoxelGameModeBase::PostLogin(APlayerController* NewPlayer)
 {
+    FTimerHandle TimerHandle2;
+    FTimerDelegate TimerDelegate;
+    // Bind the NewPlayer parameter to the callback
+    TimerDelegate.BindUFunction(this, "HandlePostLoginSpecial", NewPlayer);
 
+
+    // If character class not set which it wont be for first second or two of playing the game, we wait two seconds before attmepting to spawn the player
+    if (MyBlueprintCharacterClass == nullptr)
+    {
+		GetWorld()->GetTimerManager().SetTimer(TimerHandle2, TimerDelegate, 2.0f, false);
+	}
+    else
+    {
+		HandlePostLoginSpecial(NewPlayer);
+	}
+    
+}
+void AVoxelGameModeBase::HandlePostLoginSpecial(APlayerController* NewPlayer)
+{
     playersArray.Add(NewPlayer);
     lastPlayerPostitions.Add(NewPlayer, FVector2D(0.f, 0.f));
     // UE_LOG(LogTemp, Warning, TEXT("PostLogin called"));
@@ -257,9 +246,6 @@ void AVoxelGameModeBase::PostLogin(APlayerController* NewPlayer)
         APawn* playerPawn = GetWorld()->SpawnActor<APawn>(MyBlueprintCharacterClass, spawnLocation, FRotator::ZeroRotator, SpawnParams);
 
 
-
-
-        // APawn* playerPawn = GetWorld()->SpawnActor<AMyPawn>(AMyPawn::StaticClass(), spawnLocation, FRotator::ZeroRotator, SpawnParams);
         if (HasAuthority()) {
             UE_LOG(LogTemp, Warning, TEXT("Has Authority"));
         }
@@ -281,6 +267,9 @@ void AVoxelGameModeBase::PostLogin(APlayerController* NewPlayer)
 
 
     Super::PostLogin(NewPlayer);
+
+
+
 }
 
 void AVoxelGameModeBase::Logout(AController* Exiting)
@@ -693,3 +682,8 @@ AActor* AVoxelGameModeBase::FindActorByName(UWorld* World, const FString& ActorN
     return nullptr;
 }
 
+void AVoxelGameModeBase::SetPlayerCharacter(UClass* playerCharacter)
+{
+    UE_LOG(LogTemp, Warning, TEXT("SETTING BLUEPRINT CLASS"));
+    MyBlueprintCharacterClass = playerCharacter;
+}

@@ -27,7 +27,7 @@ class  AVoxelGameModeBase : public AGameModeBase
 
     // UProperties
     UPROPERTY(EditDefaultsOnly, Category = "Performance")
-    float maxViewDst = 20;
+    float maxViewDst = 5;
 
     UPROPERTY(EditDefaultsOnly, Category = "Performance")
     int ChunkSize = 25;
@@ -41,7 +41,8 @@ class  AVoxelGameModeBase : public AGameModeBase
     UPROPERTY(EditAnywhere, Category = "Spawning")
     TSubclassOf<AActor> ChunkToSpawn;
     
-    
+    UPROPERTY(EditAnywhere, Category = "Spawning")
+    UClass* characterClass;
     
     
     TSubclassOf<class AHUD> MyHUDClass;
@@ -79,6 +80,14 @@ class  AVoxelGameModeBase : public AGameModeBase
 
     UFUNCTION()
     void OnCheckUpdateChunks();
+
+    UFUNCTION(BlueprintCallable, Category = "CharacterFunction")
+    void SetPlayerCharacter(UClass* playerCharacter);
+
+    UFUNCTION()
+    void HandlePostLoginSpecial(APlayerController* NewPlayer);
+
+
 
 
     UClass* MyBlueprintCharacterClass;

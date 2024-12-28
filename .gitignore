@@ -199,6 +199,7 @@ DerivedDataCache/* ```
 
 # Custom .uasset handling
 *.uasset
+*.umap
 !/VoxelProject/Content/CubeDeps/*.uasset
 
 # Other standard UE ignores

@@ -774,7 +774,7 @@ void AChunk::Tick(float DeltaTime)
                         // SpawnNiagara();
                         // niagaraSpawned = true;
                     }
-                    if (distanceToPlayer <= 16000.0f && !collisionActive)
+                    if (distanceToPlayer <= 16000.0f && !collisionActive)// This is where the error where players sometimes fall through the terrain happens, bwecause although they are on top of the chunk they are still too far to trigger collision
                     {
 
                         FString name = GetActorLabel();
