@@ -1,0 +1,15 @@
+{
+    "Version": "1.2",
+    "Data": {
+        "Source": "d:\\ue - projects\\ue5.4\\agls v1.0 (experimental)\\plugins\\iwals_abilitysystem\\source\\iwals_abilitysystem\\private\\iwals_enumsandstruct.cpp",
+        "ProvidedModule": "",
+        "PCH": "d:\\ue - projects\\ue5.4\\agls v1.0 (experimental)\\intermediate\\build\\win64\\x64\\agls\\development\\engine\\sharedpch.engine.project.valapi.cpp20.h.pch",
+        "Includes": [
+            "d:\\ue - projects\\ue5.4\\agls v1.0 (experimental)\\plugins\\iwals_abilitysystem\\intermediate\\build\\win64\\x64\\unrealgame\\development\\iwals_abilitysystem\\definitions.iwals_abilitysystem.h",
+            "d:\\ue - projects\\ue5.4\\agls v1.0 (experimental)\\plugins\\iwals_abilitysystem\\source\\iwals_abilitysystem\\public\\iwals_enumsandstruct.h",
+            "d:\\ue - projects\\ue5.4\\agls v1.0 (experimental)\\plugins\\iwals_abilitysystem\\intermediate\\build\\win64\\unrealgame\\inc\\iwals_abilitysystem\\uht\\iwals_enumsandstruct.generated.h"
+        ],
+        "ImportedModules": [],
+        "ImportedHeaderUnits": []
+    }
+}

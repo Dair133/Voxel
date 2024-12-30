@@ -1,0 +1,28 @@
+{
+    "Version": "1.2",
+    "Data": {
+        "Source": "d:\\ue - projects\\ue5.4\\agls v1.0 (experimental)\\plugins\\jakubcablecomponent\\intermediate\\build\\win64\\x64\\unrealgame\\shipping\\jakubcablecomponent\\module.jakubcablecomponent.cpp",
+        "ProvidedModule": "",
+        "PCH": "d:\\ue - projects\\ue5.4\\agls v1.0 (experimental)\\intermediate\\build\\win64\\x64\\agls\\shipping\\engine\\sharedpch.engine.project.valapi.cpp20.h.pch",
+        "Includes": [
+            "d:\\ue - projects\\ue5.4\\agls v1.0 (experimental)\\plugins\\jakubcablecomponent\\intermediate\\build\\win64\\x64\\unrealgame\\shipping\\jakubcablecomponent\\definitions.jakubcablecomponent.h",
+            "d:\\ue - projects\\ue5.4\\agls v1.0 (experimental)\\plugins\\jakubcablecomponent\\intermediate\\build\\win64\\unrealgame\\inc\\jakubcablecomponent\\uht\\handleforitemcpp.gen.cpp",
+            "d:\\ue - projects\\ue5.4\\agls v1.0 (experimental)\\plugins\\jakubcablecomponent\\source\\jakubcablecomponent\\public\\handleforitemcpp.h",
+            "d:\\ue - projects\\ue5.4\\agls v1.0 (experimental)\\plugins\\jakubcablecomponent\\source\\jakubcablecomponent\\public\\jakubsimpleparticlecomponent.h",
+            "d:\\program files\\games\\ue_5.4\\engine\\source\\runtime\\engine\\classes\\components\\arrowcomponent.h",
+            "d:\\program files\\games\\ue_5.4\\engine\\intermediate\\build\\win64\\unrealgame\\inc\\engine\\uht\\arrowcomponent.generated.h",
+            "d:\\ue - projects\\ue5.4\\agls v1.0 (experimental)\\plugins\\jakubcablecomponent\\intermediate\\build\\win64\\unrealgame\\inc\\jakubcablecomponent\\uht\\jakubsimpleparticlecomponent.generated.h",
+            "d:\\ue - projects\\ue5.4\\agls v1.0 (experimental)\\plugins\\jakubcablecomponent\\intermediate\\build\\win64\\unrealgame\\inc\\jakubcablecomponent\\uht\\handleforitemcpp.generated.h",
+            "d:\\ue - projects\\ue5.4\\agls v1.0 (experimental)\\plugins\\jakubcablecomponent\\intermediate\\build\\win64\\unrealgame\\inc\\jakubcablecomponent\\uht\\jakubcablecomponent.init.gen.cpp",
+            "d:\\ue - projects\\ue5.4\\agls v1.0 (experimental)\\plugins\\jakubcablecomponent\\intermediate\\build\\win64\\unrealgame\\inc\\jakubcablecomponent\\uht\\jakubcablecomponentbplibrary.gen.cpp",
+            "d:\\ue - projects\\ue5.4\\agls v1.0 (experimental)\\plugins\\jakubcablecomponent\\source\\jakubcablecomponent\\public\\jakubcablecomponentbplibrary.h",
+            "d:\\ue - projects\\ue5.4\\agls v1.0 (experimental)\\plugins\\jakubcablecomponent\\intermediate\\build\\win64\\unrealgame\\inc\\jakubcablecomponent\\uht\\jakubcablecomponentbplibrary.generated.h",
+            "d:\\ue - projects\\ue5.4\\agls v1.0 (experimental)\\plugins\\jakubcablecomponent\\intermediate\\build\\win64\\unrealgame\\inc\\jakubcablecomponent\\uht\\jakubcablephysic.gen.cpp",
+            "d:\\ue - projects\\ue5.4\\agls v1.0 (experimental)\\plugins\\jakubcablecomponent\\source\\jakubcablecomponent\\public\\jakubcablephysic.h",
+            "d:\\ue - projects\\ue5.4\\agls v1.0 (experimental)\\plugins\\jakubcablecomponent\\intermediate\\build\\win64\\unrealgame\\inc\\jakubcablecomponent\\uht\\jakubcablephysic.generated.h",
+            "d:\\ue - projects\\ue5.4\\agls v1.0 (experimental)\\plugins\\jakubcablecomponent\\intermediate\\build\\win64\\unrealgame\\inc\\jakubcablecomponent\\uht\\jakubsimpleparticlecomponent.gen.cpp"
+        ],
+        "ImportedModules": [],
+        "ImportedHeaderUnits": []
+    }
+}

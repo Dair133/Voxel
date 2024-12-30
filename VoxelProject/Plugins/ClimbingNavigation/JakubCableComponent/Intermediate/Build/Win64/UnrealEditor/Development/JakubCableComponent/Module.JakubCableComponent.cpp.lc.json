@@ -1,0 +1,40 @@
+{
+    "Version": "1.1",
+    "Data": {
+        "Source": "d:\\ue - projects\\ue-5\\mycablecomponent\\plugins\\jakubcablecomponent\\intermediate\\build\\win64\\unrealeditor\\development\\jakubcablecomponent\\module.jakubcablecomponent.cpp",
+        "ProvidedModule": "",
+        "PCH": "d:\\ue - projects\\ue-5\\mycablecomponent\\intermediate\\build\\win64\\mycablecomponenteditor\\development\\engine\\sharedpch.engine.shadowerrors.h.pch",
+        "Includes": [
+            "d:\\ue - projects\\ue-5\\mycablecomponent\\plugins\\jakubcablecomponent\\intermediate\\build\\win64\\unrealeditor\\development\\jakubcablecomponent\\definitions.jakubcablecomponent.h",
+            "d:\\ue - projects\\ue-5\\mycablecomponent\\plugins\\jakubcablecomponent\\source\\jakubcablecomponent\\private\\jakubcablecomponent.cpp",
+            "d:\\ue - projects\\ue-5\\mycablecomponent\\plugins\\jakubcablecomponent\\source\\jakubcablecomponent\\public\\jakubcablecomponent.h",
+            "d:\\ue - projects\\ue-5\\mycablecomponent\\plugins\\jakubcablecomponent\\source\\jakubcablecomponent\\private\\jakubcablecomponentbplibrary.cpp",
+            "d:\\ue - projects\\ue-5\\mycablecomponent\\plugins\\jakubcablecomponent\\source\\jakubcablecomponent\\public\\jakubcablecomponentbplibrary.h",
+            "d:\\ue - projects\\ue-5\\mycablecomponent\\plugins\\jakubcablecomponent\\intermediate\\build\\win64\\unrealeditor\\inc\\jakubcablecomponent\\jakubcablecomponentbplibrary.generated.h",
+            "d:\\ue - projects\\ue-5\\mycablecomponent\\plugins\\jakubcablecomponent\\source\\jakubcablecomponent\\private\\jakubcablephysic.cpp",
+            "d:\\ue - projects\\ue-5\\mycablecomponent\\plugins\\jakubcablecomponent\\source\\jakubcablecomponent\\public\\jakubcablephysic.h",
+            "d:\\ue - projects\\ue-5\\mycablecomponent\\plugins\\jakubcablecomponent\\intermediate\\build\\win64\\unrealeditor\\inc\\jakubcablecomponent\\jakubcablephysic.generated.h",
+            "d:\\ue - projects\\ue-5\\mycablecomponent\\plugins\\jakubcablecomponent\\source\\jakubcablecomponent\\private\\jakubcablestats.h",
+            "d:\\program files\\games\\ue_5.0\\engine\\source\\runtime\\engine\\classes\\kismet\\gameplaystatics.h",
+            "d:\\program files\\games\\ue_5.0\\engine\\source\\runtime\\engine\\classes\\kismet\\kismetsystemlibrary.h",
+            "d:\\program files\\games\\ue_5.0\\engine\\source\\runtime\\coreuobject\\public\\uobject\\propertyaccessutil.h",
+            "d:\\program files\\games\\ue_5.0\\engine\\intermediate\\build\\win64\\unrealeditor\\inc\\engine\\kismetsystemlibrary.generated.h",
+            "d:\\program files\\games\\ue_5.0\\engine\\source\\runtime\\engine\\classes\\sound\\dialoguetypes.h",
+            "d:\\program files\\games\\ue_5.0\\engine\\intermediate\\build\\win64\\unrealeditor\\inc\\engine\\dialoguetypes.generated.h",
+            "d:\\program files\\games\\ue_5.0\\engine\\source\\runtime\\engine\\classes\\kismet\\gameplaystaticstypes.h",
+            "d:\\program files\\games\\ue_5.0\\engine\\intermediate\\build\\win64\\unrealeditor\\inc\\engine\\gameplaystaticstypes.generated.h",
+            "d:\\program files\\games\\ue_5.0\\engine\\intermediate\\build\\win64\\unrealeditor\\inc\\engine\\gameplaystatics.generated.h",
+            "d:\\ue - projects\\ue-5\\mycablecomponent\\plugins\\jakubcablecomponent\\source\\jakubcablecomponent\\private\\jakubcablestats.cpp",
+            "d:\\ue - projects\\ue-5\\mycablecomponent\\plugins\\jakubcablecomponent\\source\\jakubcablecomponent\\private\\jakubsimpleparticlecomponent.cpp",
+            "d:\\ue - projects\\ue-5\\mycablecomponent\\plugins\\jakubcablecomponent\\source\\jakubcablecomponent\\public\\jakubsimpleparticlecomponent.h",
+            "d:\\program files\\games\\ue_5.0\\engine\\source\\runtime\\engine\\classes\\components\\arrowcomponent.h",
+            "d:\\program files\\games\\ue_5.0\\engine\\intermediate\\build\\win64\\unrealeditor\\inc\\engine\\arrowcomponent.generated.h",
+            "d:\\ue - projects\\ue-5\\mycablecomponent\\plugins\\jakubcablecomponent\\intermediate\\build\\win64\\unrealeditor\\inc\\jakubcablecomponent\\jakubsimpleparticlecomponent.generated.h",
+            "d:\\program files\\games\\ue_5.0\\engine\\source\\runtime\\engine\\classes\\kismet\\kismetmathlibrary.h",
+            "d:\\program files\\games\\ue_5.0\\engine\\intermediate\\build\\win64\\unrealeditor\\inc\\engine\\kismetmathlibrary.generated.h",
+            "d:\\program files\\games\\ue_5.0\\engine\\source\\runtime\\engine\\classes\\kismet\\kismetmathlibrary.inl"
+        ],
+        "ImportedModules": [],
+        "ImportedHeaderUnits": []
+    }
+}

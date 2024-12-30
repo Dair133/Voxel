@@ -1,0 +1,12 @@
+/NOLOGO
+/errorReport:prompt
+/MACHINE:x64
+/SUBSYSTEM:WINDOWS
+/DEF
+/NAME:"UnrealEditor-JakubAnimNodesTool.dll"
+/IGNORE:4221
+/NODEFAULTLIB
+"C:\Users\kubac\Documents\Unreal Projects\PluginBuildingV2 5.1\Intermediate\Build\Win64\PluginBuildingV2Editor\Development\Engine\SharedPCH.Engine.ShadowErrors.InclOrderUnreal5_0.h.obj"
+"C:\Users\kubac\Documents\Unreal Projects\PluginBuildingV2 5.1\Plugins\JakubAnimNodes\Intermediate\Build\Win64\UnrealEditor\Development\JakubAnimNodesTool\Module.JakubAnimNodesTool.cpp.obj"
+"C:\Users\kubac\Documents\Unreal Projects\PluginBuildingV2 5.1\Plugins\JakubAnimNodes\Intermediate\Build\Win64\UnrealEditor\Development\JakubAnimNodesTool\Default.rc2.res"
+/OUT:"C:\Users\kubac\Documents\Unreal Projects\PluginBuildingV2 5.1\Plugins\JakubAnimNodes\Intermediate\Build\Win64\UnrealEditor\Development\JakubAnimNodesTool\UnrealEditor-JakubAnimNodesTool.lib"

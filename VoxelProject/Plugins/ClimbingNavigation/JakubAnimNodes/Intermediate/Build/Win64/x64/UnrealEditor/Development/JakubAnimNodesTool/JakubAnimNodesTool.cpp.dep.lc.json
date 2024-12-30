@@ -1,0 +1,14 @@
+{
+    "Version": "1.2",
+    "Data": {
+        "Source": "d:\\ue - projects\\ue5.4\\pluginbuildingv2 5.4\\plugins\\jakubanimnodes\\source\\jakubanimnodestool\\private\\jakubanimnodestool.cpp",
+        "ProvidedModule": "",
+        "PCH": "d:\\ue - projects\\ue5.4\\pluginbuildingv2 5.4\\intermediate\\build\\win64\\x64\\pluginbuildingv2editor\\development\\unrealed\\sharedpch.unrealed.project.valapi.cpp20.h.pch",
+        "Includes": [
+            "d:\\ue - projects\\ue5.4\\pluginbuildingv2 5.4\\plugins\\jakubanimnodes\\intermediate\\build\\win64\\x64\\unrealeditor\\development\\jakubanimnodestool\\definitions.jakubanimnodestool.h",
+            "d:\\ue - projects\\ue5.4\\pluginbuildingv2 5.4\\plugins\\jakubanimnodes\\source\\jakubanimnodestool\\public\\jakubanimnodestool.h"
+        ],
+        "ImportedModules": [],
+        "ImportedHeaderUnits": []
+    }
+}

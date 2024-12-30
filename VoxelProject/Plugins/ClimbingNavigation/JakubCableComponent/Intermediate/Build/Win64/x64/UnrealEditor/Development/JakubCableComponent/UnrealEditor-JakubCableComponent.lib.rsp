@@ -1,0 +1,18 @@
+/NOLOGO
+/errorReport:prompt
+/MACHINE:x64
+/SUBSYSTEM:WINDOWS
+/DEF
+/NAME:"UnrealEditor-JakubCableComponent.dll"
+/IGNORE:4221
+/NODEFAULTLIB
+"D:\UE - Projects\UE5.5\TestDoArmour 5.5\Intermediate\Build\Win64\x64\TestDoArmourEditor\Development\UnrealEd\SharedPCH.UnrealEd.Project.ValApi.Cpp20.h.obj"
+"D:\UE - Projects\UE5.5\TestDoArmour 5.5\Plugins\JakubCableComponent\Intermediate\Build\Win64\x64\UnrealEditor\Development\JakubCableComponent\Module.JakubCableComponent.cpp.obj"
+"D:\UE - Projects\UE5.5\TestDoArmour 5.5\Plugins\JakubCableComponent\Intermediate\Build\Win64\x64\UnrealEditor\Development\JakubCableComponent\HandleForItemCpp.cpp.obj"
+"D:\UE - Projects\UE5.5\TestDoArmour 5.5\Plugins\JakubCableComponent\Intermediate\Build\Win64\x64\UnrealEditor\Development\JakubCableComponent\JakubCableComponent.cpp.obj"
+"D:\UE - Projects\UE5.5\TestDoArmour 5.5\Plugins\JakubCableComponent\Intermediate\Build\Win64\x64\UnrealEditor\Development\JakubCableComponent\JakubCableComponentBPLibrary.cpp.obj"
+"D:\UE - Projects\UE5.5\TestDoArmour 5.5\Plugins\JakubCableComponent\Intermediate\Build\Win64\x64\UnrealEditor\Development\JakubCableComponent\JakubCablePhysic.cpp.obj"
+"D:\UE - Projects\UE5.5\TestDoArmour 5.5\Plugins\JakubCableComponent\Intermediate\Build\Win64\x64\UnrealEditor\Development\JakubCableComponent\JakubCableStats.cpp.obj"
+"D:\UE - Projects\UE5.5\TestDoArmour 5.5\Plugins\JakubCableComponent\Intermediate\Build\Win64\x64\UnrealEditor\Development\JakubCableComponent\JakubSimpleParticleComponent.cpp.obj"
+"D:\UE - Projects\UE5.5\TestDoArmour 5.5\Plugins\JakubCableComponent\Intermediate\Build\Win64\x64\UnrealEditor\Development\JakubCableComponent\Default.rc2.res"
+/OUT:"D:\UE - Projects\UE5.5\TestDoArmour 5.5\Plugins\JakubCableComponent\Intermediate\Build\Win64\x64\UnrealEditor\Development\JakubCableComponent\UnrealEditor-JakubCableComponent.lib"

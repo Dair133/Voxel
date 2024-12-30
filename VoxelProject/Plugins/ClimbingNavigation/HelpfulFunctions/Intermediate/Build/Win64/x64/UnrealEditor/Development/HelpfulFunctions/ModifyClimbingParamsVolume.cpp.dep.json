@@ -1,0 +1,38 @@
+{
+    "Version": "1.2",
+    "Data": {
+        "Source": "d:\\ue - projects\\ue5.5\\testdoarmour 5.5\\plugins\\helpfulfunctions\\source\\helpfulfunctions\\private\\modifyclimbingparamsvolume.cpp",
+        "ProvidedModule": "",
+        "PCH": "d:\\ue - projects\\ue5.5\\testdoarmour 5.5\\intermediate\\build\\win64\\x64\\testdoarmoureditor\\development\\unrealed\\sharedpch.unrealed.project.valapi.cpp20.h.pch",
+        "Includes": [
+            "d:\\ue - projects\\ue5.5\\testdoarmour 5.5\\plugins\\helpfulfunctions\\intermediate\\build\\win64\\x64\\unrealeditor\\development\\helpfulfunctions\\definitions.helpfulfunctions.h",
+            "d:\\ue - projects\\ue5.5\\testdoarmour 5.5\\plugins\\helpfulfunctions\\source\\helpfulfunctions\\public\\modifyclimbingparamsvolume.h",
+            "d:\\program files\\games\\ue_5.5\\engine\\source\\runtime\\engine\\classes\\components\\boxcomponent.h",
+            "d:\\program files\\games\\ue_5.5\\engine\\source\\runtime\\engine\\classes\\components\\shapecomponent.h",
+            "d:\\program files\\games\\ue_5.5\\engine\\intermediate\\build\\win64\\unrealeditor\\inc\\engine\\uht\\shapecomponent.generated.h",
+            "d:\\program files\\games\\ue_5.5\\engine\\intermediate\\build\\win64\\unrealeditor\\inc\\engine\\uht\\boxcomponent.generated.h",
+            "d:\\program files\\games\\ue_5.5\\engine\\source\\runtime\\engine\\classes\\gameframework\\character.h",
+            "d:\\program files\\games\\ue_5.5\\engine\\source\\runtime\\engine\\classes\\gameframework\\charactermovementreplication.h",
+            "d:\\program files\\games\\ue_5.5\\engine\\source\\runtime\\net\\core\\public\\net\\core\\nettoken\\nettokenexportcontext.h",
+            "d:\\program files\\games\\ue_5.5\\engine\\source\\runtime\\experimental\\iris\\core\\public\\iris\\serialization\\irisobjectreferencepackagemap.h",
+            "d:\\program files\\games\\ue_5.5\\engine\\intermediate\\build\\win64\\unrealeditor\\inc\\iriscore\\uht\\irisobjectreferencepackagemap.generated.h",
+            "d:\\program files\\games\\ue_5.5\\engine\\intermediate\\build\\win64\\unrealeditor\\inc\\engine\\uht\\charactermovementreplication.generated.h",
+            "d:\\program files\\games\\ue_5.5\\engine\\source\\runtime\\engine\\classes\\gameframework\\rootmotionsource.h",
+            "d:\\program files\\games\\ue_5.5\\engine\\intermediate\\build\\win64\\unrealeditor\\inc\\engine\\uht\\rootmotionsource.generated.h",
+            "d:\\program files\\games\\ue_5.5\\engine\\intermediate\\build\\win64\\unrealeditor\\inc\\engine\\uht\\character.generated.h",
+            "d:\\ue - projects\\ue5.5\\testdoarmour 5.5\\plugins\\helpfulfunctions\\intermediate\\build\\win64\\unrealeditor\\inc\\helpfulfunctions\\uht\\modifyclimbingparamsvolume.generated.h",
+            "d:\\ue - projects\\ue5.5\\testdoarmour 5.5\\plugins\\helpfulfunctions\\source\\helpfulfunctions\\public\\cpp_dynamicclimbingcomponent.h",
+            "d:\\ue - projects\\ue5.5\\testdoarmour 5.5\\plugins\\helpfulfunctions\\source\\helpfulfunctions\\public\\als_structuresandenumscpp.h",
+            "d:\\program files\\games\\ue_5.5\\engine\\source\\runtime\\engine\\classes\\curves\\curvevector.h",
+            "d:\\program files\\games\\ue_5.5\\engine\\intermediate\\build\\win64\\unrealeditor\\inc\\engine\\uht\\curvevector.generated.h",
+            "d:\\ue - projects\\ue5.5\\testdoarmour 5.5\\plugins\\helpfulfunctions\\intermediate\\build\\win64\\unrealeditor\\inc\\helpfulfunctions\\uht\\als_structuresandenumscpp.generated.h",
+            "d:\\ue - projects\\ue5.5\\testdoarmour 5.5\\plugins\\jakubcablecomponent\\source\\jakubcablecomponent\\public\\jakubcablephysic.h",
+            "d:\\ue - projects\\ue5.5\\testdoarmour 5.5\\plugins\\jakubcablecomponent\\intermediate\\build\\win64\\unrealeditor\\inc\\jakubcablecomponent\\uht\\jakubcablephysic.generated.h",
+            "d:\\ue - projects\\ue5.5\\testdoarmour 5.5\\plugins\\helpfulfunctions\\source\\helpfulfunctions\\public\\als_hookactorinterface.h",
+            "d:\\ue - projects\\ue5.5\\testdoarmour 5.5\\plugins\\helpfulfunctions\\intermediate\\build\\win64\\unrealeditor\\inc\\helpfulfunctions\\uht\\als_hookactorinterface.generated.h",
+            "d:\\ue - projects\\ue5.5\\testdoarmour 5.5\\plugins\\helpfulfunctions\\intermediate\\build\\win64\\unrealeditor\\inc\\helpfulfunctions\\uht\\cpp_dynamicclimbingcomponent.generated.h"
+        ],
+        "ImportedModules": [],
+        "ImportedHeaderUnits": []
+    }
+}

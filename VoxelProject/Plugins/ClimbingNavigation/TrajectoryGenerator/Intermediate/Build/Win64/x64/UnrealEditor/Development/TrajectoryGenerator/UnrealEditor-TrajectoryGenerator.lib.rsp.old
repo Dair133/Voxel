@@ -1,0 +1,18 @@
+/NOLOGO
+/errorReport:prompt
+/MACHINE:x64
+/SUBSYSTEM:WINDOWS
+/DEF
+/NAME:"UnrealEditor-TrajectoryGenerator.dll"
+/IGNORE:4221
+/NODEFAULTLIB
+"D:\UE - Projects\UE5.4\AGLS v1.0 (Experimental)\Intermediate\Build\Win64\x64\UnrealEditor\Development\UnrealEd\SharedPCH.UnrealEd.Project.ValApi.Cpp20.h.obj"
+"D:\UE - Projects\UE5.4\AGLS v1.0 (Experimental)\Plugins\TrajectoryGenerator\Intermediate\Build\Win64\x64\UnrealEditor\Development\TrajectoryGenerator\Module.TrajectoryGenerator.cpp.obj"
+"D:\UE - Projects\UE5.4\AGLS v1.0 (Experimental)\Plugins\TrajectoryGenerator\Intermediate\Build\Win64\x64\UnrealEditor\Development\TrajectoryGenerator\CurveEditorDerivativeFilter.cpp.obj"
+"D:\UE - Projects\UE5.4\AGLS v1.0 (Experimental)\Plugins\TrajectoryGenerator\Intermediate\Build\Win64\x64\UnrealEditor\Development\TrajectoryGenerator\GaussianDerivativeFilter.cpp.obj"
+"D:\UE - Projects\UE5.4\AGLS v1.0 (Experimental)\Plugins\TrajectoryGenerator\Intermediate\Build\Win64\x64\UnrealEditor\Development\TrajectoryGenerator\TG_EnumsAndStructures.cpp.obj"
+"D:\UE - Projects\UE5.4\AGLS v1.0 (Experimental)\Plugins\TrajectoryGenerator\Intermediate\Build\Win64\x64\UnrealEditor\Development\TrajectoryGenerator\TrajectoryGenerator.cpp.obj"
+"D:\UE - Projects\UE5.4\AGLS v1.0 (Experimental)\Plugins\TrajectoryGenerator\Intermediate\Build\Win64\x64\UnrealEditor\Development\TrajectoryGenerator\TrajectoryGeneratorBPLibrary.cpp.obj"
+"D:\UE - Projects\UE5.4\AGLS v1.0 (Experimental)\Plugins\TrajectoryGenerator\Intermediate\Build\Win64\x64\UnrealEditor\Development\TrajectoryGenerator\TrajectoryPresetsCpp.cpp.obj"
+"D:\UE - Projects\UE5.4\AGLS v1.0 (Experimental)\Plugins\TrajectoryGenerator\Intermediate\Build\Win64\x64\UnrealEditor\Development\TrajectoryGenerator\Default.rc2.res"
+/OUT:"D:\UE - Projects\UE5.4\AGLS v1.0 (Experimental)\Plugins\TrajectoryGenerator\Intermediate\Build\Win64\x64\UnrealEditor\Development\TrajectoryGenerator\UnrealEditor-TrajectoryGenerator.lib"

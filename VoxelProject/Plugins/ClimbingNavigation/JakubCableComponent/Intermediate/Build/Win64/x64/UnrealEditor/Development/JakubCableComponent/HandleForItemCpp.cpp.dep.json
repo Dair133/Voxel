@@ -1,0 +1,19 @@
+{
+    "Version": "1.2",
+    "Data": {
+        "Source": "d:\\ue - projects\\ue5.5\\testdoarmour 5.5\\plugins\\jakubcablecomponent\\source\\jakubcablecomponent\\private\\handleforitemcpp.cpp",
+        "ProvidedModule": "",
+        "PCH": "d:\\ue - projects\\ue5.5\\testdoarmour 5.5\\intermediate\\build\\win64\\x64\\testdoarmoureditor\\development\\unrealed\\sharedpch.unrealed.project.valapi.cpp20.h.pch",
+        "Includes": [
+            "d:\\ue - projects\\ue5.5\\testdoarmour 5.5\\plugins\\jakubcablecomponent\\intermediate\\build\\win64\\x64\\unrealeditor\\development\\jakubcablecomponent\\definitions.jakubcablecomponent.h",
+            "d:\\ue - projects\\ue5.5\\testdoarmour 5.5\\plugins\\jakubcablecomponent\\source\\jakubcablecomponent\\public\\handleforitemcpp.h",
+            "d:\\ue - projects\\ue5.5\\testdoarmour 5.5\\plugins\\jakubcablecomponent\\source\\jakubcablecomponent\\public\\jakubsimpleparticlecomponent.h",
+            "d:\\program files\\games\\ue_5.5\\engine\\source\\runtime\\engine\\classes\\components\\arrowcomponent.h",
+            "d:\\program files\\games\\ue_5.5\\engine\\intermediate\\build\\win64\\unrealeditor\\inc\\engine\\uht\\arrowcomponent.generated.h",
+            "d:\\ue - projects\\ue5.5\\testdoarmour 5.5\\plugins\\jakubcablecomponent\\intermediate\\build\\win64\\unrealeditor\\inc\\jakubcablecomponent\\uht\\jakubsimpleparticlecomponent.generated.h",
+            "d:\\ue - projects\\ue5.5\\testdoarmour 5.5\\plugins\\jakubcablecomponent\\intermediate\\build\\win64\\unrealeditor\\inc\\jakubcablecomponent\\uht\\handleforitemcpp.generated.h"
+        ],
+        "ImportedModules": [],
+        "ImportedHeaderUnits": []
+    }
+}

@@ -1,0 +1,14 @@
+{
+    "Version": "1.2",
+    "Data": {
+        "Source": "d:\\ue - projects\\ue5.5\\agls v1.0 (experimental) 5.5\\plugins\\jakubanimnodes\\source\\jakubanimnodestool\\private\\jakubanimnodestool.cpp",
+        "ProvidedModule": "",
+        "PCH": "d:\\ue - projects\\ue5.5\\agls v1.0 (experimental) 5.5\\intermediate\\build\\win64\\x64\\aglseditor\\development\\unrealed\\sharedpch.unrealed.project.valapi.cpp20.h.pch",
+        "Includes": [
+            "d:\\ue - projects\\ue5.5\\agls v1.0 (experimental) 5.5\\plugins\\jakubanimnodes\\intermediate\\build\\win64\\x64\\unrealeditor\\development\\jakubanimnodestool\\definitions.jakubanimnodestool.h",
+            "d:\\ue - projects\\ue5.5\\agls v1.0 (experimental) 5.5\\plugins\\jakubanimnodes\\source\\jakubanimnodestool\\public\\jakubanimnodestool.h"
+        ],
+        "ImportedModules": [],
+        "ImportedHeaderUnits": []
+    }
+}

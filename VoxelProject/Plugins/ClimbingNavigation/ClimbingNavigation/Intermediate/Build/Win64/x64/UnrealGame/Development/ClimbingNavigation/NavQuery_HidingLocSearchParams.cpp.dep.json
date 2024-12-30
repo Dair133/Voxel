@@ -1,0 +1,15 @@
+{
+    "Version": "1.2",
+    "Data": {
+        "Source": "d:\\ue - projects\\ue5.4\\agls v1.0 (experimental)\\plugins\\climbingnavigation\\source\\climbingnavigation\\private\\navquery_hidinglocsearchparams.cpp",
+        "ProvidedModule": "",
+        "PCH": "d:\\ue - projects\\ue5.4\\agls v1.0 (experimental)\\intermediate\\build\\win64\\x64\\agls\\development\\engine\\sharedpch.engine.project.valapi.cpp20.h.pch",
+        "Includes": [
+            "d:\\ue - projects\\ue5.4\\agls v1.0 (experimental)\\plugins\\climbingnavigation\\intermediate\\build\\win64\\x64\\unrealgame\\development\\climbingnavigation\\definitions.climbingnavigation.h",
+            "d:\\ue - projects\\ue5.4\\agls v1.0 (experimental)\\plugins\\climbingnavigation\\source\\climbingnavigation\\public\\navquery_hidinglocsearchparams.h",
+            "d:\\ue - projects\\ue5.4\\agls v1.0 (experimental)\\plugins\\climbingnavigation\\intermediate\\build\\win64\\unrealgame\\inc\\climbingnavigation\\uht\\navquery_hidinglocsearchparams.generated.h"
+        ],
+        "ImportedModules": [],
+        "ImportedHeaderUnits": []
+    }
+}

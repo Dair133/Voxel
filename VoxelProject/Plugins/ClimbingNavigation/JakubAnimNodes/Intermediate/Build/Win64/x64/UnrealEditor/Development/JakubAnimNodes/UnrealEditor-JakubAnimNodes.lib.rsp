@@ -1,0 +1,19 @@
+/NOLOGO
+/errorReport:prompt
+/MACHINE:x64
+/SUBSYSTEM:WINDOWS
+/DEF
+/NAME:"UnrealEditor-JakubAnimNodes.dll"
+/IGNORE:4221
+/NODEFAULTLIB
+"D:\UE - Projects\UE5.5\AGLS v1.0 (Experimental) 5.5\Intermediate\Build\Win64\x64\AGLSEditor\Development\UnrealEd\SharedPCH.UnrealEd.Project.ValApi.Cpp20.h.obj"
+"D:\UE - Projects\UE5.5\AGLS v1.0 (Experimental) 5.5\Plugins\JakubAnimNodes\Intermediate\Build\Win64\x64\UnrealEditor\Development\JakubAnimNodes\Module.JakubAnimNodes.cpp.obj"
+"D:\UE - Projects\UE5.5\AGLS v1.0 (Experimental) 5.5\Plugins\JakubAnimNodes\Intermediate\Build\Win64\x64\UnrealEditor\Development\JakubAnimNodes\JakubAnimNodes.cpp.obj"
+"D:\UE - Projects\UE5.5\AGLS v1.0 (Experimental) 5.5\Plugins\JakubAnimNodes\Intermediate\Build\Win64\x64\UnrealEditor\Development\JakubAnimNodes\JakubAnimNodesBPLibrary.cpp.obj"
+"D:\UE - Projects\UE5.5\AGLS v1.0 (Experimental) 5.5\Plugins\JakubAnimNodes\Intermediate\Build\Win64\x64\UnrealEditor\Development\JakubAnimNodes\JWAN_CurveSmootherGraph.cpp.obj"
+"D:\UE - Projects\UE5.5\AGLS v1.0 (Experimental) 5.5\Plugins\JakubAnimNodes\Intermediate\Build\Win64\x64\UnrealEditor\Development\JakubAnimNodes\JWAN_LayerBlendingGraph.cpp.obj"
+"D:\UE - Projects\UE5.5\AGLS v1.0 (Experimental) 5.5\Plugins\JakubAnimNodes\Intermediate\Build\Win64\x64\UnrealEditor\Development\JakubAnimNodes\JWAN_ModifyLayeringGraph.cpp.obj"
+"D:\UE - Projects\UE5.5\AGLS v1.0 (Experimental) 5.5\Plugins\JakubAnimNodes\Intermediate\Build\Win64\x64\UnrealEditor\Development\JakubAnimNodes\JWAN_PoseSnapShotGraph.cpp.obj"
+"D:\UE - Projects\UE5.5\AGLS v1.0 (Experimental) 5.5\Plugins\JakubAnimNodes\Intermediate\Build\Win64\x64\UnrealEditor\Development\JakubAnimNodes\MyAnimGraphNode.cpp.obj"
+"D:\UE - Projects\UE5.5\AGLS v1.0 (Experimental) 5.5\Plugins\JakubAnimNodes\Intermediate\Build\Win64\x64\UnrealEditor\Development\JakubAnimNodes\Default.rc2.res"
+/OUT:"D:\UE - Projects\UE5.5\AGLS v1.0 (Experimental) 5.5\Plugins\JakubAnimNodes\Intermediate\Build\Win64\x64\UnrealEditor\Development\JakubAnimNodes\UnrealEditor-JakubAnimNodes.lib"

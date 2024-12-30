@@ -1,0 +1,41 @@
+{
+    "version": "2.1.0",
+    "$schema": "https://schemastore.azurewebsites.net/schemas/json/sarif-2.1.0-rtm.5.json",
+    "runs": [
+        {
+            "results": [
+                {
+                    "ruleId": "C4996",
+                    "message": {
+                        "text": "'FAnimInstanceProxy::GetSlotInertializationRequest': Please use GetSlotInertializationRequestData instead. Please update your code to the new API before upgrading to the next release, otherwise your project will no longer compile."
+                    },
+                    "analysisTarget": {
+                        "uri": "file:///D:/UE - Projects/UE5.5/AGLS v1.0 (Experimental) 5.5/Plugins/JakubAnimNodes/Source/JakubAnimNodesTool/Private/JWAN_LayerBlendingLogic.cpp"
+                    },
+                    "locations": [
+                        {
+                            "physicalLocation": {
+                                "artifactLocation": {
+                                    "uri": "file:///D:/UE - Projects/UE5.5/AGLS v1.0 (Experimental) 5.5/Plugins/JakubAnimNodes/Source/JakubAnimNodesTool/Private/JWAN_LayerBlendingLogic.cpp"
+                                },
+                                "region": {
+                                    "startLine": 461,
+                                    "startColumn": 34
+                                }
+                            }
+                        }
+                    ]
+                }
+            ],
+            "tool": {
+                "driver": {
+                    "name": "MSVC",
+                    "shortDescription": {
+                        "text": "Microsoft Visual C++ Compiler Warnings/Errors"
+                    },
+                    "informationUri": "https://docs.microsoft.com/cpp/error-messages/compiler-errors-1/c-cpp-build-errors"
+                }
+            }
+        }
+    ]
+}

@@ -1,0 +1,15 @@
+{
+    "Version": "1.2",
+    "Data": {
+        "Source": "d:\\ue - projects\\ue5.4\\iwals (version 3.3) 5.4\\plugins\\trajectorygenerator\\source\\trajectorygenerator\\private\\trajectorypresetscpp.cpp",
+        "ProvidedModule": "",
+        "PCH": "d:\\ue - projects\\ue5.4\\iwals (version 3.3) 5.4\\intermediate\\build\\win64\\x64\\unrealeditor\\development\\unrealed\\sharedpch.unrealed.project.valapi.cpp20.h.pch",
+        "Includes": [
+            "d:\\ue - projects\\ue5.4\\iwals (version 3.3) 5.4\\plugins\\trajectorygenerator\\intermediate\\build\\win64\\x64\\unrealeditor\\development\\trajectorygenerator\\definitions.trajectorygenerator.h",
+            "d:\\ue - projects\\ue5.4\\iwals (version 3.3) 5.4\\plugins\\trajectorygenerator\\source\\trajectorygenerator\\public\\trajectorypresetscpp.h",
+            "d:\\ue - projects\\ue5.4\\iwals (version 3.3) 5.4\\plugins\\trajectorygenerator\\intermediate\\build\\win64\\unrealeditor\\inc\\trajectorygenerator\\uht\\trajectorypresetscpp.generated.h"
+        ],
+        "ImportedModules": [],
+        "ImportedHeaderUnits": []
+    }
+}

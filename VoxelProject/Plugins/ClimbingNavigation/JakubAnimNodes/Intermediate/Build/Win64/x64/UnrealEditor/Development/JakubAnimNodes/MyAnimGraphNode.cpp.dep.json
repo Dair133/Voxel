@@ -1,0 +1,29 @@
+{
+    "Version": "1.2",
+    "Data": {
+        "Source": "d:\\ue - projects\\ue5.5\\agls v1.0 (experimental) 5.5\\plugins\\jakubanimnodes\\source\\jakubanimnodes\\private\\myanimgraphnode.cpp",
+        "ProvidedModule": "",
+        "PCH": "d:\\ue - projects\\ue5.5\\agls v1.0 (experimental) 5.5\\intermediate\\build\\win64\\x64\\aglseditor\\development\\unrealed\\sharedpch.unrealed.project.valapi.cpp20.h.pch",
+        "Includes": [
+            "d:\\ue - projects\\ue5.5\\agls v1.0 (experimental) 5.5\\plugins\\jakubanimnodes\\intermediate\\build\\win64\\x64\\unrealeditor\\development\\jakubanimnodes\\definitions.jakubanimnodes.h",
+            "d:\\ue - projects\\ue5.5\\agls v1.0 (experimental) 5.5\\plugins\\jakubanimnodes\\source\\jakubanimnodes\\public\\myanimgraphnode.h",
+            "d:\\program files\\games\\ue_5.5\\engine\\source\\editor\\animgraph\\public\\animgraphnode_blendlistbase.h",
+            "d:\\program files\\games\\ue_5.5\\engine\\source\\editor\\animgraph\\public\\animgraphnode_base.h",
+            "d:\\program files\\games\\ue_5.5\\engine\\source\\editor\\unrealed\\public\\ipropertyaccesseditor.h",
+            "d:\\program files\\games\\ue_5.5\\engine\\intermediate\\build\\win64\\unrealeditor\\inc\\animgraph\\uht\\animgraphnode_base.generated.h",
+            "d:\\program files\\games\\ue_5.5\\engine\\intermediate\\build\\win64\\unrealeditor\\inc\\animgraph\\uht\\animgraphnode_blendlistbase.generated.h",
+            "d:\\ue - projects\\ue5.5\\agls v1.0 (experimental) 5.5\\plugins\\jakubanimnodes\\source\\jakubanimnodestool\\public\\myanimnode.h",
+            "d:\\program files\\games\\ue_5.5\\engine\\source\\runtime\\engine\\classes\\animation\\animdata\\bonemaskfilter.h",
+            "d:\\program files\\games\\ue_5.5\\engine\\intermediate\\build\\win64\\unrealeditor\\inc\\engine\\uht\\bonemaskfilter.generated.h",
+            "d:\\ue - projects\\ue5.5\\agls v1.0 (experimental) 5.5\\plugins\\jakubanimnodes\\intermediate\\build\\win64\\unrealeditor\\inc\\jakubanimnodestool\\uht\\myanimnode.generated.h",
+            "d:\\ue - projects\\ue5.5\\agls v1.0 (experimental) 5.5\\plugins\\jakubanimnodes\\intermediate\\build\\win64\\unrealeditor\\inc\\jakubanimnodes\\uht\\myanimgraphnode.generated.h",
+            "d:\\program files\\games\\ue_5.5\\engine\\source\\editor\\unrealed\\public\\kismet2\\blueprinteditorutils.h",
+            "d:\\program files\\games\\ue_5.5\\engine\\source\\editor\\classviewer\\public\\classviewermodule.h",
+            "d:\\program files\\games\\ue_5.5\\engine\\source\\editor\\animgraph\\public\\animgraphcommands.h",
+            "d:\\program files\\games\\ue_5.5\\engine\\source\\editor\\propertyeditor\\public\\detaillayoutbuilder.h",
+            "d:\\program files\\games\\ue_5.5\\engine\\source\\editor\\propertyeditor\\public\\idetailpropertyrow.h"
+        ],
+        "ImportedModules": [],
+        "ImportedHeaderUnits": []
+    }
+}

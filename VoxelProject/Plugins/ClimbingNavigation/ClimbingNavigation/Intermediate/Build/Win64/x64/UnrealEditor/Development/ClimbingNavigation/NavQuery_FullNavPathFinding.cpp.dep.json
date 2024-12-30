@@ -1,0 +1,15 @@
+{
+    "Version": "1.2",
+    "Data": {
+        "Source": "d:\\ue - projects\\ue5.5\\testdoarmour 5.5\\plugins\\climbingnavigation\\source\\climbingnavigation\\private\\navquery_fullnavpathfinding.cpp",
+        "ProvidedModule": "",
+        "PCH": "d:\\ue - projects\\ue5.5\\testdoarmour 5.5\\intermediate\\build\\win64\\x64\\testdoarmoureditor\\development\\unrealed\\sharedpch.unrealed.project.valapi.cpp20.h.pch",
+        "Includes": [
+            "d:\\ue - projects\\ue5.5\\testdoarmour 5.5\\plugins\\climbingnavigation\\intermediate\\build\\win64\\x64\\unrealeditor\\development\\climbingnavigation\\definitions.climbingnavigation.h",
+            "d:\\ue - projects\\ue5.5\\testdoarmour 5.5\\plugins\\climbingnavigation\\source\\climbingnavigation\\public\\navquery_fullnavpathfinding.h",
+            "d:\\ue - projects\\ue5.5\\testdoarmour 5.5\\plugins\\climbingnavigation\\intermediate\\build\\win64\\unrealeditor\\inc\\climbingnavigation\\uht\\navquery_fullnavpathfinding.generated.h"
+        ],
+        "ImportedModules": [],
+        "ImportedHeaderUnits": []
+    }
+}

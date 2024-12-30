@@ -1,0 +1,15 @@
+{
+	"RemapUnityFiles": 
+	{
+		"Module.GraphDebbuger.cpp.obj": [
+			"AGLS_EditorCommands.gen.cpp.obj",
+			"GraphDebbuger.init.gen.cpp.obj",
+			"GraphDebbugerBPLibrary.gen.cpp.obj",
+			"GraphDebuggerCore.gen.cpp.obj",
+			"AGLS_EditorCommands.cpp.obj",
+			"GraphDebbuger.cpp.obj",
+			"GraphDebbugerBPLibrary.cpp.obj",
+			"GraphDebuggerCore.cpp.obj"
+		]
+	}
+}

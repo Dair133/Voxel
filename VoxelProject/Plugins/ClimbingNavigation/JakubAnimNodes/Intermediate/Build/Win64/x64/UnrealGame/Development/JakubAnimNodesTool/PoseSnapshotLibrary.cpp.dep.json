@@ -1,0 +1,32 @@
+{
+    "Version": "1.2",
+    "Data": {
+        "Source": "d:\\ue - projects\\ue5.4\\agls v1.0 (experimental)\\plugins\\jakubanimnodes\\source\\jakubanimnodestool\\private\\posesnapshotlibrary.cpp",
+        "ProvidedModule": "",
+        "PCH": "d:\\ue - projects\\ue5.4\\agls v1.0 (experimental)\\intermediate\\build\\win64\\x64\\agls\\development\\engine\\sharedpch.engine.project.valapi.cpp20.h.pch",
+        "Includes": [
+            "d:\\ue - projects\\ue5.4\\agls v1.0 (experimental)\\plugins\\jakubanimnodes\\intermediate\\build\\win64\\x64\\unrealgame\\development\\jakubanimnodestool\\definitions.jakubanimnodestool.h",
+            "d:\\ue - projects\\ue5.4\\agls v1.0 (experimental)\\plugins\\jakubanimnodes\\source\\jakubanimnodestool\\public\\posesnapshotlibrary.h",
+            "d:\\program files\\games\\ue_5.4\\engine\\source\\runtime\\engine\\classes\\animation\\animexecutioncontext.h",
+            "d:\\program files\\games\\ue_5.4\\engine\\intermediate\\build\\win64\\unrealgame\\inc\\engine\\uht\\animexecutioncontext.generated.h",
+            "d:\\program files\\games\\ue_5.4\\engine\\source\\runtime\\engine\\classes\\animation\\animnodereference.h",
+            "d:\\program files\\games\\ue_5.4\\engine\\intermediate\\build\\win64\\unrealgame\\inc\\engine\\uht\\animnodereference.generated.h",
+            "d:\\ue - projects\\ue5.4\\agls v1.0 (experimental)\\plugins\\jakubanimnodes\\intermediate\\build\\win64\\unrealgame\\inc\\jakubanimnodestool\\uht\\posesnapshotlibrary.generated.h",
+            "d:\\program files\\games\\ue_5.4\\engine\\source\\runtime\\engine\\classes\\animation\\animnode_inertialization.h",
+            "d:\\program files\\games\\ue_5.4\\engine\\source\\runtime\\engine\\classes\\interfaces\\interface_bonereferenceskeletonprovider.h",
+            "d:\\program files\\games\\ue_5.4\\engine\\intermediate\\build\\win64\\unrealgame\\inc\\engine\\uht\\interface_bonereferenceskeletonprovider.generated.h",
+            "d:\\program files\\games\\ue_5.4\\engine\\intermediate\\build\\win64\\unrealgame\\inc\\engine\\uht\\animnode_inertialization.generated.h",
+            "d:\\ue - projects\\ue5.4\\agls v1.0 (experimental)\\plugins\\jakubanimnodes\\source\\jakubanimnodestool\\public\\jwan_posesnapshotlogic.h",
+            "d:\\program files\\games\\ue_5.4\\engine\\source\\runtime\\engine\\public\\animation\\animinstanceproxy.h",
+            "d:\\program files\\games\\ue_5.4\\engine\\source\\runtime\\engine\\public\\animation\\animtrace.h",
+            "d:\\program files\\games\\ue_5.4\\engine\\source\\runtime\\engine\\public\\objecttrace.h",
+            "d:\\program files\\games\\ue_5.4\\engine\\source\\runtime\\engine\\public\\tracefilter.h",
+            "d:\\program files\\games\\ue_5.4\\engine\\intermediate\\build\\win64\\unrealgame\\inc\\engine\\uht\\objecttrace.generated.h",
+            "d:\\program files\\games\\ue_5.4\\engine\\source\\runtime\\engine\\public\\animation\\animattributes.h",
+            "d:\\program files\\games\\ue_5.4\\engine\\intermediate\\build\\win64\\unrealgame\\inc\\engine\\uht\\animinstanceproxy.generated.h",
+            "d:\\ue - projects\\ue5.4\\agls v1.0 (experimental)\\plugins\\jakubanimnodes\\intermediate\\build\\win64\\unrealgame\\inc\\jakubanimnodestool\\uht\\jwan_posesnapshotlogic.generated.h"
+        ],
+        "ImportedModules": [],
+        "ImportedHeaderUnits": []
+    }
+}

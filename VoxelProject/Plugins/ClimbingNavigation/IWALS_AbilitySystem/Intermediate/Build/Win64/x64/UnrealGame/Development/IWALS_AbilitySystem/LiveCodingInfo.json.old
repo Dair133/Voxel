@@ -1,0 +1,34 @@
+{
+	"RemapUnityFiles": 
+	{
+		"Module.IWALS_AbilitySystem.cpp.obj": [
+			"AbilityTask_DelayWithTick.gen.cpp.obj",
+			"AbilityTask_MoveByInputWithRot.gen.cpp.obj",
+			"AbilityTask_MovePawnByInput.gen.cpp.obj",
+			"AbilityTask_TimerFunction.gen.cpp.obj",
+			"GAS_MainCharacterCpp.gen.cpp.obj",
+			"IWALS_AbilityInterface.gen.cpp.obj",
+			"IWALS_AbilitySystem.gen.cpp.obj",
+			"IWALS_AbilitySystem.init.gen.cpp.obj",
+			"IWALS_AnimInstanceCpp.gen.cpp.obj",
+			"IWALS_AnimLayersClassData.gen.cpp.obj",
+			"IWALS_BaseAttributeSet.gen.cpp.obj",
+			"IWALS_EnumsAndStruct.gen.cpp.obj",
+			"IWALS_GameplayAbility.gen.cpp.obj",
+			"IWALS_GameplayAbilitySet.gen.cpp.obj",
+			"AbilityTask_DelayWithTick.cpp.obj",
+			"AbilityTask_MoveByInputWithRot.cpp.obj",
+			"AbilityTask_MovePawnByInput.cpp.obj",
+			"AbilityTask_TimerFunction.cpp.obj",
+			"GAS_MainCharacterCpp.cpp.obj",
+			"IWALS_AbilityInterface.cpp.obj",
+			"IWALS_AbilitySystem.cpp.obj",
+			"IWALS_AnimInstanceCpp.cpp.obj",
+			"IWALS_AnimLayersClassData.cpp.obj",
+			"IWALS_BaseAttributeSet.cpp.obj",
+			"IWALS_EnumsAndStruct.cpp.obj",
+			"IWALS_GameplayAbility.cpp.obj",
+			"IWALS_GameplayAbilitySet.cpp.obj"
+		]
+	}
+}

@@ -1,0 +1,29 @@
+{
+    "Version": "1.2",
+    "Data": {
+        "Source": "d:\\ue - projects\\ue5.5\\agls v1.0 (experimental) 5.5\\plugins\\jakubanimnodes\\source\\jakubanimnodes\\private\\jwan_posesnapshotgraph.cpp",
+        "ProvidedModule": "",
+        "PCH": "d:\\ue - projects\\ue5.5\\agls v1.0 (experimental) 5.5\\intermediate\\build\\win64\\x64\\aglseditor\\development\\unrealed\\sharedpch.unrealed.project.valapi.cpp20.h.pch",
+        "Includes": [
+            "d:\\ue - projects\\ue5.5\\agls v1.0 (experimental) 5.5\\plugins\\jakubanimnodes\\intermediate\\build\\win64\\x64\\unrealeditor\\development\\jakubanimnodes\\definitions.jakubanimnodes.h",
+            "d:\\ue - projects\\ue5.5\\agls v1.0 (experimental) 5.5\\plugins\\jakubanimnodes\\source\\jakubanimnodes\\public\\jwan_posesnapshotgraph.h",
+            "d:\\program files\\games\\ue_5.5\\engine\\source\\editor\\animgraph\\public\\animgraphnode_base.h",
+            "d:\\program files\\games\\ue_5.5\\engine\\source\\editor\\unrealed\\public\\ipropertyaccesseditor.h",
+            "d:\\program files\\games\\ue_5.5\\engine\\intermediate\\build\\win64\\unrealeditor\\inc\\animgraph\\uht\\animgraphnode_base.generated.h",
+            "d:\\ue - projects\\ue5.5\\agls v1.0 (experimental) 5.5\\plugins\\jakubanimnodes\\source\\jakubanimnodestool\\public\\jwan_posesnapshotlogic.h",
+            "d:\\program files\\games\\ue_5.5\\engine\\source\\runtime\\engine\\public\\animation\\animinstanceproxy.h",
+            "d:\\program files\\games\\ue_5.5\\engine\\source\\runtime\\engine\\public\\animation\\animtrace.h",
+            "d:\\program files\\games\\ue_5.5\\engine\\source\\runtime\\engine\\public\\objecttrace.h",
+            "d:\\program files\\games\\ue_5.5\\engine\\source\\runtime\\engine\\public\\tracefilter.h",
+            "d:\\program files\\games\\ue_5.5\\engine\\intermediate\\build\\win64\\unrealeditor\\inc\\engine\\uht\\objecttrace.generated.h",
+            "d:\\program files\\games\\ue_5.5\\engine\\source\\runtime\\engine\\public\\animation\\animattributes.h",
+            "d:\\program files\\games\\ue_5.5\\engine\\intermediate\\build\\win64\\unrealeditor\\inc\\engine\\uht\\animinstanceproxy.generated.h",
+            "d:\\ue - projects\\ue5.5\\agls v1.0 (experimental) 5.5\\plugins\\jakubanimnodes\\intermediate\\build\\win64\\unrealeditor\\inc\\jakubanimnodestool\\uht\\jwan_posesnapshotlogic.generated.h",
+            "d:\\ue - projects\\ue5.5\\agls v1.0 (experimental) 5.5\\plugins\\jakubanimnodes\\intermediate\\build\\win64\\unrealeditor\\inc\\jakubanimnodes\\uht\\jwan_posesnapshotgraph.generated.h",
+            "d:\\program files\\games\\ue_5.5\\engine\\source\\editor\\unrealed\\public\\kismet2\\blueprinteditorutils.h",
+            "d:\\program files\\games\\ue_5.5\\engine\\source\\editor\\classviewer\\public\\classviewermodule.h"
+        ],
+        "ImportedModules": [],
+        "ImportedHeaderUnits": []
+    }
+}

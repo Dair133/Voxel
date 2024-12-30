@@ -1,0 +1,17 @@
+{
+	"RemapUnityFiles": 
+	{
+		"Module.JakubAnimNodes.cpp.obj": [
+			"JakubAnimNodes.init.gen.cpp.obj",
+			"JakubAnimNodesBPLibrary.gen.cpp.obj",
+			"JWAN_LayerBlendingGraph.gen.cpp.obj",
+			"JWAN_ModifyLayeringGraph.gen.cpp.obj",
+			"MyAnimGraphNode.gen.cpp.obj",
+			"JakubAnimNodes.cpp.obj",
+			"JakubAnimNodesBPLibrary.cpp.obj",
+			"JWAN_LayerBlendingGraph.cpp.obj",
+			"JWAN_ModifyLayeringGraph.cpp.obj",
+			"MyAnimGraphNode.cpp.obj"
+		]
+	}
+}

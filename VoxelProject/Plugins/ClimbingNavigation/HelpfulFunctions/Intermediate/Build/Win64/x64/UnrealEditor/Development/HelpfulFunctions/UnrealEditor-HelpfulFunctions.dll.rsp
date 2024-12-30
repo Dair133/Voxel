@@ -1,0 +1,116 @@
+/MANIFEST:EMBED
+/MANIFESTINPUT:"..\Build\Windows\Resources\Default-Win64.manifest"
+/NOLOGO
+/DEBUG:FULL
+/errorReport:prompt
+/MACHINE:x64
+/SUBSYSTEM:WINDOWS
+/FIXED:No
+/NXCOMPAT
+/STACK:12000000
+/DELAY:UNLOAD
+/DLL
+/PDBALTPATH:%_PDB%
+/d2:-ExtendedWarningInfo
+/OPT:NOREF
+/OPT:NOICF
+/INCREMENTAL:NO
+/ignore:4199
+/ignore:4099
+/ALTERNATENAME:__imp___std_init_once_begin_initialize=__imp_InitOnceBeginInitialize
+/ALTERNATENAME:__imp___std_init_once_complete=__imp_InitOnceComplete
+/DELAYLOAD:"d3d12.dll"
+/DELAYLOAD:"DBGHELP.DLL"
+/LIBPATH:"C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.38.33130\lib\x64"
+/LIBPATH:"C:\Program Files (x86)\Windows Kits\10\lib\10.0.22621.0\ucrt\x64"
+/LIBPATH:"C:\Program Files (x86)\Windows Kits\10\lib\10.0.22621.0\um\x64"
+/NODEFAULTLIB:"LIBCMT"
+/NODEFAULTLIB:"LIBCPMT"
+/NODEFAULTLIB:"LIBCMTD"
+/NODEFAULTLIB:"LIBCPMTD"
+/NODEFAULTLIB:"MSVCRTD"
+/NODEFAULTLIB:"MSVCPRTD"
+/NODEFAULTLIB:"LIBC"
+/NODEFAULTLIB:"LIBCP"
+/NODEFAULTLIB:"LIBCD"
+/NODEFAULTLIB:"LIBCPD"
+/FUNCTIONPADMIN:6
+/NOIMPLIB
+"D:\UE - Projects\UE5.5\TestDoArmour 5.5\Intermediate\Build\Win64\x64\TestDoArmourEditor\Development\UnrealEd\SharedPCH.UnrealEd.Project.ValApi.Cpp20.h.obj"
+"D:\UE - Projects\UE5.5\TestDoArmour 5.5\Plugins\HelpfulFunctions\Intermediate\Build\Win64\x64\UnrealEditor\Development\HelpfulFunctions\Module.HelpfulFunctions.1.cpp.obj"
+"D:\UE - Projects\UE5.5\TestDoArmour 5.5\Plugins\HelpfulFunctions\Intermediate\Build\Win64\x64\UnrealEditor\Development\HelpfulFunctions\Module.HelpfulFunctions.2.cpp.obj"
+"D:\UE - Projects\UE5.5\TestDoArmour 5.5\Plugins\HelpfulFunctions\Intermediate\Build\Win64\x64\UnrealEditor\Development\HelpfulFunctions\Module.HelpfulFunctions.3.cpp.obj"
+"D:\UE - Projects\UE5.5\TestDoArmour 5.5\Plugins\HelpfulFunctions\Intermediate\Build\Win64\x64\UnrealEditor\Development\HelpfulFunctions\Module.HelpfulFunctions.4.cpp.obj"
+"D:\UE - Projects\UE5.5\TestDoArmour 5.5\Plugins\HelpfulFunctions\Intermediate\Build\Win64\x64\UnrealEditor\Development\HelpfulFunctions\Module.HelpfulFunctions.5.cpp.obj"
+"D:\UE - Projects\UE5.5\TestDoArmour 5.5\Plugins\HelpfulFunctions\Intermediate\Build\Win64\x64\UnrealEditor\Development\HelpfulFunctions\Module.HelpfulFunctions.6.cpp.obj"
+"D:\UE - Projects\UE5.5\TestDoArmour 5.5\Plugins\HelpfulFunctions\Intermediate\Build\Win64\x64\UnrealEditor\Development\HelpfulFunctions\Module.HelpfulFunctions.7.cpp.obj"
+"D:\UE - Projects\UE5.5\TestDoArmour 5.5\Plugins\HelpfulFunctions\Intermediate\Build\Win64\x64\UnrealEditor\Development\HelpfulFunctions\AGLS_AIsMeleeFightCore.cpp.obj"
+"D:\UE - Projects\UE5.5\TestDoArmour 5.5\Plugins\HelpfulFunctions\Intermediate\Build\Win64\x64\UnrealEditor\Development\HelpfulFunctions\AGLS_AI_AnimInstanceBase.cpp.obj"
+"D:\UE - Projects\UE5.5\TestDoArmour 5.5\Plugins\HelpfulFunctions\Intermediate\Build\Win64\x64\UnrealEditor\Development\HelpfulFunctions\AGLS_AI_CharacterInterface.cpp.obj"
+"D:\UE - Projects\UE5.5\TestDoArmour 5.5\Plugins\HelpfulFunctions\Intermediate\Build\Win64\x64\UnrealEditor\Development\HelpfulFunctions\AGLS_AI_HumanCharInterface.cpp.obj"
+"D:\UE - Projects\UE5.5\TestDoArmour 5.5\Plugins\HelpfulFunctions\Intermediate\Build\Win64\x64\UnrealEditor\Development\HelpfulFunctions\AGLS_CharacterMovementComponent.cpp.obj"
+"D:\UE - Projects\UE5.5\TestDoArmour 5.5\Plugins\HelpfulFunctions\Intermediate\Build\Win64\x64\UnrealEditor\Development\HelpfulFunctions\AGLS_HumanAI_CharacterBase.cpp.obj"
+"D:\UE - Projects\UE5.5\TestDoArmour 5.5\Plugins\HelpfulFunctions\Intermediate\Build\Win64\x64\UnrealEditor\Development\HelpfulFunctions\AI_MeleeFightSequencesData.cpp.obj"
+"D:\UE - Projects\UE5.5\TestDoArmour 5.5\Plugins\HelpfulFunctions\Intermediate\Build\Win64\x64\UnrealEditor\Development\HelpfulFunctions\ALS_BaseAI_CharacterCpp.cpp.obj"
+"D:\UE - Projects\UE5.5\TestDoArmour 5.5\Plugins\HelpfulFunctions\Intermediate\Build\Win64\x64\UnrealEditor\Development\HelpfulFunctions\ALS_BaseComponentsInterfaceCpp.cpp.obj"
+"D:\UE - Projects\UE5.5\TestDoArmour 5.5\Plugins\HelpfulFunctions\Intermediate\Build\Win64\x64\UnrealEditor\Development\HelpfulFunctions\ALS_DamageConfigData.cpp.obj"
+"D:\UE - Projects\UE5.5\TestDoArmour 5.5\Plugins\HelpfulFunctions\Intermediate\Build\Win64\x64\UnrealEditor\Development\HelpfulFunctions\ALS_HookActorInterface.cpp.obj"
+"D:\UE - Projects\UE5.5\TestDoArmour 5.5\Plugins\HelpfulFunctions\Intermediate\Build\Win64\x64\UnrealEditor\Development\HelpfulFunctions\ALS_HumanAI_ControllerCpp.cpp.obj"
+"D:\UE - Projects\UE5.5\TestDoArmour 5.5\Plugins\HelpfulFunctions\Intermediate\Build\Win64\x64\UnrealEditor\Development\HelpfulFunctions\ALS_HumanAI_InterfaceCpp.cpp.obj"
+"D:\UE - Projects\UE5.5\TestDoArmour 5.5\Plugins\HelpfulFunctions\Intermediate\Build\Win64\x64\UnrealEditor\Development\HelpfulFunctions\ALS_StructuresAndEnumsCpp.cpp.obj"
+"D:\UE - Projects\UE5.5\TestDoArmour 5.5\Plugins\HelpfulFunctions\Intermediate\Build\Win64\x64\UnrealEditor\Development\HelpfulFunctions\AsyncFunctionsPlayer.cpp.obj"
+"D:\UE - Projects\UE5.5\TestDoArmour 5.5\Plugins\HelpfulFunctions\Intermediate\Build\Win64\x64\UnrealEditor\Development\HelpfulFunctions\Cpp_CoverSystemV2.cpp.obj"
+"D:\UE - Projects\UE5.5\TestDoArmour 5.5\Plugins\HelpfulFunctions\Intermediate\Build\Win64\x64\UnrealEditor\Development\HelpfulFunctions\Cpp_DynamicClimbingComponent.cpp.obj"
+"D:\UE - Projects\UE5.5\TestDoArmour 5.5\Plugins\HelpfulFunctions\Intermediate\Build\Win64\x64\UnrealEditor\Development\HelpfulFunctions\Cpp_FallDamageAndSliding.cpp.obj"
+"D:\UE - Projects\UE5.5\TestDoArmour 5.5\Plugins\HelpfulFunctions\Intermediate\Build\Win64\x64\UnrealEditor\Development\HelpfulFunctions\Cpp_LadderClimbingComponent.cpp.obj"
+"D:\UE - Projects\UE5.5\TestDoArmour 5.5\Plugins\HelpfulFunctions\Intermediate\Build\Win64\x64\UnrealEditor\Development\HelpfulFunctions\Cpp_MatchedMontageComponent.cpp.obj"
+"D:\UE - Projects\UE5.5\TestDoArmour 5.5\Plugins\HelpfulFunctions\Intermediate\Build\Win64\x64\UnrealEditor\Development\HelpfulFunctions\Cpp_TraversalActionComponent.cpp.obj"
+"D:\UE - Projects\UE5.5\TestDoArmour 5.5\Plugins\HelpfulFunctions\Intermediate\Build\Win64\x64\UnrealEditor\Development\HelpfulFunctions\HelpfulFunctions.cpp.obj"
+"D:\UE - Projects\UE5.5\TestDoArmour 5.5\Plugins\HelpfulFunctions\Intermediate\Build\Win64\x64\UnrealEditor\Development\HelpfulFunctions\HelpfulFunctionsBPLibrary.cpp.obj"
+"D:\UE - Projects\UE5.5\TestDoArmour 5.5\Plugins\HelpfulFunctions\Intermediate\Build\Win64\x64\UnrealEditor\Development\HelpfulFunctions\JacobMotionWarpingComponent.cpp.obj"
+"D:\UE - Projects\UE5.5\TestDoArmour 5.5\Plugins\HelpfulFunctions\Intermediate\Build\Win64\x64\UnrealEditor\Development\HelpfulFunctions\JakubW_ASyncFunctions.cpp.obj"
+"D:\UE - Projects\UE5.5\TestDoArmour 5.5\Plugins\HelpfulFunctions\Intermediate\Build\Win64\x64\UnrealEditor\Development\HelpfulFunctions\MantleAssetData.cpp.obj"
+"D:\UE - Projects\UE5.5\TestDoArmour 5.5\Plugins\HelpfulFunctions\Intermediate\Build\Win64\x64\UnrealEditor\Development\HelpfulFunctions\ModifyClimbingParamsVolume.cpp.obj"
+"D:\UE - Projects\UE5.5\TestDoArmour 5.5\Plugins\HelpfulFunctions\Intermediate\Build\Win64\x64\UnrealEditor\Development\HelpfulFunctions\TraversalActionsParamsData.cpp.obj"
+"D:\UE - Projects\UE5.5\TestDoArmour 5.5\Plugins\HelpfulFunctions\Intermediate\Build\Win64\x64\UnrealEditor\Development\HelpfulFunctions\TraversalInteractionInterface.cpp.obj"
+"D:\UE - Projects\UE5.5\TestDoArmour 5.5\Plugins\HelpfulFunctions\Intermediate\Build\Win64\x64\UnrealEditor\Development\HelpfulFunctions\Default.rc2.res"
+"..\Intermediate\Build\Win64\x64\UnrealEditor\Development\CoreUObject\UnrealEditor-CoreUObject.lib"
+"..\Intermediate\Build\Win64\x64\UnrealEditor\Development\Engine\UnrealEditor-Engine.lib"
+"..\Intermediate\Build\Win64\x64\UnrealEditor\Development\Slate\UnrealEditor-Slate.lib"
+"..\Intermediate\Build\Win64\x64\UnrealEditor\Development\SlateCore\UnrealEditor-SlateCore.lib"
+"..\Intermediate\Build\Win64\x64\UnrealEditor\Development\AnimationCore\UnrealEditor-AnimationCore.lib"
+"..\Intermediate\Build\Win64\x64\UnrealEditor\Development\AnimGraphRuntime\UnrealEditor-AnimGraphRuntime.lib"
+"..\Intermediate\Build\Win64\x64\UnrealEditor\Development\AIModule\UnrealEditor-AIModule.lib"
+"..\Intermediate\Build\Win64\x64\UnrealEditor\Development\NavigationSystem\UnrealEditor-NavigationSystem.lib"
+"..\Intermediate\Build\Win64\x64\UnrealEditor\Development\Core\UnrealEditor-Core.lib"
+"D:\UE - Projects\UE5.5\TestDoArmour 5.5\Plugins\JakubCableComponent\Intermediate\Build\Win64\x64\UnrealEditor\Development\JakubCableComponent\UnrealEditor-JakubCableComponent.lib"
+"..\Plugins\Animation\PoseSearch\Intermediate\Build\Win64\x64\UnrealEditor\Development\PoseSearch\UnrealEditor-PoseSearch.lib"
+"..\Intermediate\Build\Win64\x64\UnrealEditor\Development\AssetRegistry\UnrealEditor-AssetRegistry.lib"
+"delayimp.lib"
+"wininet.lib"
+"rpcrt4.lib"
+"ws2_32.lib"
+"dbghelp.lib"
+"comctl32.lib"
+"Winmm.lib"
+"kernel32.lib"
+"user32.lib"
+"gdi32.lib"
+"winspool.lib"
+"comdlg32.lib"
+"advapi32.lib"
+"shell32.lib"
+"ole32.lib"
+"oleaut32.lib"
+"uuid.lib"
+"odbc32.lib"
+"odbccp32.lib"
+"netapi32.lib"
+"iphlpapi.lib"
+"setupapi.lib"
+"synchronization.lib"
+"dwmapi.lib"
+"imm32.lib"
+/OUT:"D:\UE - Projects\UE5.5\TestDoArmour 5.5\Plugins\HelpfulFunctions\Binaries\Win64\UnrealEditor-HelpfulFunctions.dll"
+/PDB:"D:\UE - Projects\UE5.5\TestDoArmour 5.5\Plugins\HelpfulFunctions\Binaries\Win64\UnrealEditor-HelpfulFunctions.pdb"
+/ignore:4078

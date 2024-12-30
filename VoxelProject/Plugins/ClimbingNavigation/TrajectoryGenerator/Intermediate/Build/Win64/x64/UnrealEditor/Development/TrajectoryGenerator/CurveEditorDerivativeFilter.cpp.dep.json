@@ -1,0 +1,37 @@
+{
+    "Version": "1.2",
+    "Data": {
+        "Source": "d:\\ue - projects\\ue5.4\\iwals (version 3.3) 5.4\\plugins\\trajectorygenerator\\source\\trajectorygenerator\\private\\curveeditorderivativefilter.cpp",
+        "ProvidedModule": "",
+        "PCH": "d:\\ue - projects\\ue5.4\\iwals (version 3.3) 5.4\\intermediate\\build\\win64\\x64\\unrealeditor\\development\\unrealed\\sharedpch.unrealed.project.valapi.cpp20.h.pch",
+        "Includes": [
+            "d:\\ue - projects\\ue5.4\\iwals (version 3.3) 5.4\\plugins\\trajectorygenerator\\intermediate\\build\\win64\\x64\\unrealeditor\\development\\trajectorygenerator\\definitions.trajectorygenerator.h",
+            "d:\\ue - projects\\ue5.4\\iwals (version 3.3) 5.4\\plugins\\trajectorygenerator\\source\\trajectorygenerator\\public\\curveeditorderivativefilter.h",
+            "d:\\program files\\games\\ue_5.4\\engine\\source\\editor\\curveeditor\\public\\filters\\curveeditorfilterbase.h",
+            "d:\\program files\\games\\ue_5.4\\engine\\source\\editor\\curveeditor\\public\\curveeditorselection.h",
+            "d:\\program files\\games\\ue_5.4\\engine\\source\\editor\\curveeditor\\public\\curveeditortypes.h",
+            "d:\\program files\\games\\ue_5.4\\engine\\source\\editor\\curveeditor\\public\\curveeditor.h",
+            "d:\\program files\\games\\ue_5.4\\engine\\source\\editor\\curveeditor\\public\\curvedataabstraction.h",
+            "d:\\program files\\games\\ue_5.4\\engine\\intermediate\\build\\win64\\unrealeditor\\inc\\curveeditor\\uht\\curvedataabstraction.generated.h",
+            "d:\\program files\\games\\ue_5.4\\engine\\source\\editor\\curveeditor\\public\\curveeditorhelpers.h",
+            "d:\\program files\\games\\ue_5.4\\engine\\source\\editor\\curveeditor\\public\\curveeditorscreenspace.h",
+            "d:\\program files\\games\\ue_5.4\\engine\\source\\editor\\curveeditor\\public\\curveeditorsnapmetrics.h",
+            "d:\\program files\\games\\ue_5.4\\engine\\source\\editor\\curveeditor\\public\\curvemodel.h",
+            "d:\\program files\\games\\ue_5.4\\engine\\source\\editor\\curveeditor\\public\\ibufferedcurvemodel.h",
+            "d:\\program files\\games\\ue_5.4\\engine\\source\\editor\\curveeditor\\public\\icurveeditorbounds.h",
+            "d:\\program files\\games\\ue_5.4\\engine\\source\\editor\\curveeditor\\public\\icurveeditordragoperation.h",
+            "d:\\program files\\games\\ue_5.4\\engine\\source\\runtime\\slate\\public\\framework\\delayeddrag.h",
+            "d:\\program files\\games\\ue_5.4\\engine\\source\\editor\\curveeditor\\public\\icurveeditormodule.h",
+            "d:\\program files\\games\\ue_5.4\\engine\\source\\editor\\curveeditor\\public\\icurveeditortoolextension.h",
+            "d:\\program files\\games\\ue_5.4\\engine\\source\\editor\\sequencerwidgets\\public\\itimeslider.h",
+            "d:\\program files\\games\\ue_5.4\\engine\\source\\editor\\sequencercore\\public\\isequencerinputhandler.h",
+            "d:\\program files\\games\\ue_5.4\\engine\\source\\editor\\sequencerwidgets\\public\\viewrangeinterpolation.h",
+            "d:\\program files\\games\\ue_5.4\\engine\\source\\editor\\curveeditor\\public\\tree\\curveeditortree.h",
+            "d:\\program files\\games\\ue_5.4\\engine\\source\\runtime\\core\\public\\algo\\foreach.h",
+            "d:\\program files\\games\\ue_5.4\\engine\\intermediate\\build\\win64\\unrealeditor\\inc\\curveeditor\\uht\\curveeditorfilterbase.generated.h",
+            "d:\\ue - projects\\ue5.4\\iwals (version 3.3) 5.4\\plugins\\trajectorygenerator\\intermediate\\build\\win64\\unrealeditor\\inc\\trajectorygenerator\\uht\\curveeditorderivativefilter.generated.h"
+        ],
+        "ImportedModules": [],
+        "ImportedHeaderUnits": []
+    }
+}

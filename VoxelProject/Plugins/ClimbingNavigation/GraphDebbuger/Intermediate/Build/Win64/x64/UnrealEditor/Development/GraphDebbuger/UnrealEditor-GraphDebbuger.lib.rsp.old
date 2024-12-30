@@ -1,0 +1,16 @@
+/NOLOGO
+/errorReport:prompt
+/MACHINE:x64
+/SUBSYSTEM:WINDOWS
+/DEF
+/NAME:"UnrealEditor-GraphDebbuger.dll"
+/IGNORE:4221
+/NODEFAULTLIB
+"D:\UE - Projects\UE5.4\TestDoArmour 5.4\Intermediate\Build\Win64\x64\TestDoArmourEditor\Development\UnrealEd\SharedPCH.UnrealEd.Project.ValApi.Cpp20.h.obj"
+"D:\UE - Projects\UE5.4\TestDoArmour 5.4\Plugins\GraphDebbuger\Intermediate\Build\Win64\x64\UnrealEditor\Development\GraphDebbuger\Module.GraphDebbuger.cpp.obj"
+"D:\UE - Projects\UE5.4\TestDoArmour 5.4\Plugins\GraphDebbuger\Intermediate\Build\Win64\x64\UnrealEditor\Development\GraphDebbuger\AGLS_EditorCommands.cpp.obj"
+"D:\UE - Projects\UE5.4\TestDoArmour 5.4\Plugins\GraphDebbuger\Intermediate\Build\Win64\x64\UnrealEditor\Development\GraphDebbuger\GraphDebbuger.cpp.obj"
+"D:\UE - Projects\UE5.4\TestDoArmour 5.4\Plugins\GraphDebbuger\Intermediate\Build\Win64\x64\UnrealEditor\Development\GraphDebbuger\GraphDebbugerBPLibrary.cpp.obj"
+"D:\UE - Projects\UE5.4\TestDoArmour 5.4\Plugins\GraphDebbuger\Intermediate\Build\Win64\x64\UnrealEditor\Development\GraphDebbuger\GraphDebuggerCore.cpp.obj"
+"D:\UE - Projects\UE5.4\TestDoArmour 5.4\Plugins\GraphDebbuger\Intermediate\Build\Win64\x64\UnrealEditor\Development\GraphDebbuger\Default.rc2.res"
+/OUT:"D:\UE - Projects\UE5.4\TestDoArmour 5.4\Plugins\GraphDebbuger\Intermediate\Build\Win64\x64\UnrealEditor\Development\GraphDebbuger\UnrealEditor-GraphDebbuger.lib"

@@ -1,0 +1,14 @@
+{
+    "Version": "1.2",
+    "Data": {
+        "Source": "d:\\ue - projects\\ue5.4\\agls v1.0 (experimental)\\plugins\\jakubcablecomponent\\source\\jakubcablecomponent\\private\\jakubcablecomponent.cpp",
+        "ProvidedModule": "",
+        "PCH": "d:\\ue - projects\\ue5.4\\agls v1.0 (experimental)\\intermediate\\build\\win64\\x64\\agls\\development\\engine\\sharedpch.engine.project.valapi.cpp20.h.pch",
+        "Includes": [
+            "d:\\ue - projects\\ue5.4\\agls v1.0 (experimental)\\plugins\\jakubcablecomponent\\intermediate\\build\\win64\\x64\\unrealgame\\development\\jakubcablecomponent\\definitions.jakubcablecomponent.h",
+            "d:\\ue - projects\\ue5.4\\agls v1.0 (experimental)\\plugins\\jakubcablecomponent\\source\\jakubcablecomponent\\public\\jakubcablecomponent.h"
+        ],
+        "ImportedModules": [],
+        "ImportedHeaderUnits": []
+    }
+}

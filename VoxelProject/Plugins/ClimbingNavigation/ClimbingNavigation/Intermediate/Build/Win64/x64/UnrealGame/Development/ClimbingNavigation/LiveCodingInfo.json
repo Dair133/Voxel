@@ -1,0 +1,35 @@
+{
+	"RemapUnityFiles": 
+	{
+		"Module.ClimbingNavigation.cpp.obj": [
+			"AdvancedAI_TasksAndFunctions.gen.cpp.obj",
+			"AISense_BetterSight.gen.cpp.obj",
+			"BTService_BlueprintCustom.gen.cpp.obj",
+			"ClimbingNavigation.init.gen.cpp.obj",
+			"ClimbingNavigationBPLibrary.gen.cpp.obj",
+			"ClimbNavigationStorageActor.gen.cpp.obj",
+			"DynamicNavLinkComponent.gen.cpp.obj",
+			"HidingLocSearch_EnemyProperties.gen.cpp.obj",
+			"NavClimbingComponentCore.gen.cpp.obj",
+			"NavLinksAutoGenerator.gen.cpp.obj",
+			"NavLinksStorage.gen.cpp.obj",
+			"NavQuery_FullNavPathFinding.gen.cpp.obj",
+			"NavQuery_HidingLocSearchParams.gen.cpp.obj",
+			"SmoothPathFollowingComponent.gen.cpp.obj",
+			"AdvancedAI_TasksAndFunctions.cpp.obj",
+			"AISense_BetterSight.cpp.obj",
+			"BTService_BlueprintCustom.cpp.obj",
+			"ClimbingNavigation.cpp.obj",
+			"ClimbingNavigationBPLibrary.cpp.obj",
+			"ClimbNavigationStorageActor.cpp.obj",
+			"DynamicNavLinkComponent.cpp.obj",
+			"HidingLocSearch_EnemyProperties.cpp.obj",
+			"NavClimbingComponentCore.cpp.obj",
+			"NavLinksAutoGenerator.cpp.obj",
+			"NavLinksStorage.cpp.obj",
+			"NavQuery_FullNavPathFinding.cpp.obj",
+			"NavQuery_HidingLocSearchParams.cpp.obj",
+			"SmoothPathFollowingComponent.cpp.obj"
+		]
+	}
+}

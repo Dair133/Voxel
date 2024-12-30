@@ -1,0 +1,19 @@
+{
+	"RemapUnityFiles": 
+	{
+		"Module.JakubAnimNodesTool.cpp.obj": [
+			"JakubAnimNodesTool.init.gen.cpp.obj",
+			"JWAN_LayerBlendingLogic.gen.cpp.obj",
+			"JWAN_ModifyLayeringLogic.gen.cpp.obj",
+			"JWAN_PoseSnapShotLogic.gen.cpp.obj",
+			"MyAnimNode.gen.cpp.obj",
+			"PoseSnapshotLibrary.gen.cpp.obj",
+			"JakubAnimNodesTool.cpp.obj",
+			"JWAN_LayerBlendingLogic.cpp.obj",
+			"JWAN_ModifyLayeringLogic.cpp.obj",
+			"JWAN_PoseSnapShotLogic.cpp.obj",
+			"MyAnimNode.cpp.obj",
+			"PoseSnapshotLibrary.cpp.obj"
+		]
+	}
+}

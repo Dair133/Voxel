@@ -1,0 +1,18 @@
+{
+	"RemapUnityFiles": 
+	{
+		"Module.JakubCableComponent.cpp.obj": [
+			"HandleForItemCpp.gen.cpp.obj",
+			"JakubCableComponent.init.gen.cpp.obj",
+			"JakubCableComponentBPLibrary.gen.cpp.obj",
+			"JakubCablePhysic.gen.cpp.obj",
+			"JakubSimpleParticleComponent.gen.cpp.obj",
+			"HandleForItemCpp.cpp.obj",
+			"JakubCableComponent.cpp.obj",
+			"JakubCableComponentBPLibrary.cpp.obj",
+			"JakubCablePhysic.cpp.obj",
+			"JakubCableStats.cpp.obj",
+			"JakubSimpleParticleComponent.cpp.obj"
+		]
+	}
+}

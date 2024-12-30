@@ -1,0 +1,15 @@
+{
+    "Version": "1.2",
+    "Data": {
+        "Source": "d:\\ue - projects\\ue5.5\\testdoarmour 5.5\\plugins\\helpfulfunctions\\source\\helpfulfunctions\\private\\agls_ai_humancharinterface.cpp",
+        "ProvidedModule": "",
+        "PCH": "d:\\ue - projects\\ue5.5\\testdoarmour 5.5\\intermediate\\build\\win64\\x64\\testdoarmoureditor\\development\\unrealed\\sharedpch.unrealed.project.valapi.cpp20.h.pch",
+        "Includes": [
+            "d:\\ue - projects\\ue5.5\\testdoarmour 5.5\\plugins\\helpfulfunctions\\intermediate\\build\\win64\\x64\\unrealeditor\\development\\helpfulfunctions\\definitions.helpfulfunctions.h",
+            "d:\\ue - projects\\ue5.5\\testdoarmour 5.5\\plugins\\helpfulfunctions\\source\\helpfulfunctions\\public\\agls_ai_humancharinterface.h",
+            "d:\\ue - projects\\ue5.5\\testdoarmour 5.5\\plugins\\helpfulfunctions\\intermediate\\build\\win64\\unrealeditor\\inc\\helpfulfunctions\\uht\\agls_ai_humancharinterface.generated.h"
+        ],
+        "ImportedModules": [],
+        "ImportedHeaderUnits": []
+    }
+}
