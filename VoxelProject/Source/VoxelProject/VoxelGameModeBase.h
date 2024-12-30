@@ -81,16 +81,14 @@ class  AVoxelGameModeBase : public AGameModeBase
     UFUNCTION()
     void OnCheckUpdateChunks();
 
-    UFUNCTION(BlueprintCallable, Category = "CharacterFunction")
-    void SetPlayerCharacter(UClass* playerCharacter);
-
-    UFUNCTION()
-    void HandlePostLoginSpecial(APlayerController* NewPlayer);
 
 
 
 
-    UClass* MyBlueprintCharacterClass;
+    UPROPERTY(EditDefaultsOnly, Category = "Player")
+    TSubclassOf<APawn> MyBlueprintCharacterClass;
+
+
     int chunksCounter = 0;
     int chunkcCounterTwo = 0;
     int numTimers;

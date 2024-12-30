@@ -201,7 +201,8 @@ DerivedDataCache/* ```
 *.uasset
 *.umap
 !/VoxelProject/Content/CubeDeps/*.uasset
-
+/VoxelProject/Plugins/*
+/VoxelProject/Content/Splash/*
 # Other standard UE ignores
 /VoxelProject/Intermediate/
 /VoxelProject/Saved/

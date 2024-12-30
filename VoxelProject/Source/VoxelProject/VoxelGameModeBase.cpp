@@ -20,6 +20,7 @@
 #include <GameFramework/CharacterMovementComponent.h>
 #include <EditorCategoryUtils.h>
 #include <random>
+#include <SocketSubsystem.h>
 
 
 std::string AVoxelGameModeBase::ToStringEnumFunc(EBlock blockType) {
@@ -40,8 +41,7 @@ AVoxelGameModeBase::AVoxelGameModeBase()
 {
 
     ChunkToSpawn = AChunk::StaticClass();
-    PlayerControllerClass = APlayerController::StaticClass();
-
+    PlayerControllerClass;
    
         static ConstructorHelpers::FClassFinder<AHUD> HUDClassHolder(TEXT("'/Game/ThirdPerson/CustomBp/MyHud.MyHud'"));
         if (HUDClassHolder.Succeeded())
@@ -63,7 +63,6 @@ AVoxelGameModeBase::AVoxelGameModeBase()
         MyTreeBPClass = (UClass*)MyTreeBlueprintFinder.Object->GeneratedClass;
         //  UE_LOG(LogTemp, Warning, TEXT("Blueprint loaded successfully."));
     }
-
 
 }
 
@@ -203,33 +202,11 @@ void AVoxelGameModeBase::BeginPlay()
     //UpdateVisibleChunksAroundPlayers();
 
     InitialiseActorReferences();
-
-  
-
-
 }
 
 void AVoxelGameModeBase::PostLogin(APlayerController* NewPlayer)
 {
-    FTimerHandle TimerHandle2;
-    FTimerDelegate TimerDelegate;
-    // Bind the NewPlayer parameter to the callback
-    TimerDelegate.BindUFunction(this, "HandlePostLoginSpecial", NewPlayer);
-
-
-    // If character class not set which it wont be for first second or two of playing the game, we wait two seconds before attmepting to spawn the player
-    if (MyBlueprintCharacterClass == nullptr)
-    {
-		GetWorld()->GetTimerManager().SetTimer(TimerHandle2, TimerDelegate, 2.0f, false);
-	}
-    else
-    {
-		HandlePostLoginSpecial(NewPlayer);
-	}
-    
-}
-void AVoxelGameModeBase::HandlePostLoginSpecial(APlayerController* NewPlayer)
-{
+    UE_LOG(LogTemp, Warning, TEXT("NewPlayer Class: %s"), *NewPlayer->GetClass()->GetName());
     playersArray.Add(NewPlayer);
     lastPlayerPostitions.Add(NewPlayer, FVector2D(0.f, 0.f));
     // UE_LOG(LogTemp, Warning, TEXT("PostLogin called"));
@@ -244,7 +221,10 @@ void AVoxelGameModeBase::HandlePostLoginSpecial(APlayerController* NewPlayer)
         SpawnParams.bNoFail = true;
 
         APawn* playerPawn = GetWorld()->SpawnActor<APawn>(MyBlueprintCharacterClass, spawnLocation, FRotator::ZeroRotator, SpawnParams);
-
+        if (MyBlueprintCharacterClass == nullptr)
+        {
+			UE_LOG(LogTemp, Warning, TEXT("MyBlueprintCharacterClass is null"));
+		}
 
         if (HasAuthority()) {
             UE_LOG(LogTemp, Warning, TEXT("Has Authority"));
@@ -257,20 +237,25 @@ void AVoxelGameModeBase::HandlePostLoginSpecial(APlayerController* NewPlayer)
         }
         if (playerPawn)
         {
+            //playerPawn->FinishSpawning(FTransform(FRotator::ZeroRotator, spawnLocation));
+
+
             NewPlayer->SetPawn(playerPawn);
+
             NewPlayer->Possess(playerPawn);
-            NewPlayer->SetViewTargetWithBlend(playerPawn);
-            NewPlayer->ClientSetHUD(HUDClass);
+
+            //NewPlayer->SetViewTarget(playerPawn);
+            // CORRECT - First get or create a controller instance
+
+
+            //NewPlayer->SetViewTargetWithBlend(playerPawn);
+           // NewPlayer->ClientSetHUD(HUDClass);
             UE_LOG(LogTemp, Warning, TEXT("Correct pos login called"));
         }
     }
-
-
     Super::PostLogin(NewPlayer);
-
-
-
 }
+
 
 void AVoxelGameModeBase::Logout(AController* Exiting)
 {
@@ -682,8 +667,3 @@ AActor* AVoxelGameModeBase::FindActorByName(UWorld* World, const FString& ActorN
     return nullptr;
 }
 
-void AVoxelGameModeBase::SetPlayerCharacter(UClass* playerCharacter)
-{
-    UE_LOG(LogTemp, Warning, TEXT("SETTING BLUEPRINT CLASS"));
-    MyBlueprintCharacterClass = playerCharacter;
-}
