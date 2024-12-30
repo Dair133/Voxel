@@ -1,0 +1,27 @@
+{
+    "Version": "1.2",
+    "Data": {
+        "Source": "e:\\ue5projects\\voxel\\voxelproject\\plugins\\climbingnavigation\\source\\climbingnavigation\\private\\dynamicnavlinkcomponent.cpp",
+        "ProvidedModule": "",
+        "PCH": "e:\\ue5projects\\voxel\\voxelproject\\intermediate\\build\\win64\\x64\\voxelprojecteditor\\development\\unrealed\\sharedpch.unrealed.project.novalfmtstr.valapi.cpp20.inclorderunreal5_3.h.pch",
+        "Includes": [
+            "e:\\ue5projects\\voxel\\voxelproject\\plugins\\climbingnavigation\\intermediate\\build\\win64\\x64\\unrealeditor\\development\\climbingnavigation\\definitions.climbingnavigation.h",
+            "e:\\ue5projects\\voxel\\voxelproject\\plugins\\climbingnavigation\\source\\climbingnavigation\\public\\dynamicnavlinkcomponent.h",
+            "e:\\ue5\\ue_5.5\\ue_5.5\\engine\\source\\runtime\\navigationsystem\\public\\navlinkcomponent.h",
+            "e:\\ue5\\ue_5.5\\ue_5.5\\engine\\source\\runtime\\navigationsystem\\public\\navlinkhostinterface.h",
+            "e:\\ue5\\ue_5.5\\ue_5.5\\engine\\intermediate\\build\\win64\\unrealeditor\\inc\\navigationsystem\\uht\\navlinkhostinterface.generated.h",
+            "e:\\ue5\\ue_5.5\\ue_5.5\\engine\\intermediate\\build\\win64\\unrealeditor\\inc\\navigationsystem\\uht\\navlinkcomponent.generated.h",
+            "e:\\ue5projects\\voxel\\voxelproject\\plugins\\climbingnavigation\\intermediate\\build\\win64\\unrealeditor\\inc\\climbingnavigation\\uht\\dynamicnavlinkcomponent.generated.h",
+            "e:\\ue5\\ue_5.5\\ue_5.5\\engine\\source\\runtime\\navigationsystem\\public\\navareas\\navarea_default.h",
+            "e:\\ue5\\ue_5.5\\ue_5.5\\engine\\intermediate\\build\\win64\\unrealeditor\\inc\\navigationsystem\\uht\\navarea_default.generated.h",
+            "e:\\ue5\\ue_5.5\\ue_5.5\\engine\\source\\runtime\\navigationsystem\\public\\navareas\\navarea_lowheight.h",
+            "e:\\ue5\\ue_5.5\\ue_5.5\\engine\\intermediate\\build\\win64\\unrealeditor\\inc\\navigationsystem\\uht\\navarea_lowheight.generated.h",
+            "e:\\ue5\\ue_5.5\\ue_5.5\\engine\\source\\runtime\\navigationsystem\\public\\navareas\\navarea_null.h",
+            "e:\\ue5\\ue_5.5\\ue_5.5\\engine\\intermediate\\build\\win64\\unrealeditor\\inc\\navigationsystem\\uht\\navarea_null.generated.h",
+            "e:\\ue5\\ue_5.5\\ue_5.5\\engine\\source\\runtime\\navigationsystem\\public\\navareas\\navarea_obstacle.h",
+            "e:\\ue5\\ue_5.5\\ue_5.5\\engine\\intermediate\\build\\win64\\unrealeditor\\inc\\navigationsystem\\uht\\navarea_obstacle.generated.h"
+        ],
+        "ImportedModules": [],
+        "ImportedHeaderUnits": []
+    }
+}

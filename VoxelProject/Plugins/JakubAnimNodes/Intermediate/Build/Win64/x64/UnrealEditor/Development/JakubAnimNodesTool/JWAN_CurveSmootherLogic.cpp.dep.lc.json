@@ -1,0 +1,24 @@
+{
+    "Version": "1.2",
+    "Data": {
+        "Source": "d:\\ue - projects\\ue5.4\\pluginbuildingv2 5.4\\plugins\\jakubanimnodes\\source\\jakubanimnodestool\\private\\jwan_curvesmootherlogic.cpp",
+        "ProvidedModule": "",
+        "PCH": "d:\\ue - projects\\ue5.4\\pluginbuildingv2 5.4\\intermediate\\build\\win64\\x64\\pluginbuildingv2editor\\development\\unrealed\\sharedpch.unrealed.project.valapi.cpp20.h.pch",
+        "Includes": [
+            "d:\\ue - projects\\ue5.4\\pluginbuildingv2 5.4\\plugins\\jakubanimnodes\\intermediate\\build\\win64\\x64\\unrealeditor\\development\\jakubanimnodestool\\definitions.jakubanimnodestool.h",
+            "d:\\ue - projects\\ue5.4\\pluginbuildingv2 5.4\\plugins\\jakubanimnodes\\source\\jakubanimnodestool\\public\\jwan_curvesmootherlogic.h",
+            "d:\\program files\\games\\ue_5.4\\engine\\source\\runtime\\engine\\classes\\animation\\inputscalebias.h",
+            "d:\\program files\\games\\ue_5.4\\engine\\intermediate\\build\\win64\\unrealeditor\\inc\\engine\\uht\\inputscalebias.generated.h",
+            "d:\\ue - projects\\ue5.4\\pluginbuildingv2 5.4\\plugins\\jakubanimnodes\\intermediate\\build\\win64\\unrealeditor\\inc\\jakubanimnodestool\\uht\\jwan_curvesmootherlogic.generated.h",
+            "d:\\program files\\games\\ue_5.4\\engine\\source\\runtime\\engine\\public\\animation\\animinstanceproxy.h",
+            "d:\\program files\\games\\ue_5.4\\engine\\source\\runtime\\engine\\public\\animation\\animtrace.h",
+            "d:\\program files\\games\\ue_5.4\\engine\\source\\runtime\\engine\\public\\objecttrace.h",
+            "d:\\program files\\games\\ue_5.4\\engine\\source\\runtime\\engine\\public\\tracefilter.h",
+            "d:\\program files\\games\\ue_5.4\\engine\\intermediate\\build\\win64\\unrealeditor\\inc\\engine\\uht\\objecttrace.generated.h",
+            "d:\\program files\\games\\ue_5.4\\engine\\source\\runtime\\engine\\public\\animation\\animattributes.h",
+            "d:\\program files\\games\\ue_5.4\\engine\\intermediate\\build\\win64\\unrealeditor\\inc\\engine\\uht\\animinstanceproxy.generated.h"
+        ],
+        "ImportedModules": [],
+        "ImportedHeaderUnits": []
+    }
+}

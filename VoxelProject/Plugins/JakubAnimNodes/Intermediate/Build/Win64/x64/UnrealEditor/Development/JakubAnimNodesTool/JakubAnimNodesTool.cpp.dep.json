@@ -1,0 +1,14 @@
+{
+    "Version": "1.2",
+    "Data": {
+        "Source": "e:\\ue5projects\\voxel\\voxelproject\\plugins\\jakubanimnodes\\source\\jakubanimnodestool\\private\\jakubanimnodestool.cpp",
+        "ProvidedModule": "",
+        "PCH": "e:\\ue5projects\\voxel\\voxelproject\\intermediate\\build\\win64\\x64\\voxelprojecteditor\\development\\unrealed\\sharedpch.unrealed.project.novalfmtstr.valapi.cpp20.inclorderunreal5_3.h.pch",
+        "Includes": [
+            "e:\\ue5projects\\voxel\\voxelproject\\plugins\\jakubanimnodes\\intermediate\\build\\win64\\x64\\unrealeditor\\development\\jakubanimnodestool\\definitions.jakubanimnodestool.h",
+            "e:\\ue5projects\\voxel\\voxelproject\\plugins\\jakubanimnodes\\source\\jakubanimnodestool\\public\\jakubanimnodestool.h"
+        ],
+        "ImportedModules": [],
+        "ImportedHeaderUnits": []
+    }
+}

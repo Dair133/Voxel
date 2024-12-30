@@ -1,0 +1,15 @@
+{
+    "Version": "1.2",
+    "Data": {
+        "Source": "e:\\ue5projects\\voxel\\voxelproject\\plugins\\helpfulfunctions\\intermediate\\build\\win64\\unrealeditor\\inc\\helpfulfunctions\\uht\\als_basecomponentsinterfacecpp.gen.cpp",
+        "ProvidedModule": "",
+        "PCH": "e:\\ue5projects\\voxel\\voxelproject\\intermediate\\build\\win64\\x64\\voxelprojecteditor\\development\\unrealed\\sharedpch.unrealed.project.novalfmtstr.valapi.cpp20.inclorderunreal5_3.h.pch",
+        "Includes": [
+            "e:\\ue5projects\\voxel\\voxelproject\\plugins\\helpfulfunctions\\intermediate\\build\\win64\\x64\\unrealeditor\\development\\helpfulfunctions\\definitions.helpfulfunctions.h",
+            "e:\\ue5projects\\voxel\\voxelproject\\plugins\\helpfulfunctions\\source\\helpfulfunctions\\public\\als_basecomponentsinterfacecpp.h",
+            "e:\\ue5projects\\voxel\\voxelproject\\plugins\\helpfulfunctions\\intermediate\\build\\win64\\unrealeditor\\inc\\helpfulfunctions\\uht\\als_basecomponentsinterfacecpp.generated.h"
+        ],
+        "ImportedModules": [],
+        "ImportedHeaderUnits": []
+    }
+}

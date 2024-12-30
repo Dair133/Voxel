@@ -1,0 +1,35 @@
+{
+    "Version": "1.2",
+    "Data": {
+        "Source": "d:\\ue - projects\\ue5.4\\testdoarmour 5.4\\plugins\\climbingnavigation\\source\\climbingnavigation\\private\\dynamicnavlinkcomponent.cpp",
+        "ProvidedModule": "",
+        "PCH": "d:\\ue - projects\\ue5.4\\testdoarmour 5.4\\intermediate\\build\\win64\\x64\\testdoarmoureditor\\development\\unrealed\\sharedpch.unrealed.project.valapi.cpp20.h.pch",
+        "Includes": [
+            "d:\\ue - projects\\ue5.4\\testdoarmour 5.4\\plugins\\climbingnavigation\\intermediate\\build\\win64\\x64\\unrealeditor\\development\\climbingnavigation\\definitions.climbingnavigation.h",
+            "d:\\ue - projects\\ue5.4\\testdoarmour 5.4\\plugins\\climbingnavigation\\source\\climbingnavigation\\public\\dynamicnavlinkcomponent.h",
+            "d:\\program files\\games\\ue_5.4\\engine\\source\\runtime\\navigationsystem\\public\\navlinkcomponent.h",
+            "d:\\program files\\games\\ue_5.4\\engine\\source\\runtime\\engine\\classes\\ai\\navigation\\navlinkdefinition.h",
+            "d:\\program files\\games\\ue_5.4\\engine\\source\\runtime\\engine\\classes\\ai\\navigation\\navagentselector.h",
+            "d:\\program files\\games\\ue_5.4\\engine\\intermediate\\build\\win64\\unrealeditor\\inc\\engine\\uht\\navagentselector.generated.h",
+            "d:\\program files\\games\\ue_5.4\\engine\\intermediate\\build\\win64\\unrealeditor\\inc\\engine\\uht\\navlinkdefinition.generated.h",
+            "d:\\program files\\games\\ue_5.4\\engine\\source\\runtime\\navigationsystem\\public\\navlinkhostinterface.h",
+            "d:\\program files\\games\\ue_5.4\\engine\\intermediate\\build\\win64\\unrealeditor\\inc\\navigationsystem\\uht\\navlinkhostinterface.generated.h",
+            "d:\\program files\\games\\ue_5.4\\engine\\intermediate\\build\\win64\\unrealeditor\\inc\\navigationsystem\\uht\\navlinkcomponent.generated.h",
+            "d:\\ue - projects\\ue5.4\\testdoarmour 5.4\\plugins\\climbingnavigation\\intermediate\\build\\win64\\unrealeditor\\inc\\climbingnavigation\\uht\\dynamicnavlinkcomponent.generated.h",
+            "d:\\program files\\games\\ue_5.4\\engine\\source\\runtime\\navigationsystem\\public\\navareas\\navarea_default.h",
+            "d:\\program files\\games\\ue_5.4\\engine\\source\\runtime\\navigationsystem\\public\\navareas\\navarea.h",
+            "d:\\program files\\games\\ue_5.4\\engine\\source\\runtime\\engine\\classes\\ai\\navigation\\navareabase.h",
+            "d:\\program files\\games\\ue_5.4\\engine\\intermediate\\build\\win64\\unrealeditor\\inc\\engine\\uht\\navareabase.generated.h",
+            "d:\\program files\\games\\ue_5.4\\engine\\intermediate\\build\\win64\\unrealeditor\\inc\\navigationsystem\\uht\\navarea.generated.h",
+            "d:\\program files\\games\\ue_5.4\\engine\\intermediate\\build\\win64\\unrealeditor\\inc\\navigationsystem\\uht\\navarea_default.generated.h",
+            "d:\\program files\\games\\ue_5.4\\engine\\source\\runtime\\navigationsystem\\public\\navareas\\navarea_lowheight.h",
+            "d:\\program files\\games\\ue_5.4\\engine\\intermediate\\build\\win64\\unrealeditor\\inc\\navigationsystem\\uht\\navarea_lowheight.generated.h",
+            "d:\\program files\\games\\ue_5.4\\engine\\source\\runtime\\navigationsystem\\public\\navareas\\navarea_null.h",
+            "d:\\program files\\games\\ue_5.4\\engine\\intermediate\\build\\win64\\unrealeditor\\inc\\navigationsystem\\uht\\navarea_null.generated.h",
+            "d:\\program files\\games\\ue_5.4\\engine\\source\\runtime\\navigationsystem\\public\\navareas\\navarea_obstacle.h",
+            "d:\\program files\\games\\ue_5.4\\engine\\intermediate\\build\\win64\\unrealeditor\\inc\\navigationsystem\\uht\\navarea_obstacle.generated.h"
+        ],
+        "ImportedModules": [],
+        "ImportedHeaderUnits": []
+    }
+}

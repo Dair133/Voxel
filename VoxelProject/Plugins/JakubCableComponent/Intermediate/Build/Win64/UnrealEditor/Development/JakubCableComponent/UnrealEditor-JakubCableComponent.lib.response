@@ -1,0 +1,13 @@
+/NOLOGO
+/errorReport:prompt
+/MACHINE:x64
+/SUBSYSTEM:WINDOWS
+/DEF
+/NAME:"UnrealEditor-JakubCableComponent.dll"
+/IGNORE:4221
+/NODEFAULTLIB
+"D:\UE - Projects\UE-5\MyCableComponent\Intermediate\Build\Win64\MyCableComponentEditor\Development\Engine\SharedPCH.Engine.ShadowErrors.h.obj"
+"D:\UE - Projects\UE-5\MyCableComponent\Plugins\JakubCableComponent\Intermediate\Build\Win64\UnrealEditor\Development\JakubCableComponent\Module.JakubCableComponent.cpp.obj"
+"D:\UE - Projects\UE-5\MyCableComponent\Plugins\JakubCableComponent\Intermediate\Build\Win64\UnrealEditor\Development\JakubCableComponent\Module.JakubCableComponent.gen.cpp.obj"
+"D:\UE - Projects\UE-5\MyCableComponent\Plugins\JakubCableComponent\Intermediate\Build\Win64\UnrealEditor\Development\JakubCableComponent\Default.rc2.res"
+/OUT:"D:\UE - Projects\UE-5\MyCableComponent\Plugins\JakubCableComponent\Intermediate\Build\Win64\UnrealEditor\Development\JakubCableComponent\UnrealEditor-JakubCableComponent.lib"

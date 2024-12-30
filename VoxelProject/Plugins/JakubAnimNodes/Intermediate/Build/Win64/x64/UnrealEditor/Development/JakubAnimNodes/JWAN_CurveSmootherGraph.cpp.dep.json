@@ -1,0 +1,31 @@
+{
+    "Version": "1.2",
+    "Data": {
+        "Source": "e:\\ue5projects\\voxel\\voxelproject\\plugins\\jakubanimnodes\\source\\jakubanimnodes\\private\\jwan_curvesmoothergraph.cpp",
+        "ProvidedModule": "",
+        "PCH": "e:\\ue5projects\\voxel\\voxelproject\\intermediate\\build\\win64\\x64\\voxelprojecteditor\\development\\unrealed\\sharedpch.unrealed.project.novalfmtstr.valapi.cpp20.inclorderunreal5_3.h.pch",
+        "Includes": [
+            "e:\\ue5projects\\voxel\\voxelproject\\plugins\\jakubanimnodes\\intermediate\\build\\win64\\x64\\unrealeditor\\development\\jakubanimnodes\\definitions.jakubanimnodes.h",
+            "e:\\ue5projects\\voxel\\voxelproject\\plugins\\jakubanimnodes\\source\\jakubanimnodes\\public\\jwan_curvesmoothergraph.h",
+            "e:\\ue5\\ue_5.5\\ue_5.5\\engine\\source\\editor\\animgraph\\public\\animgraphnode_base.h",
+            "e:\\ue5\\ue_5.5\\ue_5.5\\engine\\source\\editor\\unrealed\\public\\ipropertyaccesseditor.h",
+            "e:\\ue5\\ue_5.5\\ue_5.5\\engine\\intermediate\\build\\win64\\unrealeditor\\inc\\animgraph\\uht\\animgraphnode_base.generated.h",
+            "e:\\ue5projects\\voxel\\voxelproject\\plugins\\jakubanimnodes\\source\\jakubanimnodestool\\public\\jwan_curvesmootherlogic.h",
+            "e:\\ue5\\ue_5.5\\ue_5.5\\engine\\source\\runtime\\engine\\classes\\animation\\inputscalebias.h",
+            "e:\\ue5\\ue_5.5\\ue_5.5\\engine\\intermediate\\build\\win64\\unrealeditor\\inc\\engine\\uht\\inputscalebias.generated.h",
+            "e:\\ue5projects\\voxel\\voxelproject\\plugins\\jakubanimnodes\\intermediate\\build\\win64\\unrealeditor\\inc\\jakubanimnodestool\\uht\\jwan_curvesmootherlogic.generated.h",
+            "e:\\ue5projects\\voxel\\voxelproject\\plugins\\jakubanimnodes\\intermediate\\build\\win64\\unrealeditor\\inc\\jakubanimnodes\\uht\\jwan_curvesmoothergraph.generated.h",
+            "e:\\ue5\\ue_5.5\\ue_5.5\\engine\\source\\editor\\grapheditor\\public\\grapheditoractions.h",
+            "e:\\ue5\\ue_5.5\\ue_5.5\\engine\\source\\editor\\animgraph\\public\\animationgraphschema.h",
+            "e:\\ue5\\ue_5.5\\ue_5.5\\engine\\intermediate\\build\\win64\\unrealeditor\\inc\\animgraph\\uht\\animationgraphschema.generated.h",
+            "e:\\ue5\\ue_5.5\\ue_5.5\\engine\\source\\editor\\blueprintgraph\\public\\blueprintactiondatabaseregistrar.h",
+            "e:\\ue5\\ue_5.5\\ue_5.5\\engine\\source\\editor\\blueprintgraph\\public\\blueprintactiondatabase.h",
+            "e:\\ue5\\ue_5.5\\ue_5.5\\engine\\source\\editor\\propertyeditor\\public\\detaillayoutbuilder.h",
+            "e:\\ue5\\ue_5.5\\ue_5.5\\engine\\source\\editor\\propertyeditor\\public\\idetailpropertyrow.h",
+            "e:\\ue5\\ue_5.5\\ue_5.5\\engine\\source\\editor\\unrealed\\public\\kismet2\\blueprinteditorutils.h",
+            "e:\\ue5\\ue_5.5\\ue_5.5\\engine\\source\\editor\\classviewer\\public\\classviewermodule.h"
+        ],
+        "ImportedModules": [],
+        "ImportedHeaderUnits": []
+    }
+}

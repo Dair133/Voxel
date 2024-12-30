@@ -1,0 +1,12 @@
+/NOLOGO
+/errorReport:prompt
+/MACHINE:x64
+/SUBSYSTEM:WINDOWS
+/DEF
+/NAME:"UnrealEditor-JakubAnimNodes.dll"
+/IGNORE:4221
+/NODEFAULTLIB
+"E:\UE5Projects\Voxel\VoxelProject\Intermediate\Build\Win64\x64\VoxelProjectEditor\Development\UnrealEd\SharedPCH.UnrealEd.Project.NoValFmtStr.ValApi.Cpp20.InclOrderUnreal5_3.h.obj"
+"E:\UE5Projects\Voxel\VoxelProject\Plugins\JakubAnimNodes\Intermediate\Build\Win64\x64\UnrealEditor\Development\JakubAnimNodes\Module.JakubAnimNodes.cpp.obj"
+"E:\UE5Projects\Voxel\VoxelProject\Plugins\JakubAnimNodes\Intermediate\Build\Win64\x64\UnrealEditor\Development\JakubAnimNodes\Default.rc2.res"
+/OUT:"E:\UE5Projects\Voxel\VoxelProject\Plugins\JakubAnimNodes\Intermediate\Build\Win64\x64\UnrealEditor\Development\JakubAnimNodes\UnrealEditor-JakubAnimNodes.lib"

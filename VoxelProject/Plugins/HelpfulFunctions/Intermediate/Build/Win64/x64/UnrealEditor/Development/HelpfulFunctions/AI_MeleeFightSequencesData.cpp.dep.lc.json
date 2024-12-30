@@ -1,0 +1,19 @@
+{
+    "Version": "1.2",
+    "Data": {
+        "Source": "d:\\ue - projects\\ue5.4\\testdoarmour 5.4\\plugins\\helpfulfunctions\\source\\helpfulfunctions\\private\\ai_meleefightsequencesdata.cpp",
+        "ProvidedModule": "",
+        "PCH": "d:\\ue - projects\\ue5.4\\testdoarmour 5.4\\intermediate\\build\\win64\\x64\\testdoarmoureditor\\development\\unrealed\\sharedpch.unrealed.project.valapi.cpp20.h.pch",
+        "Includes": [
+            "d:\\ue - projects\\ue5.4\\testdoarmour 5.4\\plugins\\helpfulfunctions\\intermediate\\build\\win64\\x64\\unrealeditor\\development\\helpfulfunctions\\definitions.helpfulfunctions.h",
+            "d:\\ue - projects\\ue5.4\\testdoarmour 5.4\\plugins\\helpfulfunctions\\source\\helpfulfunctions\\public\\ai_meleefightsequencesdata.h",
+            "d:\\ue - projects\\ue5.4\\testdoarmour 5.4\\plugins\\helpfulfunctions\\source\\helpfulfunctions\\public\\als_structuresandenumscpp.h",
+            "d:\\program files\\games\\ue_5.4\\engine\\source\\runtime\\engine\\classes\\curves\\curvevector.h",
+            "d:\\program files\\games\\ue_5.4\\engine\\intermediate\\build\\win64\\unrealeditor\\inc\\engine\\uht\\curvevector.generated.h",
+            "d:\\ue - projects\\ue5.4\\testdoarmour 5.4\\plugins\\helpfulfunctions\\intermediate\\build\\win64\\unrealeditor\\inc\\helpfulfunctions\\uht\\als_structuresandenumscpp.generated.h",
+            "d:\\ue - projects\\ue5.4\\testdoarmour 5.4\\plugins\\helpfulfunctions\\intermediate\\build\\win64\\unrealeditor\\inc\\helpfulfunctions\\uht\\ai_meleefightsequencesdata.generated.h"
+        ],
+        "ImportedModules": [],
+        "ImportedHeaderUnits": []
+    }
+}

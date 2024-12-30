@@ -1,0 +1,39 @@
+{
+    "Version": "1.2",
+    "Data": {
+        "Source": "d:\\ue - projects\\ue5.4\\agls v1.0 (experimental)\\plugins\\helpfulfunctions\\source\\helpfulfunctions\\private\\agls_charactermovementcomponent.cpp",
+        "ProvidedModule": "",
+        "PCH": "d:\\ue - projects\\ue5.4\\agls v1.0 (experimental)\\intermediate\\build\\win64\\x64\\agls\\shipping\\engine\\sharedpch.engine.project.valapi.cpp20.h.pch",
+        "Includes": [
+            "d:\\ue - projects\\ue5.4\\agls v1.0 (experimental)\\plugins\\helpfulfunctions\\intermediate\\build\\win64\\x64\\unrealgame\\shipping\\helpfulfunctions\\definitions.helpfulfunctions.h",
+            "d:\\ue - projects\\ue5.4\\agls v1.0 (experimental)\\plugins\\helpfulfunctions\\source\\helpfulfunctions\\public\\agls_charactermovementcomponent.h",
+            "d:\\program files\\games\\ue_5.4\\engine\\source\\runtime\\engine\\classes\\gameframework\\charactermovementcomponent.h",
+            "d:\\program files\\games\\ue_5.4\\engine\\source\\runtime\\engine\\classes\\gameframework\\rootmotionsource.h",
+            "d:\\program files\\games\\ue_5.4\\engine\\intermediate\\build\\win64\\unrealgame\\inc\\engine\\uht\\rootmotionsource.generated.h",
+            "d:\\program files\\games\\ue_5.4\\engine\\source\\runtime\\engine\\classes\\ai\\navigation\\navigationavoidancetypes.h",
+            "d:\\program files\\games\\ue_5.4\\engine\\intermediate\\build\\win64\\unrealgame\\inc\\engine\\uht\\navigationavoidancetypes.generated.h",
+            "d:\\program files\\games\\ue_5.4\\engine\\source\\runtime\\engine\\public\\ai\\rvoavoidanceinterface.h",
+            "d:\\program files\\games\\ue_5.4\\engine\\intermediate\\build\\win64\\unrealgame\\inc\\engine\\uht\\rvoavoidanceinterface.generated.h",
+            "d:\\program files\\games\\ue_5.4\\engine\\source\\runtime\\engine\\classes\\gameframework\\pawnmovementcomponent.h",
+            "d:\\program files\\games\\ue_5.4\\engine\\source\\runtime\\engine\\classes\\gameframework\\navmovementcomponent.h",
+            "d:\\program files\\games\\ue_5.4\\engine\\source\\runtime\\engine\\classes\\ai\\navigation\\pathfollowingagentinterface.h",
+            "d:\\program files\\games\\ue_5.4\\engine\\intermediate\\build\\win64\\unrealgame\\inc\\engine\\uht\\pathfollowingagentinterface.generated.h",
+            "d:\\program files\\games\\ue_5.4\\engine\\source\\runtime\\engine\\classes\\gameframework\\movementcomponent.h",
+            "d:\\program files\\games\\ue_5.4\\engine\\intermediate\\build\\win64\\unrealgame\\inc\\engine\\uht\\movementcomponent.generated.h",
+            "d:\\program files\\games\\ue_5.4\\engine\\intermediate\\build\\win64\\unrealgame\\inc\\engine\\uht\\navmovementcomponent.generated.h",
+            "d:\\program files\\games\\ue_5.4\\engine\\intermediate\\build\\win64\\unrealgame\\inc\\engine\\uht\\pawnmovementcomponent.generated.h",
+            "d:\\program files\\games\\ue_5.4\\engine\\source\\runtime\\engine\\classes\\gameframework\\charactermovementreplication.h",
+            "d:\\program files\\games\\ue_5.4\\engine\\source\\runtime\\experimental\\iris\\core\\public\\iris\\serialization\\irisobjectreferencepackagemap.h",
+            "d:\\program files\\games\\ue_5.4\\engine\\intermediate\\build\\win64\\unrealgame\\inc\\iriscore\\uht\\irisobjectreferencepackagemap.generated.h",
+            "d:\\program files\\games\\ue_5.4\\engine\\intermediate\\build\\win64\\unrealgame\\inc\\engine\\uht\\charactermovementreplication.generated.h",
+            "d:\\program files\\games\\ue_5.4\\engine\\source\\runtime\\engine\\classes\\interfaces\\networkpredictioninterface.h",
+            "d:\\program files\\games\\ue_5.4\\engine\\intermediate\\build\\win64\\unrealgame\\inc\\engine\\uht\\networkpredictioninterface.generated.h",
+            "d:\\program files\\games\\ue_5.4\\engine\\source\\runtime\\engine\\public\\charactermovementcomponentasync.h",
+            "d:\\program files\\games\\ue_5.4\\engine\\intermediate\\build\\win64\\unrealgame\\inc\\engine\\uht\\charactermovementcomponentasync.generated.h",
+            "d:\\program files\\games\\ue_5.4\\engine\\intermediate\\build\\win64\\unrealgame\\inc\\engine\\uht\\charactermovementcomponent.generated.h",
+            "d:\\ue - projects\\ue5.4\\agls v1.0 (experimental)\\plugins\\helpfulfunctions\\intermediate\\build\\win64\\unrealgame\\inc\\helpfulfunctions\\uht\\agls_charactermovementcomponent.generated.h"
+        ],
+        "ImportedModules": [],
+        "ImportedHeaderUnits": []
+    }
+}

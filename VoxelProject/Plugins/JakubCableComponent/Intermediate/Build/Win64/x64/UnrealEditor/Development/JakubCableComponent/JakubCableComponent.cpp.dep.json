@@ -1,0 +1,14 @@
+{
+    "Version": "1.2",
+    "Data": {
+        "Source": "e:\\ue5projects\\voxel\\voxelproject\\plugins\\jakubcablecomponent\\source\\jakubcablecomponent\\private\\jakubcablecomponent.cpp",
+        "ProvidedModule": "",
+        "PCH": "e:\\ue5projects\\voxel\\voxelproject\\intermediate\\build\\win64\\x64\\voxelprojecteditor\\development\\unrealed\\sharedpch.unrealed.project.novalfmtstr.valapi.cpp20.inclorderunreal5_3.h.pch",
+        "Includes": [
+            "e:\\ue5projects\\voxel\\voxelproject\\plugins\\jakubcablecomponent\\intermediate\\build\\win64\\x64\\unrealeditor\\development\\jakubcablecomponent\\definitions.jakubcablecomponent.h",
+            "e:\\ue5projects\\voxel\\voxelproject\\plugins\\jakubcablecomponent\\source\\jakubcablecomponent\\public\\jakubcablecomponent.h"
+        ],
+        "ImportedModules": [],
+        "ImportedHeaderUnits": []
+    }
+}

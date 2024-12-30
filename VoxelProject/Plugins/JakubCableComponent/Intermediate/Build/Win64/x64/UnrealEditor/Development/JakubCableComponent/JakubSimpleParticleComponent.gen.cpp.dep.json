@@ -1,0 +1,17 @@
+{
+    "Version": "1.2",
+    "Data": {
+        "Source": "e:\\ue5projects\\voxel\\voxelproject\\plugins\\jakubcablecomponent\\intermediate\\build\\win64\\unrealeditor\\inc\\jakubcablecomponent\\uht\\jakubsimpleparticlecomponent.gen.cpp",
+        "ProvidedModule": "",
+        "PCH": "e:\\ue5projects\\voxel\\voxelproject\\intermediate\\build\\win64\\x64\\voxelprojecteditor\\development\\unrealed\\sharedpch.unrealed.project.novalfmtstr.valapi.cpp20.inclorderunreal5_3.h.pch",
+        "Includes": [
+            "e:\\ue5projects\\voxel\\voxelproject\\plugins\\jakubcablecomponent\\intermediate\\build\\win64\\x64\\unrealeditor\\development\\jakubcablecomponent\\definitions.jakubcablecomponent.h",
+            "e:\\ue5projects\\voxel\\voxelproject\\plugins\\jakubcablecomponent\\source\\jakubcablecomponent\\public\\jakubsimpleparticlecomponent.h",
+            "e:\\ue5\\ue_5.5\\ue_5.5\\engine\\source\\runtime\\engine\\classes\\components\\arrowcomponent.h",
+            "e:\\ue5\\ue_5.5\\ue_5.5\\engine\\intermediate\\build\\win64\\unrealeditor\\inc\\engine\\uht\\arrowcomponent.generated.h",
+            "e:\\ue5projects\\voxel\\voxelproject\\plugins\\jakubcablecomponent\\intermediate\\build\\win64\\unrealeditor\\inc\\jakubcablecomponent\\uht\\jakubsimpleparticlecomponent.generated.h"
+        ],
+        "ImportedModules": [],
+        "ImportedHeaderUnits": []
+    }
+}

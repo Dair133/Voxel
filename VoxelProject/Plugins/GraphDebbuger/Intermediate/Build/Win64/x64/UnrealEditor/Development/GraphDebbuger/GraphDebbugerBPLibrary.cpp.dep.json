@@ -1,0 +1,16 @@
+{
+    "Version": "1.2",
+    "Data": {
+        "Source": "e:\\ue5projects\\voxel\\voxelproject\\plugins\\graphdebbuger\\source\\graphdebbuger\\private\\graphdebbugerbplibrary.cpp",
+        "ProvidedModule": "",
+        "PCH": "e:\\ue5projects\\voxel\\voxelproject\\intermediate\\build\\win64\\x64\\voxelprojecteditor\\development\\unrealed\\sharedpch.unrealed.project.novalfmtstr.valapi.cpp20.inclorderunreal5_3.h.pch",
+        "Includes": [
+            "e:\\ue5projects\\voxel\\voxelproject\\plugins\\graphdebbuger\\intermediate\\build\\win64\\x64\\unrealeditor\\development\\graphdebbuger\\definitions.graphdebbuger.h",
+            "e:\\ue5projects\\voxel\\voxelproject\\plugins\\graphdebbuger\\source\\graphdebbuger\\public\\graphdebbugerbplibrary.h",
+            "e:\\ue5projects\\voxel\\voxelproject\\plugins\\graphdebbuger\\intermediate\\build\\win64\\unrealeditor\\inc\\graphdebbuger\\uht\\graphdebbugerbplibrary.generated.h",
+            "e:\\ue5projects\\voxel\\voxelproject\\plugins\\graphdebbuger\\source\\graphdebbuger\\public\\graphdebbuger.h"
+        ],
+        "ImportedModules": [],
+        "ImportedHeaderUnits": []
+    }
+}

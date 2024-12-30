@@ -1,0 +1,15 @@
+{
+    "Version": "1.2",
+    "Data": {
+        "Source": "e:\\ue5projects\\voxel\\voxelproject\\plugins\\trajectorygenerator\\intermediate\\build\\win64\\unrealeditor\\inc\\trajectorygenerator\\uht\\tg_enumsandstructures.gen.cpp",
+        "ProvidedModule": "",
+        "PCH": "e:\\ue5projects\\voxel\\voxelproject\\intermediate\\build\\win64\\x64\\voxelprojecteditor\\development\\unrealed\\sharedpch.unrealed.project.novalfmtstr.valapi.cpp20.inclorderunreal5_3.h.pch",
+        "Includes": [
+            "e:\\ue5projects\\voxel\\voxelproject\\plugins\\trajectorygenerator\\intermediate\\build\\win64\\x64\\unrealeditor\\development\\trajectorygenerator\\definitions.trajectorygenerator.h",
+            "e:\\ue5projects\\voxel\\voxelproject\\plugins\\trajectorygenerator\\source\\trajectorygenerator\\public\\tg_enumsandstructures.h",
+            "e:\\ue5projects\\voxel\\voxelproject\\plugins\\trajectorygenerator\\intermediate\\build\\win64\\unrealeditor\\inc\\trajectorygenerator\\uht\\tg_enumsandstructures.generated.h"
+        ],
+        "ImportedModules": [],
+        "ImportedHeaderUnits": []
+    }
+}

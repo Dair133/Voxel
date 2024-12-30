@@ -1,0 +1,20 @@
+{
+	"RemapUnityFiles": 
+	{
+		"Module.TrajectoryGenerator.cpp.obj": [
+			"CurveEditorDerivativeFilter.gen.cpp.obj",
+			"GaussianDerivativeFilter.gen.cpp.obj",
+			"TG_EnumsAndStructures.gen.cpp.obj",
+			"TrajectoryGenerator.init.gen.cpp.obj",
+			"TrajectoryGeneratorBPLibrary.gen.cpp.obj",
+			"TrajectoryPresetsCpp.gen.cpp.obj",
+			"PerModuleInline.gen.cpp.obj",
+			"CurveEditorDerivativeFilter.cpp.obj",
+			"GaussianDerivativeFilter.cpp.obj",
+			"TG_EnumsAndStructures.cpp.obj",
+			"TrajectoryGenerator.cpp.obj",
+			"TrajectoryGeneratorBPLibrary.cpp.obj",
+			"TrajectoryPresetsCpp.cpp.obj"
+		]
+	}
+}

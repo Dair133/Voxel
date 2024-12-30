@@ -1,0 +1,39 @@
+{
+    "Version": "1.2",
+    "Data": {
+        "Source": "e:\\ue5projects\\voxel\\voxelproject\\plugins\\trajectorygenerator\\intermediate\\build\\win64\\unrealeditor\\inc\\trajectorygenerator\\uht\\gaussianderivativefilter.gen.cpp",
+        "ProvidedModule": "",
+        "PCH": "e:\\ue5projects\\voxel\\voxelproject\\intermediate\\build\\win64\\x64\\voxelprojecteditor\\development\\unrealed\\sharedpch.unrealed.project.novalfmtstr.valapi.cpp20.inclorderunreal5_3.h.pch",
+        "Includes": [
+            "e:\\ue5projects\\voxel\\voxelproject\\plugins\\trajectorygenerator\\intermediate\\build\\win64\\x64\\unrealeditor\\development\\trajectorygenerator\\definitions.trajectorygenerator.h",
+            "e:\\ue5projects\\voxel\\voxelproject\\plugins\\trajectorygenerator\\source\\trajectorygenerator\\public\\gaussianderivativefilter.h",
+            "e:\\ue5\\ue_5.5\\ue_5.5\\engine\\source\\editor\\curveeditor\\public\\filters\\curveeditorfilterbase.h",
+            "e:\\ue5\\ue_5.5\\ue_5.5\\engine\\source\\editor\\curveeditor\\public\\curveeditorselection.h",
+            "e:\\ue5\\ue_5.5\\ue_5.5\\engine\\source\\editor\\curveeditor\\public\\curveeditortypes.h",
+            "e:\\ue5\\ue_5.5\\ue_5.5\\engine\\source\\editor\\curveeditor\\public\\curveeditor.h",
+            "e:\\ue5\\ue_5.5\\ue_5.5\\engine\\source\\editor\\curveeditor\\public\\curvedataabstraction.h",
+            "e:\\ue5\\ue_5.5\\ue_5.5\\engine\\intermediate\\build\\win64\\unrealeditor\\inc\\curveeditor\\uht\\curvedataabstraction.generated.h",
+            "e:\\ue5\\ue_5.5\\ue_5.5\\engine\\source\\editor\\curveeditor\\public\\curveeditorhelpers.h",
+            "e:\\ue5\\ue_5.5\\ue_5.5\\engine\\source\\editor\\curveeditor\\public\\curveeditorscreenspace.h",
+            "e:\\ue5\\ue_5.5\\ue_5.5\\engine\\source\\editor\\curveeditor\\public\\curveeditorsnapmetrics.h",
+            "e:\\ue5\\ue_5.5\\ue_5.5\\engine\\source\\editor\\curveeditor\\public\\curveeditorsettings.h",
+            "e:\\ue5\\ue_5.5\\ue_5.5\\engine\\intermediate\\build\\win64\\unrealeditor\\inc\\curveeditor\\uht\\curveeditorsettings.generated.h",
+            "e:\\ue5\\ue_5.5\\ue_5.5\\engine\\source\\editor\\curveeditor\\public\\curvemodel.h",
+            "e:\\ue5\\ue_5.5\\ue_5.5\\engine\\source\\editor\\curveeditor\\public\\ibufferedcurvemodel.h",
+            "e:\\ue5\\ue_5.5\\ue_5.5\\engine\\source\\editor\\curveeditor\\public\\icurveeditorbounds.h",
+            "e:\\ue5\\ue_5.5\\ue_5.5\\engine\\source\\editor\\curveeditor\\public\\icurveeditordragoperation.h",
+            "e:\\ue5\\ue_5.5\\ue_5.5\\engine\\source\\runtime\\slate\\public\\framework\\delayeddrag.h",
+            "e:\\ue5\\ue_5.5\\ue_5.5\\engine\\source\\editor\\curveeditor\\public\\icurveeditormodule.h",
+            "e:\\ue5\\ue_5.5\\ue_5.5\\engine\\source\\editor\\curveeditor\\public\\icurveeditortoolextension.h",
+            "e:\\ue5\\ue_5.5\\ue_5.5\\engine\\source\\editor\\sequencerwidgets\\public\\itimeslider.h",
+            "e:\\ue5\\ue_5.5\\ue_5.5\\engine\\source\\editor\\sequencercore\\public\\isequencerinputhandler.h",
+            "e:\\ue5\\ue_5.5\\ue_5.5\\engine\\source\\editor\\sequencerwidgets\\public\\viewrangeinterpolation.h",
+            "e:\\ue5\\ue_5.5\\ue_5.5\\engine\\source\\editor\\curveeditor\\public\\tree\\curveeditortree.h",
+            "e:\\ue5\\ue_5.5\\ue_5.5\\engine\\source\\runtime\\core\\public\\algo\\foreach.h",
+            "e:\\ue5\\ue_5.5\\ue_5.5\\engine\\intermediate\\build\\win64\\unrealeditor\\inc\\curveeditor\\uht\\curveeditorfilterbase.generated.h",
+            "e:\\ue5projects\\voxel\\voxelproject\\plugins\\trajectorygenerator\\intermediate\\build\\win64\\unrealeditor\\inc\\trajectorygenerator\\uht\\gaussianderivativefilter.generated.h"
+        ],
+        "ImportedModules": [],
+        "ImportedHeaderUnits": []
+    }
+}

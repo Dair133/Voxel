@@ -1,0 +1,12 @@
+/NOLOGO
+/errorReport:prompt
+/MACHINE:x64
+/SUBSYSTEM:WINDOWS
+/DEF
+/NAME:"UnrealEditor-IWALS_AbilitySystem.dll"
+/IGNORE:4221
+/NODEFAULTLIB
+"D:\UE - Projects\UE5.2\IWALS_GAS_Plugin\Intermediate\Build\Win64\x64\IWALS_GAS_PluginEditor\Development\Engine\SharedPCH.Engine.ShadowErrors.InclOrderUnreal5_0.h.obj"
+"D:\UE - Projects\UE5.2\IWALS_GAS_Plugin\Plugins\IWALS_AbilitySystem\Intermediate\Build\Win64\x64\UnrealEditor\Development\IWALS_AbilitySystem\Module.IWALS_AbilitySystem.cpp.obj"
+"D:\UE - Projects\UE5.2\IWALS_GAS_Plugin\Plugins\IWALS_AbilitySystem\Intermediate\Build\Win64\x64\UnrealEditor\Development\IWALS_AbilitySystem\Default.rc2.res"
+/OUT:"D:\UE - Projects\UE5.2\IWALS_GAS_Plugin\Plugins\IWALS_AbilitySystem\Intermediate\Build\Win64\x64\UnrealEditor\Development\IWALS_AbilitySystem\UnrealEditor-IWALS_AbilitySystem.lib"

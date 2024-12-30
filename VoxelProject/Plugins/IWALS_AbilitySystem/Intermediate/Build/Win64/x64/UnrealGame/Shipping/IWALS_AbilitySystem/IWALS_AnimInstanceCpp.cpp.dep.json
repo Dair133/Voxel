@@ -1,0 +1,17 @@
+{
+    "Version": "1.2",
+    "Data": {
+        "Source": "d:\\ue - projects\\ue5.4\\agls v1.0 (experimental)\\plugins\\iwals_abilitysystem\\source\\iwals_abilitysystem\\private\\iwals_animinstancecpp.cpp",
+        "ProvidedModule": "",
+        "PCH": "d:\\ue - projects\\ue5.4\\agls v1.0 (experimental)\\intermediate\\build\\win64\\x64\\agls\\shipping\\engine\\sharedpch.engine.project.valapi.cpp20.h.pch",
+        "Includes": [
+            "d:\\ue - projects\\ue5.4\\agls v1.0 (experimental)\\plugins\\iwals_abilitysystem\\intermediate\\build\\win64\\x64\\unrealgame\\shipping\\iwals_abilitysystem\\definitions.iwals_abilitysystem.h",
+            "d:\\ue - projects\\ue5.4\\agls v1.0 (experimental)\\plugins\\iwals_abilitysystem\\source\\iwals_abilitysystem\\public\\iwals_animinstancecpp.h",
+            "d:\\ue - projects\\ue5.4\\agls v1.0 (experimental)\\plugins\\iwals_abilitysystem\\source\\iwals_abilitysystem\\public\\iwals_enumsandstruct.h",
+            "d:\\ue - projects\\ue5.4\\agls v1.0 (experimental)\\plugins\\iwals_abilitysystem\\intermediate\\build\\win64\\unrealgame\\inc\\iwals_abilitysystem\\uht\\iwals_enumsandstruct.generated.h",
+            "d:\\ue - projects\\ue5.4\\agls v1.0 (experimental)\\plugins\\iwals_abilitysystem\\intermediate\\build\\win64\\unrealgame\\inc\\iwals_abilitysystem\\uht\\iwals_animinstancecpp.generated.h"
+        ],
+        "ImportedModules": [],
+        "ImportedHeaderUnits": []
+    }
+}

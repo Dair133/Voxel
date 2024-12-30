@@ -1,0 +1,36 @@
+{
+    "Version": "1.1",
+    "Data": {
+        "Source": "c:\\users\\kubac\\documents\\unreal projects\\pluginbuildingv2\\plugins\\jakubanimnodes\\intermediate\\build\\win64\\unrealgame\\development\\jakubanimnodestool\\module.jakubanimnodestool.cpp",
+        "ProvidedModule": "",
+        "PCH": "c:\\users\\kubac\\documents\\unreal projects\\pluginbuildingv2\\intermediate\\build\\win64\\pluginbuildingv2\\development\\engine\\sharedpch.engine.shadowerrors.h.pch",
+        "Includes": [
+            "c:\\users\\kubac\\documents\\unreal projects\\pluginbuildingv2\\plugins\\jakubanimnodes\\intermediate\\build\\win64\\unrealgame\\development\\jakubanimnodestool\\definitions.jakubanimnodestool.h",
+            "c:\\users\\kubac\\documents\\unreal projects\\pluginbuildingv2\\plugins\\jakubanimnodes\\source\\jakubanimnodestool\\private\\jakubanimnodestool.cpp",
+            "c:\\users\\kubac\\documents\\unreal projects\\pluginbuildingv2\\plugins\\jakubanimnodes\\source\\jakubanimnodestool\\public\\jakubanimnodestool.h",
+            "c:\\users\\kubac\\documents\\unreal projects\\pluginbuildingv2\\plugins\\jakubanimnodes\\source\\jakubanimnodestool\\private\\jwan_layerblendinglogic.cpp",
+            "c:\\users\\kubac\\documents\\unreal projects\\pluginbuildingv2\\plugins\\jakubanimnodes\\source\\jakubanimnodestool\\public\\jwan_layerblendinglogic.h",
+            "d:\\program files\\games\\ue_5.0\\engine\\source\\runtime\\engine\\classes\\animation\\animdata\\bonemaskfilter.h",
+            "d:\\program files\\games\\ue_5.0\\engine\\intermediate\\build\\win64\\unrealgame\\inc\\engine\\bonemaskfilter.generated.h",
+            "c:\\users\\kubac\\documents\\unreal projects\\pluginbuildingv2\\plugins\\jakubanimnodes\\intermediate\\build\\win64\\unrealgame\\inc\\jakubanimnodestool\\jwan_layerblendinglogic.generated.h",
+            "d:\\program files\\games\\ue_5.0\\engine\\source\\runtime\\engine\\classes\\animation\\animnode_inertialization.h",
+            "d:\\program files\\games\\ue_5.0\\engine\\intermediate\\build\\win64\\unrealgame\\inc\\engine\\animnode_inertialization.generated.h",
+            "d:\\program files\\games\\ue_5.0\\engine\\source\\runtime\\engine\\public\\animation\\animinstanceproxy.h",
+            "d:\\program files\\games\\ue_5.0\\engine\\source\\runtime\\engine\\public\\animation\\animsync.h",
+            "d:\\program files\\games\\ue_5.0\\engine\\source\\runtime\\engine\\public\\animation\\animsyncscope.h",
+            "d:\\program files\\games\\ue_5.0\\engine\\source\\runtime\\engine\\public\\animation\\activestatemachinescope.h",
+            "d:\\program files\\games\\ue_5.0\\engine\\intermediate\\build\\win64\\unrealgame\\inc\\engine\\activestatemachinescope.generated.h",
+            "d:\\program files\\games\\ue_5.0\\engine\\intermediate\\build\\win64\\unrealgame\\inc\\engine\\animinstanceproxy.generated.h",
+            "c:\\users\\kubac\\documents\\unreal projects\\pluginbuildingv2\\plugins\\jakubanimnodes\\source\\jakubanimnodestool\\private\\jwan_modifylayeringlogic.cpp",
+            "c:\\users\\kubac\\documents\\unreal projects\\pluginbuildingv2\\plugins\\jakubanimnodes\\source\\jakubanimnodestool\\public\\jwan_modifylayeringlogic.h",
+            "d:\\program files\\games\\ue_5.0\\engine\\source\\runtime\\engine\\classes\\animation\\inputscalebias.h",
+            "d:\\program files\\games\\ue_5.0\\engine\\intermediate\\build\\win64\\unrealgame\\inc\\engine\\inputscalebias.generated.h",
+            "c:\\users\\kubac\\documents\\unreal projects\\pluginbuildingv2\\plugins\\jakubanimnodes\\intermediate\\build\\win64\\unrealgame\\inc\\jakubanimnodestool\\jwan_modifylayeringlogic.generated.h",
+            "c:\\users\\kubac\\documents\\unreal projects\\pluginbuildingv2\\plugins\\jakubanimnodes\\source\\jakubanimnodestool\\private\\myanimnode.cpp",
+            "c:\\users\\kubac\\documents\\unreal projects\\pluginbuildingv2\\plugins\\jakubanimnodes\\source\\jakubanimnodestool\\public\\myanimnode.h",
+            "c:\\users\\kubac\\documents\\unreal projects\\pluginbuildingv2\\plugins\\jakubanimnodes\\intermediate\\build\\win64\\unrealgame\\inc\\jakubanimnodestool\\myanimnode.generated.h"
+        ],
+        "ImportedModules": [],
+        "ImportedHeaderUnits": []
+    }
+}

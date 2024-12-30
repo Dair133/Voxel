@@ -1,0 +1,15 @@
+{
+    "Version": "1.2",
+    "Data": {
+        "Source": "d:\\ue - projects\\ue5.4\\agls v1.0 (experimental)\\plugins\\helpfulfunctions\\source\\helpfulfunctions\\private\\als_basecomponentsinterfacecpp.cpp",
+        "ProvidedModule": "",
+        "PCH": "d:\\ue - projects\\ue5.4\\agls v1.0 (experimental)\\intermediate\\build\\win64\\x64\\agls\\development\\engine\\sharedpch.engine.project.valapi.cpp20.h.pch",
+        "Includes": [
+            "d:\\ue - projects\\ue5.4\\agls v1.0 (experimental)\\plugins\\helpfulfunctions\\intermediate\\build\\win64\\x64\\unrealgame\\development\\helpfulfunctions\\definitions.helpfulfunctions.h",
+            "d:\\ue - projects\\ue5.4\\agls v1.0 (experimental)\\plugins\\helpfulfunctions\\source\\helpfulfunctions\\public\\als_basecomponentsinterfacecpp.h",
+            "d:\\ue - projects\\ue5.4\\agls v1.0 (experimental)\\plugins\\helpfulfunctions\\intermediate\\build\\win64\\unrealgame\\inc\\helpfulfunctions\\uht\\als_basecomponentsinterfacecpp.generated.h"
+        ],
+        "ImportedModules": [],
+        "ImportedHeaderUnits": []
+    }
+}

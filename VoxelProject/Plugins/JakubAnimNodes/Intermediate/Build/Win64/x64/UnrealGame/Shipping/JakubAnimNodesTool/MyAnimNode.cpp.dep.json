@@ -1,0 +1,23 @@
+{
+    "Version": "1.2",
+    "Data": {
+        "Source": "d:\\ue - projects\\ue5.4\\agls v1.0 (experimental)\\plugins\\jakubanimnodes\\source\\jakubanimnodestool\\private\\myanimnode.cpp",
+        "ProvidedModule": "",
+        "PCH": "d:\\ue - projects\\ue5.4\\agls v1.0 (experimental)\\intermediate\\build\\win64\\x64\\agls\\shipping\\engine\\sharedpch.engine.project.valapi.cpp20.h.pch",
+        "Includes": [
+            "d:\\ue - projects\\ue5.4\\agls v1.0 (experimental)\\plugins\\jakubanimnodes\\intermediate\\build\\win64\\x64\\unrealgame\\shipping\\jakubanimnodestool\\definitions.jakubanimnodestool.h",
+            "d:\\ue - projects\\ue5.4\\agls v1.0 (experimental)\\plugins\\jakubanimnodes\\source\\jakubanimnodestool\\public\\myanimnode.h",
+            "d:\\program files\\games\\ue_5.4\\engine\\source\\runtime\\engine\\classes\\animation\\animdata\\bonemaskfilter.h",
+            "d:\\program files\\games\\ue_5.4\\engine\\intermediate\\build\\win64\\unrealgame\\inc\\engine\\uht\\bonemaskfilter.generated.h",
+            "d:\\ue - projects\\ue5.4\\agls v1.0 (experimental)\\plugins\\jakubanimnodes\\intermediate\\build\\win64\\unrealgame\\inc\\jakubanimnodestool\\uht\\myanimnode.generated.h",
+            "d:\\program files\\games\\ue_5.4\\engine\\source\\runtime\\engine\\public\\animation\\animinstanceproxy.h",
+            "d:\\program files\\games\\ue_5.4\\engine\\source\\runtime\\engine\\public\\animation\\animtrace.h",
+            "d:\\program files\\games\\ue_5.4\\engine\\source\\runtime\\engine\\public\\objecttrace.h",
+            "d:\\program files\\games\\ue_5.4\\engine\\source\\runtime\\engine\\public\\tracefilter.h",
+            "d:\\program files\\games\\ue_5.4\\engine\\intermediate\\build\\win64\\unrealgame\\inc\\engine\\uht\\objecttrace.generated.h",
+            "d:\\program files\\games\\ue_5.4\\engine\\intermediate\\build\\win64\\unrealgame\\inc\\engine\\uht\\animinstanceproxy.generated.h"
+        ],
+        "ImportedModules": [],
+        "ImportedHeaderUnits": []
+    }
+}

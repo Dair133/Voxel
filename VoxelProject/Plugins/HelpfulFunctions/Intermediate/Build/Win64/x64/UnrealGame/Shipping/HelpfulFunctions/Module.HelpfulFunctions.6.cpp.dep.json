@@ -1,0 +1,21 @@
+{
+    "Version": "1.2",
+    "Data": {
+        "Source": "d:\\ue - projects\\ue5.4\\agls v1.0 (experimental)\\plugins\\helpfulfunctions\\intermediate\\build\\win64\\x64\\unrealgame\\shipping\\helpfulfunctions\\module.helpfulfunctions.6.cpp",
+        "ProvidedModule": "",
+        "PCH": "d:\\ue - projects\\ue5.4\\agls v1.0 (experimental)\\intermediate\\build\\win64\\x64\\agls\\shipping\\engine\\sharedpch.engine.project.valapi.cpp20.h.pch",
+        "Includes": [
+            "d:\\ue - projects\\ue5.4\\agls v1.0 (experimental)\\plugins\\helpfulfunctions\\intermediate\\build\\win64\\x64\\unrealgame\\shipping\\helpfulfunctions\\definitions.helpfulfunctions.h",
+            "d:\\ue - projects\\ue5.4\\agls v1.0 (experimental)\\plugins\\helpfulfunctions\\intermediate\\build\\win64\\unrealgame\\inc\\helpfulfunctions\\uht\\helpfulfunctions.init.gen.cpp",
+            "d:\\ue - projects\\ue5.4\\agls v1.0 (experimental)\\plugins\\helpfulfunctions\\intermediate\\build\\win64\\unrealgame\\inc\\helpfulfunctions\\uht\\helpfulfunctionsbplibrary.gen.cpp",
+            "d:\\ue - projects\\ue5.4\\agls v1.0 (experimental)\\plugins\\helpfulfunctions\\source\\helpfulfunctions\\public\\helpfulfunctionsbplibrary.h",
+            "d:\\ue - projects\\ue5.4\\agls v1.0 (experimental)\\plugins\\helpfulfunctions\\source\\helpfulfunctions\\public\\als_structuresandenumscpp.h",
+            "d:\\program files\\games\\ue_5.4\\engine\\source\\runtime\\engine\\classes\\curves\\curvevector.h",
+            "d:\\program files\\games\\ue_5.4\\engine\\intermediate\\build\\win64\\unrealgame\\inc\\engine\\uht\\curvevector.generated.h",
+            "d:\\ue - projects\\ue5.4\\agls v1.0 (experimental)\\plugins\\helpfulfunctions\\intermediate\\build\\win64\\unrealgame\\inc\\helpfulfunctions\\uht\\als_structuresandenumscpp.generated.h",
+            "d:\\ue - projects\\ue5.4\\agls v1.0 (experimental)\\plugins\\helpfulfunctions\\intermediate\\build\\win64\\unrealgame\\inc\\helpfulfunctions\\uht\\helpfulfunctionsbplibrary.generated.h"
+        ],
+        "ImportedModules": [],
+        "ImportedHeaderUnits": []
+    }
+}

@@ -1,0 +1,12 @@
+/NOLOGO
+/errorReport:prompt
+/MACHINE:x64
+/SUBSYSTEM:WINDOWS
+/DEF
+/NAME:"UnrealEditor-JakubCableComponent.dll"
+/IGNORE:4221
+/NODEFAULTLIB
+"E:\UE5Projects\Voxel\VoxelProject\Intermediate\Build\Win64\x64\VoxelProjectEditor\Development\UnrealEd\SharedPCH.UnrealEd.Project.NoValFmtStr.ValApi.Cpp20.InclOrderUnreal5_3.h.obj"
+"E:\UE5Projects\Voxel\VoxelProject\Plugins\JakubCableComponent\Intermediate\Build\Win64\x64\UnrealEditor\Development\JakubCableComponent\Module.JakubCableComponent.cpp.obj"
+"E:\UE5Projects\Voxel\VoxelProject\Plugins\JakubCableComponent\Intermediate\Build\Win64\x64\UnrealEditor\Development\JakubCableComponent\Default.rc2.res"
+/OUT:"E:\UE5Projects\Voxel\VoxelProject\Plugins\JakubCableComponent\Intermediate\Build\Win64\x64\UnrealEditor\Development\JakubCableComponent\UnrealEditor-JakubCableComponent.lib"

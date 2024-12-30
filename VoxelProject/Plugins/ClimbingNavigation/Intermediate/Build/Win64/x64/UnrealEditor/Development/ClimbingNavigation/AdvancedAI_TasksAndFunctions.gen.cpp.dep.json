@@ -1,0 +1,40 @@
+{
+    "Version": "1.2",
+    "Data": {
+        "Source": "e:\\ue5projects\\voxel\\voxelproject\\plugins\\climbingnavigation\\intermediate\\build\\win64\\unrealeditor\\inc\\climbingnavigation\\uht\\advancedai_tasksandfunctions.gen.cpp",
+        "ProvidedModule": "",
+        "PCH": "e:\\ue5projects\\voxel\\voxelproject\\intermediate\\build\\win64\\x64\\voxelprojecteditor\\development\\unrealed\\sharedpch.unrealed.project.novalfmtstr.valapi.cpp20.inclorderunreal5_3.h.pch",
+        "Includes": [
+            "e:\\ue5projects\\voxel\\voxelproject\\plugins\\climbingnavigation\\intermediate\\build\\win64\\x64\\unrealeditor\\development\\climbingnavigation\\definitions.climbingnavigation.h",
+            "e:\\ue5projects\\voxel\\voxelproject\\plugins\\climbingnavigation\\source\\climbingnavigation\\public\\advancedai_tasksandfunctions.h",
+            "e:\\ue5projects\\voxel\\voxelproject\\plugins\\climbingnavigation\\source\\climbingnavigation\\public\\navquery_hidinglocsearchparams.h",
+            "e:\\ue5projects\\voxel\\voxelproject\\plugins\\climbingnavigation\\intermediate\\build\\win64\\unrealeditor\\inc\\climbingnavigation\\uht\\navquery_hidinglocsearchparams.generated.h",
+            "e:\\ue5projects\\voxel\\voxelproject\\plugins\\climbingnavigation\\source\\climbingnavigation\\public\\navquery_fullnavpathfinding.h",
+            "e:\\ue5projects\\voxel\\voxelproject\\plugins\\climbingnavigation\\intermediate\\build\\win64\\unrealeditor\\inc\\climbingnavigation\\uht\\navquery_fullnavpathfinding.generated.h",
+            "e:\\ue5\\ue_5.5\\ue_5.5\\engine\\source\\runtime\\navigationsystem\\public\\navigationpath.h",
+            "e:\\ue5\\ue_5.5\\ue_5.5\\engine\\source\\runtime\\navigationsystem\\public\\navigationdata.h",
+            "e:\\ue5\\ue_5.5\\ue_5.5\\engine\\source\\runtime\\navigationsystem\\public\\navigationsystemtypes.h",
+            "e:\\ue5\\ue_5.5\\ue_5.5\\engine\\source\\runtime\\engine\\classes\\ai\\navigationsystemconfig.h",
+            "e:\\ue5\\ue_5.5\\ue_5.5\\engine\\intermediate\\build\\win64\\unrealeditor\\inc\\engine\\uht\\navigationsystemconfig.generated.h",
+            "e:\\ue5\\ue_5.5\\ue_5.5\\engine\\source\\runtime\\engine\\classes\\ai\\navigation\\navigationdatainterface.h",
+            "e:\\ue5\\ue_5.5\\ue_5.5\\engine\\intermediate\\build\\win64\\unrealeditor\\inc\\engine\\uht\\navigationdatainterface.generated.h",
+            "e:\\ue5\\ue_5.5\\ue_5.5\\engine\\intermediate\\build\\win64\\unrealeditor\\inc\\navigationsystem\\uht\\navigationdata.generated.h",
+            "e:\\ue5\\ue_5.5\\ue_5.5\\engine\\intermediate\\build\\win64\\unrealeditor\\inc\\navigationsystem\\uht\\navigationpath.generated.h",
+            "e:\\ue5projects\\voxel\\voxelproject\\plugins\\climbingnavigation\\source\\climbingnavigation\\public\\climbingnavigationbplibrary.h",
+            "e:\\ue5projects\\voxel\\voxelproject\\plugins\\climbingnavigation\\intermediate\\build\\win64\\unrealeditor\\inc\\climbingnavigation\\uht\\climbingnavigationbplibrary.generated.h",
+            "e:\\ue5projects\\voxel\\voxelproject\\plugins\\climbingnavigation\\source\\climbingnavigation\\public\\climbnavigationstorageactor.h",
+            "e:\\ue5projects\\voxel\\voxelproject\\plugins\\climbingnavigation\\intermediate\\build\\win64\\unrealeditor\\inc\\climbingnavigation\\uht\\climbnavigationstorageactor.generated.h",
+            "e:\\ue5projects\\voxel\\voxelproject\\plugins\\climbingnavigation\\source\\climbingnavigation\\public\\hidinglocsearch_enemyproperties.h",
+            "e:\\ue5\\ue_5.5\\ue_5.5\\engine\\source\\runtime\\coreuobject\\public\\uobject\\noexporttypes.h",
+            "e:\\ue5\\ue_5.5\\ue_5.5\\engine\\source\\runtime\\coreuobject\\public\\uobject\\propertyaccessutil.h",
+            "e:\\ue5\\ue_5.5\\ue_5.5\\engine\\source\\runtime\\coreuobject\\public\\serialization\\testundeclaredscriptstructobjectreferences.h",
+            "e:\\ue5\\ue_5.5\\ue_5.5\\engine\\source\\runtime\\core\\public\\math\\unitconversion.h",
+            "e:\\ue5\\ue_5.5\\ue_5.5\\engine\\source\\runtime\\core\\public\\math\\unitconversion.inl",
+            "e:\\ue5\\ue_5.5\\ue_5.5\\engine\\source\\runtime\\core\\public\\internationalization\\polyglottextdata.h",
+            "e:\\ue5projects\\voxel\\voxelproject\\plugins\\climbingnavigation\\intermediate\\build\\win64\\unrealeditor\\inc\\climbingnavigation\\uht\\hidinglocsearch_enemyproperties.generated.h",
+            "e:\\ue5projects\\voxel\\voxelproject\\plugins\\climbingnavigation\\intermediate\\build\\win64\\unrealeditor\\inc\\climbingnavigation\\uht\\advancedai_tasksandfunctions.generated.h"
+        ],
+        "ImportedModules": [],
+        "ImportedHeaderUnits": []
+    }
+}

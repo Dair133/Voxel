@@ -41,7 +41,7 @@ AVoxelGameModeBase::AVoxelGameModeBase()
 {
 
     ChunkToSpawn = AChunk::StaticClass();
-    PlayerControllerClass;
+    PlayerControllerClass;// Default value which is set in the VoxeGameModeBase blueprint
    
         static ConstructorHelpers::FClassFinder<AHUD> HUDClassHolder(TEXT("'/Game/ThirdPerson/CustomBp/MyHud.MyHud'"));
         if (HUDClassHolder.Succeeded())

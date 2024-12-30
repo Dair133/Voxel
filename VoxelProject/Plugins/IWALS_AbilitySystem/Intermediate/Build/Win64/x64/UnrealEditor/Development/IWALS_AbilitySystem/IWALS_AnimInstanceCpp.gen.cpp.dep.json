@@ -1,0 +1,17 @@
+{
+    "Version": "1.2",
+    "Data": {
+        "Source": "e:\\ue5projects\\voxel\\voxelproject\\plugins\\iwals_abilitysystem\\intermediate\\build\\win64\\unrealeditor\\inc\\iwals_abilitysystem\\uht\\iwals_animinstancecpp.gen.cpp",
+        "ProvidedModule": "",
+        "PCH": "e:\\ue5projects\\voxel\\voxelproject\\intermediate\\build\\win64\\x64\\voxelprojecteditor\\development\\unrealed\\sharedpch.unrealed.project.novalfmtstr.valapi.cpp20.inclorderunreal5_3.h.pch",
+        "Includes": [
+            "e:\\ue5projects\\voxel\\voxelproject\\plugins\\iwals_abilitysystem\\intermediate\\build\\win64\\x64\\unrealeditor\\development\\iwals_abilitysystem\\definitions.iwals_abilitysystem.h",
+            "e:\\ue5projects\\voxel\\voxelproject\\plugins\\iwals_abilitysystem\\source\\iwals_abilitysystem\\public\\iwals_animinstancecpp.h",
+            "e:\\ue5projects\\voxel\\voxelproject\\plugins\\iwals_abilitysystem\\source\\iwals_abilitysystem\\public\\iwals_enumsandstruct.h",
+            "e:\\ue5projects\\voxel\\voxelproject\\plugins\\iwals_abilitysystem\\intermediate\\build\\win64\\unrealeditor\\inc\\iwals_abilitysystem\\uht\\iwals_enumsandstruct.generated.h",
+            "e:\\ue5projects\\voxel\\voxelproject\\plugins\\iwals_abilitysystem\\intermediate\\build\\win64\\unrealeditor\\inc\\iwals_abilitysystem\\uht\\iwals_animinstancecpp.generated.h"
+        ],
+        "ImportedModules": [],
+        "ImportedHeaderUnits": []
+    }
+}

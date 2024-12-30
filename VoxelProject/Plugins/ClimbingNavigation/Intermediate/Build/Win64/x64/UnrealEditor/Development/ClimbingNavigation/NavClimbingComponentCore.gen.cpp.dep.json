@@ -1,0 +1,23 @@
+{
+    "Version": "1.2",
+    "Data": {
+        "Source": "e:\\ue5projects\\voxel\\voxelproject\\plugins\\climbingnavigation\\intermediate\\build\\win64\\unrealeditor\\inc\\climbingnavigation\\uht\\navclimbingcomponentcore.gen.cpp",
+        "ProvidedModule": "",
+        "PCH": "e:\\ue5projects\\voxel\\voxelproject\\intermediate\\build\\win64\\x64\\voxelprojecteditor\\development\\unrealed\\sharedpch.unrealed.project.novalfmtstr.valapi.cpp20.inclorderunreal5_3.h.pch",
+        "Includes": [
+            "e:\\ue5projects\\voxel\\voxelproject\\plugins\\climbingnavigation\\intermediate\\build\\win64\\x64\\unrealeditor\\development\\climbingnavigation\\definitions.climbingnavigation.h",
+            "e:\\ue5projects\\voxel\\voxelproject\\plugins\\climbingnavigation\\source\\climbingnavigation\\public\\navclimbingcomponentcore.h",
+            "e:\\ue5projects\\voxel\\voxelproject\\plugins\\climbingnavigation\\source\\climbingnavigation\\public\\climbingnavigationbplibrary.h",
+            "e:\\ue5projects\\voxel\\voxelproject\\plugins\\climbingnavigation\\intermediate\\build\\win64\\unrealeditor\\inc\\climbingnavigation\\uht\\climbingnavigationbplibrary.generated.h",
+            "e:\\ue5projects\\voxel\\voxelproject\\plugins\\climbingnavigation\\source\\climbingnavigation\\public\\climbnavigationstorageactor.h",
+            "e:\\ue5projects\\voxel\\voxelproject\\plugins\\climbingnavigation\\intermediate\\build\\win64\\unrealeditor\\inc\\climbingnavigation\\uht\\climbnavigationstorageactor.generated.h",
+            "e:\\ue5\\ue_5.5\\ue_5.5\\engine\\source\\runtime\\engine\\classes\\curves\\curvevector.h",
+            "e:\\ue5\\ue_5.5\\ue_5.5\\engine\\intermediate\\build\\win64\\unrealeditor\\inc\\engine\\uht\\curvevector.generated.h",
+            "e:\\ue5projects\\voxel\\voxelproject\\plugins\\graphdebbuger\\source\\graphdebbuger\\public\\graphdebuggercore.h",
+            "e:\\ue5projects\\voxel\\voxelproject\\plugins\\graphdebbuger\\intermediate\\build\\win64\\unrealeditor\\inc\\graphdebbuger\\uht\\graphdebuggercore.generated.h",
+            "e:\\ue5projects\\voxel\\voxelproject\\plugins\\climbingnavigation\\intermediate\\build\\win64\\unrealeditor\\inc\\climbingnavigation\\uht\\navclimbingcomponentcore.generated.h"
+        ],
+        "ImportedModules": [],
+        "ImportedHeaderUnits": []
+    }
+}

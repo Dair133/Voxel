@@ -1,0 +1,63 @@
+{
+    "version": "2.1.0",
+    "$schema": "https://schemastore.azurewebsites.net/schemas/json/sarif-2.1.0-rtm.5.json",
+    "runs": [
+        {
+            "results": [
+                {
+                    "ruleId": "C4996",
+                    "message": {
+                        "text": "'FAISightTarget::SightTargetInterface': SightTargetInterface is deprecated. Use WeakSightTargetInterface instead. Please update your code to the new API before upgrading to the next release, otherwise your project will no longer compile."
+                    },
+                    "analysisTarget": {
+                        "uri": "file:///E:/UE5Projects/Voxel/VoxelProject/Plugins/ClimbingNavigation/Source/ClimbingNavigation/Private/AISense_BetterSight.cpp"
+                    },
+                    "locations": [
+                        {
+                            "physicalLocation": {
+                                "artifactLocation": {
+                                    "uri": "file:///E:/UE5Projects/Voxel/VoxelProject/Plugins/ClimbingNavigation/Source/ClimbingNavigation/Private/AISense_BetterSight.cpp"
+                                },
+                                "region": {
+                                    "startLine": 503,
+                                    "startColumn": 12
+                                }
+                            }
+                        }
+                    ]
+                },
+                {
+                    "ruleId": "C4996",
+                    "message": {
+                        "text": "'FAISightTarget::SightTargetInterface': SightTargetInterface is deprecated. Use WeakSightTargetInterface instead. Please update your code to the new API before upgrading to the next release, otherwise your project will no longer compile."
+                    },
+                    "analysisTarget": {
+                        "uri": "file:///E:/UE5Projects/Voxel/VoxelProject/Plugins/ClimbingNavigation/Source/ClimbingNavigation/Private/AISense_BetterSight.cpp"
+                    },
+                    "locations": [
+                        {
+                            "physicalLocation": {
+                                "artifactLocation": {
+                                    "uri": "file:///E:/UE5Projects/Voxel/VoxelProject/Plugins/ClimbingNavigation/Source/ClimbingNavigation/Private/AISense_BetterSight.cpp"
+                                },
+                                "region": {
+                                    "startLine": 512,
+                                    "startColumn": 42
+                                }
+                            }
+                        }
+                    ]
+                }
+            ],
+            "tool": {
+                "driver": {
+                    "name": "MSVC",
+                    "shortDescription": {
+                        "text": "Microsoft Visual C++ Compiler Warnings/Errors"
+                    },
+                    "informationUri": "https://docs.microsoft.com/cpp/error-messages/compiler-errors-1/c-cpp-build-errors"
+                }
+            }
+        }
+    ]
+}

@@ -1,0 +1,31 @@
+{
+    "Version": "1.2",
+    "Data": {
+        "Source": "e:\\ue5projects\\voxel\\voxelproject\\plugins\\jakubcablecomponent\\source\\jakubcablecomponent\\private\\jakubcablephysic.cpp",
+        "ProvidedModule": "",
+        "PCH": "e:\\ue5projects\\voxel\\voxelproject\\intermediate\\build\\win64\\x64\\voxelprojecteditor\\development\\unrealed\\sharedpch.unrealed.project.novalfmtstr.valapi.cpp20.inclorderunreal5_3.h.pch",
+        "Includes": [
+            "e:\\ue5projects\\voxel\\voxelproject\\plugins\\jakubcablecomponent\\intermediate\\build\\win64\\x64\\unrealeditor\\development\\jakubcablecomponent\\definitions.jakubcablecomponent.h",
+            "e:\\ue5projects\\voxel\\voxelproject\\plugins\\jakubcablecomponent\\source\\jakubcablecomponent\\public\\jakubcablephysic.h",
+            "e:\\ue5projects\\voxel\\voxelproject\\plugins\\jakubcablecomponent\\intermediate\\build\\win64\\unrealeditor\\inc\\jakubcablecomponent\\uht\\jakubcablephysic.generated.h",
+            "e:\\ue5\\ue_5.5\\ue_5.5\\engine\\source\\runtime\\engine\\public\\materialdomain.h",
+            "e:\\ue5\\ue_5.5\\ue_5.5\\engine\\intermediate\\build\\win64\\unrealeditor\\inc\\engine\\uht\\materialdomain.generated.h",
+            "e:\\ue5\\ue_5.5\\ue_5.5\\engine\\source\\runtime\\engine\\public\\primitiveuniformshaderparametersbuilder.h",
+            "e:\\ue5\\ue_5.5\\ue_5.5\\engine\\source\\runtime\\engine\\public\\materials\\materialrenderproxy.h",
+            "e:\\ue5\\ue_5.5\\ue_5.5\\engine\\source\\runtime\\engine\\public\\dynamicmeshbuilder.h",
+            "e:\\ue5projects\\voxel\\voxelproject\\plugins\\jakubcablecomponent\\source\\jakubcablecomponent\\private\\jakubcablestats.h",
+            "e:\\ue5\\ue_5.5\\ue_5.5\\engine\\source\\runtime\\renderer\\public\\raytracinginstance.h",
+            "e:\\ue5\\ue_5.5\\ue_5.5\\engine\\source\\runtime\\engine\\classes\\kismet\\gameplaystatics.h",
+            "e:\\ue5\\ue_5.5\\ue_5.5\\engine\\source\\runtime\\engine\\classes\\kismet\\kismetsystemlibrary.h",
+            "e:\\ue5\\ue_5.5\\ue_5.5\\engine\\source\\runtime\\coreuobject\\public\\uobject\\propertyaccessutil.h",
+            "e:\\ue5\\ue_5.5\\ue_5.5\\engine\\intermediate\\build\\win64\\unrealeditor\\inc\\engine\\uht\\kismetsystemlibrary.generated.h",
+            "e:\\ue5\\ue_5.5\\ue_5.5\\engine\\source\\runtime\\engine\\classes\\sound\\dialoguetypes.h",
+            "e:\\ue5\\ue_5.5\\ue_5.5\\engine\\intermediate\\build\\win64\\unrealeditor\\inc\\engine\\uht\\dialoguetypes.generated.h",
+            "e:\\ue5\\ue_5.5\\ue_5.5\\engine\\source\\runtime\\engine\\classes\\kismet\\gameplaystaticstypes.h",
+            "e:\\ue5\\ue_5.5\\ue_5.5\\engine\\intermediate\\build\\win64\\unrealeditor\\inc\\engine\\uht\\gameplaystaticstypes.generated.h",
+            "e:\\ue5\\ue_5.5\\ue_5.5\\engine\\intermediate\\build\\win64\\unrealeditor\\inc\\engine\\uht\\gameplaystatics.generated.h"
+        ],
+        "ImportedModules": [],
+        "ImportedHeaderUnits": []
+    }
+}

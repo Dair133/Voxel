@@ -1,0 +1,33 @@
+{
+    "Version": "1.2",
+    "Data": {
+        "Source": "e:\\ue5projects\\voxel\\voxelproject\\plugins\\trajectorygenerator\\intermediate\\build\\win64\\unrealeditor\\inc\\trajectorygenerator\\uht\\trajectorygeneratorbplibrary.gen.cpp",
+        "ProvidedModule": "",
+        "PCH": "e:\\ue5projects\\voxel\\voxelproject\\intermediate\\build\\win64\\x64\\voxelprojecteditor\\development\\unrealed\\sharedpch.unrealed.project.novalfmtstr.valapi.cpp20.inclorderunreal5_3.h.pch",
+        "Includes": [
+            "e:\\ue5projects\\voxel\\voxelproject\\plugins\\trajectorygenerator\\intermediate\\build\\win64\\x64\\unrealeditor\\development\\trajectorygenerator\\definitions.trajectorygenerator.h",
+            "e:\\ue5projects\\voxel\\voxelproject\\plugins\\trajectorygenerator\\source\\trajectorygenerator\\public\\trajectorygeneratorbplibrary.h",
+            "e:\\ue5\\ue_5.5\\ue_5.5\\engine\\source\\runtime\\engine\\classes\\curves\\curvevector.h",
+            "e:\\ue5\\ue_5.5\\ue_5.5\\engine\\intermediate\\build\\win64\\unrealeditor\\inc\\engine\\uht\\curvevector.generated.h",
+            "e:\\ue5\\ue_5.5\\ue_5.5\\engine\\source\\developer\\assettools\\public\\assettoolsmodule.h",
+            "e:\\ue5\\ue_5.5\\ue_5.5\\engine\\source\\developer\\assettools\\public\\iassettools.h",
+            "e:\\ue5\\ue_5.5\\ue_5.5\\engine\\source\\developer\\assettools\\public\\assettypecategories.h",
+            "e:\\ue5\\ue_5.5\\ue_5.5\\engine\\source\\developer\\assettools\\public\\iassettypeactions.h",
+            "e:\\ue5\\ue_5.5\\ue_5.5\\engine\\source\\developer\\merge\\public\\merge.h",
+            "e:\\ue5\\ue_5.5\\ue_5.5\\engine\\source\\editor\\unrealed\\classes\\thumbnailrendering\\thumbnailmanager.h",
+            "e:\\ue5\\ue_5.5\\ue_5.5\\engine\\source\\editor\\unrealed\\classes\\thumbnailrendering\\thumbnailrenderer.h",
+            "e:\\ue5\\ue_5.5\\ue_5.5\\engine\\intermediate\\build\\win64\\unrealeditor\\inc\\unrealed\\uht\\thumbnailrenderer.generated.h",
+            "e:\\ue5\\ue_5.5\\ue_5.5\\engine\\intermediate\\build\\win64\\unrealeditor\\inc\\unrealed\\uht\\thumbnailmanager.generated.h",
+            "e:\\ue5\\ue_5.5\\ue_5.5\\engine\\source\\editor\\unrealed\\public\\automatedassetimportdata.h",
+            "e:\\ue5\\ue_5.5\\ue_5.5\\engine\\intermediate\\build\\win64\\unrealeditor\\inc\\unrealed\\uht\\automatedassetimportdata.generated.h",
+            "e:\\ue5\\ue_5.5\\ue_5.5\\engine\\intermediate\\build\\win64\\unrealeditor\\inc\\assettools\\uht\\iassettools.generated.h",
+            "e:\\ue5\\ue_5.5\\ue_5.5\\engine\\source\\runtime\\assetregistry\\public\\assetregistry\\assetregistrymodule.h",
+            "e:\\ue5\\ue_5.5\\ue_5.5\\engine\\source\\runtime\\assetregistry\\public\\assetregistry\\iassetregistry.h",
+            "e:\\ue5\\ue_5.5\\ue_5.5\\engine\\source\\runtime\\coreuobject\\public\\misc\\assetregistryinterface.h",
+            "e:\\ue5\\ue_5.5\\ue_5.5\\engine\\intermediate\\build\\win64\\unrealeditor\\inc\\assetregistry\\uht\\iassetregistry.generated.h",
+            "e:\\ue5projects\\voxel\\voxelproject\\plugins\\trajectorygenerator\\intermediate\\build\\win64\\unrealeditor\\inc\\trajectorygenerator\\uht\\trajectorygeneratorbplibrary.generated.h"
+        ],
+        "ImportedModules": [],
+        "ImportedHeaderUnits": []
+    }
+}
